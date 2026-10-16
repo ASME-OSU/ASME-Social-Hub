@@ -1,0 +1,234 @@
+{
+  "generatedAt": "2026-10-15T22:31:39.041Z",
+  "campaigns": [
+    {
+      "id": "2026-11-12-fall-social",
+      "year": "2026-27",
+      "type": "social",
+      "title": "A little less work. A little more together.",
+      "start": "2026-11-12T18:30:00-05:00",
+      "end": "2026-11-12T20:00:00-05:00",
+      "location": {
+        "name": "Campus gathering space",
+        "address": ""
+      },
+      "description": "Take a study break and get to know your fellow engineers.",
+      "food": true,
+      "demo": true,
+      "revision": 0,
+      "source": {
+        "kind": "manual",
+        "uid": ""
+      },
+      "campaign": {
+        "feed": {
+          "daysBefore": 7,
+          "time": "12:00",
+          "enabled": true
+        },
+        "story": {
+          "daysBefore": 3,
+          "time": "12:00",
+          "enabled": true
+        },
+        "groupme": {
+          "createAt": "immediately",
+          "reminders": [
+            604800,
+            86400
+          ]
+        }
+      },
+      "status": {
+        "feed": "pending",
+        "story": "pending",
+        "groupme": "pending"
+      },
+      "results": {
+        "feed": {},
+        "story": {},
+        "groupme": {},
+        "insights": []
+      },
+      "log": [],
+      "notes": "Illustrative example. Duplicate to start a real campaign."
+    },
+    {
+      "id": "2026-11-04-cad-workshop",
+      "year": "2026-27",
+      "type": "workshop",
+      "title": "From sketch to solid",
+      "start": "2026-11-04T18:00:00-05:00",
+      "end": "2026-11-04T19:30:00-05:00",
+      "location": {
+        "name": "Engineering lab",
+        "address": ""
+      },
+      "description": "Bring your laptop for a hands-on introduction to parametric CAD.",
+      "food": false,
+      "demo": true,
+      "revision": 0,
+      "source": {
+        "kind": "manual",
+        "uid": ""
+      },
+      "campaign": {
+        "feed": {
+          "daysBefore": 7,
+          "time": "12:00",
+          "enabled": true
+        },
+        "story": {
+          "daysBefore": 3,
+          "time": "12:00",
+          "enabled": true
+        },
+        "groupme": {
+          "createAt": "immediately",
+          "reminders": [
+            604800,
+            86400
+          ]
+        }
+      },
+      "status": {
+        "feed": "pending",
+        "story": "pending",
+        "groupme": "pending"
+      },
+      "results": {
+        "feed": {},
+        "story": {},
+        "groupme": {},
+        "insights": []
+      },
+      "log": [],
+      "notes": "Illustrative example. Duplicate to start a real campaign."
+    },
+    {
+      "id": "2026-10-28-industry-night",
+      "year": "2026-27",
+      "type": "industry-night",
+      "title": "Meet the engineers",
+      "start": "2026-10-28T18:30:00-04:00",
+      "end": "2026-10-28T20:00:00-04:00",
+      "location": {
+        "name": "Scott Laboratory",
+        "address": ""
+      },
+      "description": "An evening of conversations, career stories, and connections with practicing engineers.",
+      "food": true,
+      "demo": true,
+      "revision": 0,
+      "source": {
+        "kind": "manual",
+        "uid": ""
+      },
+      "campaign": {
+        "feed": {
+          "daysBefore": 7,
+          "time": "12:00",
+          "enabled": true
+        },
+        "story": {
+          "daysBefore": 3,
+          "time": "12:00",
+          "enabled": true
+        },
+        "groupme": {
+          "createAt": "immediately",
+          "reminders": [
+            604800,
+            86400
+          ]
+        }
+      },
+      "status": {
+        "feed": "pending",
+        "story": "pending",
+        "groupme": "pending"
+      },
+      "results": {
+        "feed": {},
+        "story": {},
+        "groupme": {},
+        "insights": []
+      },
+      "log": [],
+      "notes": "Illustrative example. Duplicate to start a real campaign."
+    },
+    {
+      "id": "2025-10-22-industry-night",
+      "year": "2025-26",
+      "type": "industry-night",
+      "title": "Industry night: behind the design",
+      "start": "2025-10-22T18:30:00-04:00",
+      "end": "2025-10-22T20:00:00-04:00",
+      "location": {
+        "name": "Scott Laboratory",
+        "address": ""
+      },
+      "description": "A look inside the engineering decisions that shape everyday products.",
+      "food": true,
+      "demo": true,
+      "revision": 0,
+      "source": {
+        "kind": "manual",
+        "uid": ""
+      },
+      "campaign": {
+        "feed": {
+          "daysBefore": 7,
+          "time": "12:00",
+          "enabled": true
+        },
+        "story": {
+          "daysBefore": 3,
+          "time": "12:00",
+          "enabled": true
+        },
+        "groupme": {
+          "createAt": "immediately",
+          "reminders": [
+            604800,
+            86400
+          ]
+        }
+      },
+      "status": {
+        "feed": "done",
+        "story": "done",
+        "groupme": "done"
+      },
+      "results": {
+        "feed": {},
+        "story": {},
+        "groupme": {},
+        "insights": [
+          {
+            "channel": "feed",
+            "at": "2025-10-23T12:00:00Z",
+            "metrics": {
+              "reach": 842,
+              "likes": 64,
+              "saved": 12
+            }
+          }
+        ]
+      },
+      "log": [
+        {
+          "at": "2025-10-15T16:00:00Z",
+          "channel": "feed",
+          "message": "Example: feed published"
+        },
+        {
+          "at": "2025-10-19T16:00:00Z",
+          "channel": "story",
+          "message": "Example: story published"
+        }
+      ],
+      "notes": "Example lesson: posts with a clear speaker introduction received more saves. Metrics are illustrative."
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+name: Dispatch campaigns
+on:
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Preview actions without publishing
+        type: boolean
+        default: true
+permissions:
+  contents: write
+  issues: write
+  pages: write
+  id-token: write
+jobs:
+  dispatch:
+    uses: ./.github/workflows/run.yml
+    with:
+      task: dispatch
+      dry_run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
+    secrets: inherit

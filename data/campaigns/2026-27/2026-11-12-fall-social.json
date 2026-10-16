@@ -1,0 +1,52 @@
+{
+  "id": "2026-11-12-fall-social",
+  "year": "2026-27",
+  "type": "social",
+  "title": "A little less work. A little more together.",
+  "start": "2026-11-12T18:30:00-05:00",
+  "end": "2026-11-12T20:00:00-05:00",
+  "location": {
+    "name": "Campus gathering space",
+    "address": ""
+  },
+  "description": "Take a study break and get to know your fellow engineers.",
+  "food": true,
+  "demo": true,
+  "revision": 0,
+  "source": {
+    "kind": "manual",
+    "uid": ""
+  },
+  "campaign": {
+    "feed": {
+      "daysBefore": 7,
+      "time": "12:00",
+      "enabled": true
+    },
+    "story": {
+      "daysBefore": 3,
+      "time": "12:00",
+      "enabled": true
+    },
+    "groupme": {
+      "createAt": "immediately",
+      "reminders": [
+        604800,
+        86400
+      ]
+    }
+  },
+  "status": {
+    "feed": "pending",
+    "story": "pending",
+    "groupme": "pending"
+  },
+  "results": {
+    "feed": {},
+    "story": {},
+    "groupme": {},
+    "insights": []
+  },
+  "log": [],
+  "notes": "Illustrative example. Duplicate to start a real campaign."
+}

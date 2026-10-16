@@ -1,0 +1,17 @@
+name: Render and publish dashboard
+on:
+  push:
+    branches: [main]
+    paths: ['config/**', 'data/campaigns/**', 'docs/**', 'templates/**', 'scripts/**', 'package*.json', '.github/workflows/**']
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: write
+  pages: write
+  id-token: write
+jobs:
+  render:
+    uses: ./.github/workflows/run.yml
+    with:
+      task: render
+    secrets: inherit

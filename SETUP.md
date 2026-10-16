@@ -1,0 +1,40 @@
+# Setup
+
+## GitHub and Pages
+
+1. Use Node 22+. Run `npm ci`, `npm test`, and `npm run build`.
+2. In repository **Settings → Pages**, select **GitHub Actions** as the source. Allow Actions to write repository contents. The render workflow deploys `docs/`.
+3. Set `repository`, `siteUrl`, `timezone`, `activeYear`, chapter branding, captions, and event types in `config/chapter.json`. Calendar and Instagram handle are intentionally blank until officers supply them. All committed data, uploaded flyers, and dashboard content are public.
+4. Run **Render and publish dashboard** after changing configuration or campaigns. A dashboard save with an officer PAT triggers this automatically. The issue fallback automatically renders and deploys after a successful import.
+5. Connect a fine-grained PAT with access only to this repository and **Contents read/write** in dashboard Settings. Approve organization access if required. It is used only to commit campaign JSON and flyer uploads. Store it in the browser only on a trusted personal device. Clear connection on shared computers.
+
+## Instagram Login
+
+Use a chapter-owned Instagram **Business** account and Meta developer app with Instagram API / Instagram Login. This implementation uses `graph.instagram.com`, not the Facebook Login publishing flow; a Facebook Page is not required by that flow.
+
+1. Configure the app redirect URI and add the chapter account and setup officer to the appropriate app/tester roles. Complete human OAuth consent in the Meta dashboard with `instagram_business_basic` and `instagram_business_content_publish`. Request the insights permission offered for Instagram Login in the current dashboard; confirm its exact scope and approval requirements using the linked official documentation in INTEGRATIONS.md.
+2. Exchange the authorization code for a short-lived token, then exchange it for a long-lived token using Meta's documented server-side flow. Keep the client secret and tokens out of repository files, screenshots, logs, URLs shared with others, and this chat. Save the returned account ID and token directly as Actions secrets.
+3. Test a private/test campaign with your own account. Own-account dev-mode access, App Review requirements, and insights access must be verified in the current Meta dashboard; they are not assumed to work without review.
+4. Add Actions secrets `IG_USER_ID`, `IG_ACCESS_TOKEN`, and `IG_TOKEN_EXPIRES_AT` (the actual ISO expiry timestamp). Optional repository variable `IG_API_VERSION` selects the version tested by your app; the code defaults to `v25.0`.
+5. Add `SECRETS_ADMIN_PAT`, a separate fine-grained token restricted to this repository with **Secrets read/write** so refresh can update the two Instagram secrets. Add Contents read access if GitHub requires it. The default workflow token cannot update Actions secrets.
+6. Run **Refresh Token** only after the long-lived token is at least 24 hours old. The workflow runs twice monthly and stores the new token and expiry. A fully expired or revoked token requires OAuth consent again; repeat steps 1–4 and run doctor.
+
+JPEGs must be publicly reachable before Instagram container creation. Render and deploy first. A custom feed/story image URL must return `image/jpeg`; uploaded JPEGs are placed in a generated chapter template. Instagram may enforce additional image/account limits. Stories are Business-only in the current reference, contain no interactive stickers, and disappear from Instagram; saved campaign metadata remains in the archive.
+
+## GroupMe
+
+Create a dedicated chapter account, add it to the target group, and obtain its user access token. Native calendar events use an **unofficial** endpoint, and only their creator can edit/delete them. Keep ownership with the chapter at handoff.
+
+Set Actions secrets `GROUPME_TOKEN` and `GROUPME_GROUP_ID`. Optionally create an official GroupMe bot and set `GROUPME_BOT_ID`. To request an announcement/fallback message, set `campaign.groupme.announce: true` in a campaign record. The dispatcher records intent before sending a bot message and never blindly repeats an ambiguous send. Native failure falls back to a hosted `.ics` link when announcements are enabled; a repository issue reports automation failures. Optionally set `OFFICERS_GROUPME_BOT_ID` for a bot in a private officers group to receive new failure or token-expiry alerts. Without an enabled bot, use the dashboard and GitHub alert to share the calendar file manually.
+
+The native API uses GroupMe's uploaded image service, at most two allowed reminders, and chapter timezone. The doctor lists upcoming events without creating anything.
+
+## Calendar, verification, and recovery
+
+Set a public `icalUrl` in config. Calendar refresh runs daily; suggestions exclude already-used occurrence UIDs and flag changed source events in `data/candidates.json`. Officers review source changes rather than applying them automatically. All-day events require selecting an actual meeting time before saving.
+
+Run `node scripts/doctor.mjs --live` in an environment with the secrets. It checks account access, GroupMe event listing, Pages, calendar, and configuration without publishing. Use the Actions **Dispatch campaigns** manual run with **dry_run checked** first. Then use a test Business account/group for real feed, story, edit, cancel, and refresh tests. Those credentialed acceptance checks cannot be certified by local tests.
+
+When a campaign reports an ambiguous publish/create outcome, inspect Instagram/GroupMe before retrying. If it succeeded, record the returned `mediaId`/`eventId`, posted/created timestamp, and `status: done`; set GroupMe `syncedRevision` to the campaign revision. If the provider confirms nothing was created, remove the corresponding `publishAttemptedAt` or `createAttemptedAt` and container ID if expired, and set the step pending. Preserve the log. A stale local `data/.dispatch-lock` can be removed only after confirming no dispatcher process is active. Actions concurrency serializes all workflow mutations; dashboard writes can still cause a Git conflict, which aborts the run safely and needs a fresh rerun.
+
+GitHub cron is best-effort and can be late or disabled after prolonged inactivity. Keepalive writes a monthly maintenance record; check Actions schedules manually at handoff and after quiet periods. Do not rely on this app for time-critical announcements. The insights workflow runs hourly to capture short-lived story metrics and snapshots feed metrics after 1 and 7 days; unsupported metrics stay unavailable rather than becoming fabricated zeros.

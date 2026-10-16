@@ -1,0 +1,12 @@
+name: Create a campaign
+description: Export a campaign from the dashboard and paste the JSON below. A repository maintainer must submit it.
+title: '[Campaign] '
+body:
+  - type: textarea
+    id: campaign
+    attributes:
+      label: Campaign JSON
+      description: Paste the complete exported campaign JSON. Never include access tokens.
+      render: json
+    validations:
+      required: true

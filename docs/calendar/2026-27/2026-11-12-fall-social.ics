@@ -1,0 +1,17 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Chapter Campaign Scheduler//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:2026-11-12-fall-social@chapter-campaigns
+DTSTAMP:20261112T233000Z
+DTSTART:20261112T233000Z
+DTEND:20261113T010000Z
+SUMMARY:A little less work. A little more together.
+DESCRIPTION:Take a study break and get to know your fellow engineers.
+LOCATION:Campus gathering space
+STATUS:CONFIRMED
+SEQUENCE:0
+END:VEVENT
+END:VCALENDAR

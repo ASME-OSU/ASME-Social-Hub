@@ -1,0 +1,16 @@
+name: Calendar
+on:
+  schedule:
+    - cron: '43 6 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: write
+  pages: write
+  id-token: write
+jobs:
+  task:
+    uses: ./.github/workflows/run.yml
+    with:
+      task: calendar
+    secrets: inherit

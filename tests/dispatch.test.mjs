@@ -1,0 +1,83 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {mkdtemp,readFile,rm} from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import {writeJson} from '../scripts/core.mjs';
+import {dispatch} from '../scripts/dispatch.mjs';
+async function fixture(t) {
+ const root=await mkdtemp(path.join(os.tmpdir(),'scheduler-'));t.after(()=>rm(root,{recursive:true,force:true}));
+ await writeJson(path.join(root,'config/chapter.json'),{chapterName:'Chapter',activeYear:'2026-27',timezone:'America/New_York',defaultCadence:{feed:{daysBefore:7,time:'12:00'},story:{daysBefore:3,time:'12:00'}}});
+ const file=path.join(root,'data/campaigns/2026-27/meeting.json');
+ await writeJson(file,{id:'meeting',year:'2026-27',title:'Meeting',start:'2026-10-21T18:00:00-04:00',end:'2026-10-21T19:00:00-04:00',food:true,flyers:{feed:'https://example.org/feed.jpg'},campaign:{story:{enabled:false,daysBefore:3,time:'12:00'}},revision:1});
+ return {root,file};
+}
+test('dry run writes nothing and calls no services',async t=>{
+ const {root,file}=await fixture(t),before=await readFile(file,'utf8');
+ const actions=await dispatch({root,now:'2026-10-14T17:00:00Z',dryRun:true,services:new Proxy({},{get(){throw Error('network');}})});
+ assert.equal(actions.length,2);assert.equal(await readFile(file,'utf8'),before);
+});
+test('stored identifiers suppress repeat publication and sync revisions',async t=>{
+ const {root,file}=await fixture(t);let published=0,created=0,updated=0;
+ const services={ig:{createContainer:async()=> 'container',waitForContainer:async()=>{},publishContainer:async()=>{published++;return 'media';},getMedia:async()=>({permalink:'https://example.org/post'})},groupme:{createEvent:async()=>{created++;return {eventId:'event'};},updateEvent:async()=>{updated++;}}};
+ const run=()=>dispatch({root,now:'2026-10-14T17:00:00Z',services});await run();await run();
+ assert.equal(published,1);assert.equal(created,1);
+ const c=JSON.parse(await readFile(file));c.revision=2;await writeJson(file,c);await run();assert.equal(updated,1);
+});
+test('ambiguous publication failure never blindly republishes',async t=>{
+ const {root}=await fixture(t);let count=0;
+ const services={ig:{createContainer:async()=> 'container',waitForContainer:async()=>{},publishContainer:async()=>{count++;throw Error('token=SECRET');}},groupme:{createEvent:async()=>({eventId:'event'})}};
+ await dispatch({root,now:'2026-10-14T17:00:00Z',services});await dispatch({root,now:'2026-10-14T18:00:00Z',services});assert.equal(count,1);
+});
+test('missed feed windows skip publication and cancellation deletes once',async t=>{
+ const {root,file}=await fixture(t);let deleted=0;
+ const c=JSON.parse(await readFile(file));c.results={groupme:{eventId:'existing',syncedRevision:1}};await writeJson(file,c);
+ const services={ig:new Proxy({},{get(){throw Error('should skip');}}),groupme:{deleteEvent:async()=>{deleted++;}}};
+ await dispatch({root,now:'2026-10-16T17:00:00Z',services});
+ const skipped=JSON.parse(await readFile(file));assert.equal(skipped.status.feed,'skipped');skipped.cancelled=true;await writeJson(file,skipped);
+ await dispatch({root,now:'2026-10-16T18:00:00Z',services});await dispatch({root,now:'2026-10-16T19:00:00Z',services});assert.equal(deleted,1);
+});
+test('container processing failures retry using persisted container',async t=>{
+ const {root}=await fixture(t);let containers=0,waits=0;
+ const services={ig:{createContainer:async()=>{containers++;return 'container';},waitForContainer:async()=>{if(!waits++)throw Error('processing');},publishContainer:async()=> 'media',getMedia:async()=>({})},groupme:{createEvent:async()=>({eventId:'event'})}};
+ await dispatch({root,now:'2026-10-14T17:00:00Z',services});await dispatch({root,now:'2026-10-14T18:00:00Z',services});assert.equal(containers,1);assert.equal(waits,2);
+});
+test('demo campaigns never call services or checkpoints',async t=>{
+ const {root,file}=await fixture(t);const c=JSON.parse(await readFile(file));c.demo=true;await writeJson(file,c);
+ const actions=await dispatch({root,now:'2026-10-14T17:00:00Z',services:new Proxy({},{get(){throw Error('demo network');}}),checkpoint:async()=>{throw Error('demo checkpoint');}});
+ assert.deepEqual(actions,[]);
+});
+test('durable intent checkpoint is awaited before publishing',async t=>{
+ const {root,file}=await fixture(t);let calls=0;
+ const c=JSON.parse(await readFile(file));delete c.flyers;await writeJson(file,c);
+ const configFile=path.join(root,'config/chapter.json');const config=JSON.parse(await readFile(configFile));config.siteUrl='https://example.org/chapter/';await writeJson(configFile,config);
+ const services={ig:{createContainer:async({imageUrl})=>{assert.equal(imageUrl,'https://example.org/chapter/media/2026-27/meeting-feed.jpg');return 'container';},waitForContainer:async()=>{},publishContainer:async()=>{calls++;return 'media';}},groupme:{}};
+ await assert.rejects(dispatch({root,now:'2026-10-14T17:00:00Z',services,checkpoint:async({campaign})=>{if(campaign.results.feed.publishAttemptedAt) throw Error('push conflict');}}),/checkpoint failed/);
+ assert.equal(calls,0);assert.ok(JSON.parse(await readFile(file)).results.feed.publishAttemptedAt);
+});
+test('campaign filename mismatch fails before external calls',async t=>{
+ const {root,file}=await fixture(t);const c=JSON.parse(await readFile(file));c.id='different';await writeJson(file,c);
+ await assert.rejects(dispatch({root,now:'2026-10-14T17:00:00Z',dryRun:true}),/path does not match/);
+});
+test('opt-in fallback bot announcement persists intent and never blindly retries',async t=>{
+ const {root,file}=await fixture(t);let sent=0;
+ const c=JSON.parse(await readFile(file));c.campaign.feed={enabled:false,daysBefore:7,time:'12:00'};c.campaign.groupme={announce:true};await writeJson(file,c);
+ const configFile=path.join(root,'config/chapter.json');const config=JSON.parse(await readFile(configFile));config.siteUrl='https://example.org';await writeJson(configFile,config);
+ const services={groupme:{createEvent:async()=>{throw Error('token=SECRET');}},postBotMessage:async(text)=>{assert.match(text,/calendar\/2026-27\/meeting.ics/);assert.ok(JSON.parse(await readFile(file)).results.groupme.botAttemptedAt);sent++;throw Error('token=SECRET');}};
+ await dispatch({root,now:'2026-10-14T17:00:00Z',services});await dispatch({root,now:'2026-10-14T18:00:00Z',services});assert.equal(sent,1);assert.doesNotMatch(await readFile(file,'utf8'),/SECRET/);
+});
+test('disabled channels become skipped and expired GroupMe is skipped',async t=>{
+ const {root,file}=await fixture(t);const services=new Proxy({},{get(){throw Error('unexpected network');}});
+ await dispatch({root,now:'2026-10-22T17:00:00Z',services});const c=JSON.parse(await readFile(file));
+ assert.equal(c.status.story,'skipped');assert.equal(c.results.story.skipReason,'disabled');assert.equal(c.status.groupme,'skipped');assert.equal(c.results.groupme.skipReason,'event-started');
+});
+test('archived current year campaigns never dispatch',async t=>{
+ const {root,file}=await fixture(t);const c=JSON.parse(await readFile(file));c.archived=true;await writeJson(file,c);
+ assert.deepEqual(await dispatch({root,now:'2026-10-14T17:00:00Z',services:new Proxy({},{get(){throw Error('unexpected network');}})}),[]);
+});
+test('real integration factories expose scheduler contract without network',async()=>{
+ const {createInstagramClient}=await import('../scripts/ig.mjs');const {createGroupMeClient}=await import('../scripts/groupme.mjs');
+ const ig=createInstagramClient({env:{},fetchImpl:()=>{throw Error('network');}});const gm=createGroupMeClient({env:{},fetchImpl:()=>{throw Error('network');}});
+ for(const key of ['createContainer','waitForContainer','publishContainer','getMedia','checkPublishingLimit']) assert.equal(typeof ig[key],'function');
+ for(const key of ['createEvent','updateEvent','deleteEvent']) assert.equal(typeof gm[key],'function');
+});

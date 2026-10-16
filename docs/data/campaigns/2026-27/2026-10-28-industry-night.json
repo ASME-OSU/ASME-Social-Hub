@@ -1,0 +1,52 @@
+{
+  "id": "2026-10-28-industry-night",
+  "year": "2026-27",
+  "type": "industry-night",
+  "title": "Meet the engineers",
+  "start": "2026-10-28T18:30:00-04:00",
+  "end": "2026-10-28T20:00:00-04:00",
+  "location": {
+    "name": "Scott Laboratory",
+    "address": ""
+  },
+  "description": "An evening of conversations, career stories, and connections with practicing engineers.",
+  "food": true,
+  "demo": true,
+  "revision": 0,
+  "source": {
+    "kind": "manual",
+    "uid": ""
+  },
+  "campaign": {
+    "feed": {
+      "daysBefore": 7,
+      "time": "12:00",
+      "enabled": true
+    },
+    "story": {
+      "daysBefore": 3,
+      "time": "12:00",
+      "enabled": true
+    },
+    "groupme": {
+      "createAt": "immediately",
+      "reminders": [
+        604800,
+        86400
+      ]
+    }
+  },
+  "status": {
+    "feed": "pending",
+    "story": "pending",
+    "groupme": "pending"
+  },
+  "results": {
+    "feed": {},
+    "story": {},
+    "groupme": {},
+    "insights": []
+  },
+  "log": [],
+  "notes": "Illustrative example. Duplicate to start a real campaign."
+}

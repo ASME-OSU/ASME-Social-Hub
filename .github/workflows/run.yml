@@ -1,0 +1,103 @@
+name: Campaign task
+on:
+  workflow_call:
+    inputs:
+      task:
+        required: true
+        type: string
+      dry_run:
+        default: false
+        type: boolean
+permissions:
+  contents: write
+  issues: write
+  pages: write
+  id-token: write
+concurrency:
+  group: campaign-repository
+  cancel-in-progress: false
+jobs:
+  task:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    env:
+      IG_USER_ID: ${{ secrets.IG_USER_ID }}
+      IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+      IG_TOKEN_EXPIRES_AT: ${{ secrets.IG_TOKEN_EXPIRES_AT }}
+      IG_API_VERSION: ${{ vars.IG_API_VERSION || 'v25.0' }}
+      GROUPME_TOKEN: ${{ secrets.GROUPME_TOKEN }}
+      GROUPME_GROUP_ID: ${{ secrets.GROUPME_GROUP_ID }}
+      GROUPME_BOT_ID: ${{ secrets.GROUPME_BOT_ID }}
+      OFFICERS_GROUPME_BOT_ID: ${{ secrets.OFFICERS_GROUPME_BOT_ID }}
+      SECRETS_ADMIN_PAT: ${{ secrets.SECRETS_ADMIN_PAT }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Configure checkpoint identity
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+      - name: Render pending campaign flyers
+        if: inputs.task == 'render'
+        run: |
+          npx playwright install --with-deps chromium
+          npm run render
+      - name: Dispatch
+        if: inputs.task == 'dispatch'
+        env:
+          CAMPAIGN_GIT_CHECKPOINT: ${{ !inputs.dry_run && '1' || '0' }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          if [ "$DRY_RUN" = true ]; then npm run dry-run; else node scripts/dispatch.mjs; fi
+      - name: Calendar suggestions
+        if: inputs.task == 'calendar'
+        run: node scripts/tasks.mjs calendar
+      - name: Insights
+        if: inputs.task == 'insights'
+        run: node scripts/insights.mjs
+      - name: Refresh Instagram token
+        if: inputs.task == 'refresh' && env.IG_ACCESS_TOKEN != '' && env.SECRETS_ADMIN_PAT != ''
+        run: node scripts/refresh-token.mjs
+      - name: Maintenance checkpoint
+        if: inputs.task == 'keepalive'
+        run: node scripts/tasks.mjs keepalive
+      - name: Check token expiry
+        if: inputs.task != 'refresh'
+        run: node scripts/tasks.mjs expiry
+      - name: Prepare Pages data
+        if: inputs.task != 'refresh' && !inputs.dry_run
+        run: npm run build
+      - name: Persist campaign state and site data
+        if: always() && !inputs.dry_run
+        env:
+          TASK: ${{ inputs.task }}
+        run: |
+          git add data docs
+          if ! git diff --cached --quiet; then
+            git commit -m "Update campaign ${TASK} state"
+            git push origin HEAD:main
+          fi
+      - name: Report actionable failures
+        if: always() && !inputs.dry_run
+        env:
+          RUN_FAILED: ${{ job.status == 'failure' && '1' || '0' }}
+        run: node scripts/tasks.mjs alert
+      - uses: actions/configure-pages@v5
+        if: success() && inputs.task != 'refresh' && !inputs.dry_run
+      - uses: actions/upload-pages-artifact@v3
+        if: success() && inputs.task != 'refresh' && !inputs.dry_run
+        with:
+          path: docs
+      - uses: actions/deploy-pages@v4
+        if: success() && inputs.task != 'refresh' && !inputs.dry_run
+        id: deployment

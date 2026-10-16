@@ -1,0 +1,18 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Chapter Campaign Scheduler//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:2026-10-28-industry-night@chapter-campaigns
+DTSTAMP:20261028T223000Z
+DTSTART:20261028T223000Z
+DTEND:20261029T000000Z
+SUMMARY:Meet the engineers
+DESCRIPTION:An evening of conversations\, career stories\, and connections
+  with practicing engineers.
+LOCATION:Scott Laboratory
+STATUS:CONFIRMED
+SEQUENCE:0
+END:VEVENT
+END:VCALENDAR

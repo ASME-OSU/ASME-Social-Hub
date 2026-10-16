@@ -1,0 +1,16 @@
+name: Keepalive
+on:
+  schedule:
+    - cron: '23 9 1 * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: write
+  pages: write
+  id-token: write
+jobs:
+  task:
+    uses: ./.github/workflows/run.yml
+    with:
+      task: keepalive
+    secrets: inherit

@@ -1,0 +1,42 @@
+name: Import campaign issue
+on:
+  issues:
+    types: [opened, reopened]
+permissions:
+  contents: write
+  issues: write
+  pages: write
+  id-token: write
+jobs:
+  import:
+    if: startsWith(github.event.issue.title, '[Campaign]')
+    runs-on: ubuntu-latest
+    concurrency:
+      group: campaign-repository
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Import validated campaign from authorized officer
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/import-issue.mjs
+      - name: Commit imported campaign
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/campaigns
+          if ! git diff --cached --quiet; then
+            git commit -m 'Import officer campaign request'
+            git push origin HEAD:main
+          fi
+  publish:
+    needs: import
+    uses: ./.github/workflows/run.yml
+    with:
+      task: render
+    secrets: inherit

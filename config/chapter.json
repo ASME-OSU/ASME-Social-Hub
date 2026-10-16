@@ -1,0 +1,65 @@
+{
+  "chapterName": "ASME at Ohio State",
+  "school": "The Ohio State University",
+  "instagramHandle": "",
+  "timezone": "America/New_York",
+  "activeYear": "2026-27",
+  "icalUrl": "",
+  "siteUrl": "https://asme-osu.github.io/ASME-Social-Hub",
+  "repository": {
+    "owner": "ASME-OSU",
+    "name": "ASME-Social-Hub",
+    "branch": "main"
+  },
+  "brand": {
+    "primary": "#102840",
+    "accent": "#ba0c2f",
+    "background": "#f2f5f9",
+    "font": "Inter, system-ui, sans-serif",
+    "logo": "",
+    "shortName": "ASME"
+  },
+  "defaultCadence": {
+    "feed": {
+      "daysBefore": 7,
+      "time": "12:00"
+    },
+    "story": {
+      "daysBefore": 3,
+      "time": "12:00"
+    }
+  },
+  "hashtags": [
+    "ASME",
+    "Engineering",
+    "OhioState"
+  ],
+  "captionTemplate": "{title}\n\n{description}\n\n{when}\n{location}\n{food}\n\n{hashtags}",
+  "eventTypes": [
+    {
+      "id": "gbm",
+      "name": "General body meeting",
+      "location": "",
+      "food": true
+    },
+    {
+      "id": "industry-night",
+      "name": "Industry night",
+      "location": "",
+      "food": true
+    },
+    {
+      "id": "social",
+      "name": "Social",
+      "location": "",
+      "food": false
+    },
+    {
+      "id": "workshop",
+      "name": "Workshop",
+      "location": "",
+      "food": false
+    }
+  ],
+  "defaultTemplate": "editorial"
+}
