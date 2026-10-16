@@ -47,6 +47,10 @@ export async function dispatch({root=process.cwd(),now=new Date(),dryRun=false,s
           c.results[channel]=result;
           try {
             if(result.publishAttemptedAt) throw new Error('Publication outcome requires reconciliation');
+            if(result.preparedRevision !== undefined && result.preparedRevision !== (c.revision??0)) {
+              delete result.containerId; delete result.image; delete result.caption;
+            }
+            result.preparedRevision=c.revision??0;
             const imageUrl=result.image || c.flyers?.[channel] || c.images?.[channel] || (config.siteUrl ? `${config.siteUrl.replace(/\/$/,'')}/media/${c.year}/${c.id}-${channel}.jpg` : null);
             if(!imageUrl || !/^https:\/\//.test(imageUrl)) throw new Error('Public HTTPS flyer URL is required');
             await services.ig.checkPublishingLimit?.();

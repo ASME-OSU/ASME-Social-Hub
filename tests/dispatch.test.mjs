@@ -81,3 +81,9 @@ test('real integration factories expose scheduler contract without network',asyn
  for(const key of ['createContainer','waitForContainer','publishContainer','getMedia','checkPublishingLimit']) assert.equal(typeof ig[key],'function');
  for(const key of ['createEvent','updateEvent','deleteEvent']) assert.equal(typeof gm[key],'function');
 });
+test('editing an unpublished campaign replaces stale prepared container content',async t=>{
+ const {root,file}=await fixture(t);let containers=0;const captions=[];
+ const services={ig:{createContainer:async({caption})=>{captions.push(caption);return `container-${++containers}`;},waitForContainer:async()=>{throw Error('processing');}},groupme:{createEvent:async()=>({eventId:'event'}),updateEvent:async()=>{}}};
+ await dispatch({root,now:'2026-10-14T17:00:00Z',services});const c=JSON.parse(await readFile(file));c.revision=2;c.title='Revised event title';await writeJson(file,c);
+ await dispatch({root,now:'2026-10-14T18:00:00Z',services});assert.equal(containers,2);assert.match(captions[1],/Revised event title/);assert.equal(JSON.parse(await readFile(file)).results.feed.preparedRevision,2);
+});
