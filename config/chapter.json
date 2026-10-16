@@ -16,8 +16,12 @@
     "accent": "#ba0c2f",
     "background": "#f2f5f9",
     "font": "Inter, system-ui, sans-serif",
-    "logo": "",
-    "shortName": "ASME"
+    "logo": "assets/logos/primary.png",
+    "shortName": "ASME",
+    "logoPrimary": "assets/logos/primary.png",
+    "logoReverse": "assets/logos/mark.png",
+    "logoMark": "assets/logos/mark.png",
+    "logoMarkReverse": "assets/logos/mark.png"
   },
   "defaultCadence": {
     "feed": {
@@ -61,7 +65,7 @@
       "food": false
     }
   ],
-  "defaultTemplate": "editorial",
+  "defaultTemplate": "blueprint",
   "integrations": {
     "groupme": {
       "enabled": false

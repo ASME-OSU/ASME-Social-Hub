@@ -35,8 +35,8 @@ try {
  assert.equal(await page.locator('#groupme-schedule-help').isVisible(),false);
  assert.equal(downloaded.start,'2026-11-20T23:30:00.000Z');assert.equal(downloaded.food,false);assert.equal(downloaded.demo,undefined);assert.equal(downloaded.status.feed,'pending');
  assert.equal(await page.evaluate(()=>localStorage.getItem('social-hub-connection')),null);
- await page.locator('[data-view=archive]').click();await page.locator('#year-filter').selectOption('2025-26');assert.equal(await page.locator('#archive-list .campaign-card').count(),1);
- await page.locator('#search').fill('no such campaign');assert.equal(await page.locator('#archive-list .campaign-card').count(),0);
+ await page.locator('[data-view=archive]').click();await page.locator('#year-filter').selectOption('2025-26');assert.equal(await page.locator('#archive-list .archive-row').count(),1);
+ await page.locator('#search').fill('no such campaign');assert.equal(await page.locator('#archive-list .archive-row').count(),0);
  await page.locator('[data-view=dashboard]').click();await page.locator('#campaign-list [data-detail]').first().click();await page.locator('[data-duplicate]').click();
  assert.equal(await page.locator('[name=start]').inputValue(),'');assert.equal(await page.locator('[name=end]').inputValue(),'');
  await page.locator('[data-close=editor]').first().click();
@@ -55,7 +55,7 @@ try {
  });
  await page.setViewportSize({width:1440,height:1080});
  await page.locator('[data-view=settings]').click();await page.locator('[name=token]').fill('mock-token-not-a-credential');await page.locator('#settings-form button.primary').click();
- await page.waitForFunction(()=>document.querySelector('#connection-label').textContent==='Repository connected');
+ await page.waitForFunction(()=>document.querySelector('#connection-label').textContent.startsWith('Connected to '));
  await page.locator('[data-view=dashboard]').click();await page.locator('#new-campaign').click();
  for(const [name,value] of Object.entries({title:'API verification event',start:'2026-11-20T18:30',end:'2026-11-20T20:00',location:'Scott E100'}))await page.locator(`[name=${name}]`).fill(value);
  await page.locator('#save-button').click();await page.waitForFunction(()=>!document.querySelector('#editor').open);
@@ -69,6 +69,7 @@ try {
  // Exercise real JPEG rendering in an isolated fixture, never add a live campaign to this repo.
  const root=await mkdtemp(join(tmpdir(),'campaign-render-'));
  try {
+  await mkdir(join(root,'docs/assets'),{recursive:true});await cp('docs/assets/fonts',join(root,'docs/assets/fonts'),{recursive:true});await cp('docs/assets/logos',join(root,'docs/assets/logos'),{recursive:true});
   await mkdir(join(root,'config'));await cp('config/chapter.json',join(root,'config/chapter.json'));await cp('templates',join(root,'templates'),{recursive:true});
   await mkdir(join(root,'data/campaigns/2026-27'),{recursive:true});
   const fixture=JSON.parse(await readFile('data/campaigns/2026-27/2026-10-28-industry-night.json','utf8'));delete fixture.demo;
