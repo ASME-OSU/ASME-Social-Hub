@@ -87,3 +87,21 @@ test('editing an unpublished campaign replaces stale prepared container content'
  await dispatch({root,now:'2026-10-14T17:00:00Z',services});const c=JSON.parse(await readFile(file));c.revision=2;c.title='Revised event title';await writeJson(file,c);
  await dispatch({root,now:'2026-10-14T18:00:00Z',services});assert.equal(containers,2);assert.match(captions[1],/Revised event title/);assert.equal(JSON.parse(await readFile(file)).results.feed.preparedRevision,2);
 });
+
+test('chapter GroupMe switch blocks creation, updates, cancellation and bot announcements',async t=>{
+ const {root,file}=await fixture(t);
+ const configFile=path.join(root,'config/chapter.json');
+ const config=JSON.parse(await readFile(configFile));
+ config.integrations={groupme:{enabled:false}};await writeJson(configFile,config);
+ const campaign=JSON.parse(await readFile(file));
+ campaign.campaign.feed={enabled:false,daysBefore:7,time:'12:00'};
+ campaign.campaign.groupme={enabled:true,announce:true};
+ const services=new Proxy({},{get(){throw Error('Disabled integration must not access any service');}});
+ for(const state of [{},{eventId:'existing',syncedRevision:0}]) {
+  for(const cancelled of [false,true]) {
+   campaign.cancelled=cancelled;campaign.results={groupme:state};
+   await writeJson(file,campaign);
+   assert.deepEqual(await dispatch({root,now:'2026-10-14T17:00:00Z',services}),[]);
+  }
+ }
+});

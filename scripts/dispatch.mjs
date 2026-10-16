@@ -30,6 +30,8 @@ export async function dispatch({root=process.cwd(),now=new Date(),dryRun=false,s
       const log=(channel,message)=> { c.log.push({at:now.toISOString(),channel,message}); };
       if(!dryRun) { c.status??={}; c.results??={}; c.log??=[]; }
       for(const channel of ['feed','story','groupme']) {
+        // Global integration switch also blocks updates, cancellations, and bot messages.
+        if(channel==='groupme' && config.integrations?.groupme?.enabled===false) continue;
         const result=c.results?.[channel] || {};
         const disabled=c.campaign?.[channel]?.enabled===false;
         if(disabled && !(channel==='groupme' && c.cancelled && result.eventId)) {

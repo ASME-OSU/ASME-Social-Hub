@@ -19,7 +19,7 @@ if(task === 'calendar') {
 } else if(task === 'alert') {
   if(!process.env.GH_TOKEN || !process.env.GITHUB_REPOSITORY) throw new Error('GitHub workflow context required');
   const campaigns = await readCampaigns(process.cwd());
-  const failures = campaigns.filter(c=>!c.demo && !c.archived && Object.values(c.status || {}).includes('failed'));
+  const failures = campaigns.filter(c=>!c.demo && !c.archived && Object.entries(c.status || {}).some(([channel,status])=>status==='failed' && (channel!=='groupme'||config.integrations?.groupme?.enabled!==false)));
   const expiry = process.env.IG_ACCESS_TOKEN ? assessTokenExpiry(process.env.IG_TOKEN_EXPIRES_AT) : {warning:false};
   if(!failures.length && !expiry.warning && process.env.RUN_FAILED !== '1') process.exit(0);
   const title = 'Campaign automation needs attention';
@@ -28,7 +28,7 @@ if(task === 'calendar') {
   const url = `https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`;
   const body = ['Review the [workflow run]('+url+').', failures.length ? `${failures.length} campaign(s) have failed steps. Inspect the dashboard timeline and saved result identifiers before retrying.` : '',expiry.warning ? `Instagram token expiry status: ${expiry.status}. Reauthorize or refresh the token as described in SETUP.md.` : '', 'This alert contains no account tokens. Close it after the problem is resolved.'].filter(Boolean).join('\n\n');
   await exec('gh',['issue','create','--repo',process.env.GITHUB_REPOSITORY,'--title',title,'--body',body]);
-  if(process.env.OFFICERS_GROUPME_BOT_ID) {
+  if(config.integrations?.groupme?.enabled!==false && process.env.OFFICERS_GROUPME_BOT_ID) {
     try { await postBotMessage(`Campaign automation needs attention. Review ${url}`,{env:{...process.env,GROUPME_BOT_ID:process.env.OFFICERS_GROUPME_BOT_ID}}); }
     catch { console.error('Officer bot alert unavailable; GitHub issue remains open.'); }
   }

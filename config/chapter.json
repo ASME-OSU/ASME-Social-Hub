@@ -61,5 +61,10 @@
       "food": false
     }
   ],
-  "defaultTemplate": "editorial"
+  "defaultTemplate": "editorial",
+  "integrations": {
+    "groupme": {
+      "enabled": false
+    }
+  }
 }

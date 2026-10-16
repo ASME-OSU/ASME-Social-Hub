@@ -24,6 +24,8 @@ try {
  await page.locator('[name=food]').uncheck();
  const downloadPromise=page.waitForEvent('download');await page.locator('#save-button').click();
  const download=await downloadPromise;const downloaded=JSON.parse(await readFile(await download.path(),'utf8'));
+ assert.equal(downloaded.campaign.groupme.enabled,false);assert.equal(downloaded.status.groupme,'skipped');
+ assert.equal(await page.locator('#groupme-schedule-help').isVisible(),false);
  assert.equal(downloaded.start,'2026-11-20T23:30:00.000Z');assert.equal(downloaded.food,false);assert.equal(downloaded.demo,undefined);assert.equal(downloaded.status.feed,'pending');
  assert.equal(await page.evaluate(()=>localStorage.getItem('social-hub-connection')),null);
  await page.locator('[data-view=archive]').click();await page.locator('#year-filter').selectOption('2025-26');assert.equal(await page.locator('#archive-list .campaign-card').count(),1);
@@ -51,7 +53,7 @@ try {
  for(const [name,value] of Object.entries({title:'API verification event',start:'2026-11-20T18:30',end:'2026-11-20T20:00',location:'Scott E100'}))await page.locator(`[name=${name}]`).fill(value);
  await page.locator('#save-button').click();await page.waitForFunction(()=>!document.querySelector('#editor').open);
  assert.equal(writes.length,1);const saved=JSON.parse(Buffer.from(writes[0].content,'base64').toString());
- assert.equal(saved.title,'API verification event');assert.equal(saved.status.groupme,'pending');assert.equal(saved.demo,undefined);assert.equal(writes[0].branch,'main');assert.equal(await page.evaluate(()=>localStorage.getItem('social-hub-connection')),null);
+ assert.equal(saved.title,'API verification event');assert.equal(saved.status.groupme,'skipped');assert.equal(saved.demo,undefined);assert.equal(writes[0].branch,'main');assert.equal(await page.evaluate(()=>localStorage.getItem('social-hub-connection')),null);
  // A scheduler update that arrives while an officer edits must survive that edit.
  remoteRecord=structuredClone(saved);remoteRecord.status.feed='done';remoteRecord.results.feed={mediaId:'mock-published-id',postedAt:'2026-11-13T17:00:00Z'};
  await page.locator(`[data-detail="${saved.id}"]`).click();await page.locator('[data-edit]').click();await page.locator('[name=description]').fill('Updated officer description');await page.locator('#save-button').click();await page.waitForFunction(()=>!document.querySelector('#editor').open);
