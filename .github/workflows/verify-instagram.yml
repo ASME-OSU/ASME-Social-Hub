@@ -1,0 +1,42 @@
+name: Verify Instagram connection
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check account identity without publishing
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          IG_API_VERSION: ${{ vars.IG_API_VERSION || 'v25.0' }}
+        run: |
+          node --input-type=module <<'NODE'
+          const {IG_ACCESS_TOKEN: token, IG_USER_ID: expectedId, IG_API_VERSION: version} = process.env;
+          const fail = message => { console.error(message); process.exit(1); };
+          if (!token || !expectedId) fail('Missing IG_ACCESS_TOKEN or IG_USER_ID repository secret.');
+          if (!/^v\d+\.\d+$/.test(version)) fail('Invalid IG_API_VERSION repository variable.');
+          try {
+            const url = new URL(`https://graph.instagram.com/${version}/me`);
+            url.searchParams.set('fields', 'user_id,username,account_type');
+            const response = await fetch(url, {
+              headers: {Authorization: `Bearer ${token}`},
+              signal: AbortSignal.timeout(30000)
+            });
+            if (!response.ok) fail(`Instagram identity check failed (HTTP ${response.status}). Check token validity and basic permission.`);
+            const account = await response.json();
+            if (String(account.user_id) !== expectedId.trim()) fail('Instagram account ID does not match IG_USER_ID.');
+            if (account.username !== 'asmeohiostate') fail('Token belongs to a different Instagram account.');
+            console.log('PASS: Instagram token is valid and belongs to @asmeohiostate.');
+            console.log('PASS: Instagram account ID matches the configured secret.');
+            console.log('No posts were created. Publishing and insights permissions still require separate verification.');
+          } catch {
+            fail('Instagram identity check failed due to a network or response error. No credentials were logged.');
+          }
+          NODE
