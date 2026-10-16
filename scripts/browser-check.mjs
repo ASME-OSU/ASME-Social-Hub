@@ -14,7 +14,14 @@ try {
  const page=await browser.newPage({viewport:{width:1440,height:1080},timezoneId:'America/Los_Angeles'});
  await page.clock.install({time:new Date('2026-10-15T16:00:00Z')});
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
- await page.goto(base);await page.waitForSelector('.campaign-card');
+ await page.goto(base);await page.waitForSelector('#campaign-list .empty');
+ assert.equal(await page.locator('.campaign-card').count(),0);
+ assert.ok(await page.locator('#suggestions .suggestion').count()>0);
+ await page.route('**/config/chapter.json',async route=>{
+  const response=await route.fetch();const config=await response.json();
+  await route.fulfill({json:{...config,showExamples:true}});
+ });
+ await page.reload();await page.waitForSelector('.campaign-card');
  assert.equal(await page.locator('#campaign-list .campaign-card').count(),3);
  await page.locator('#new-campaign').click();
  await page.locator('[name=title]').fill('Browser verification event');
