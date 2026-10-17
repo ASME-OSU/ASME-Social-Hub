@@ -16,7 +16,7 @@ export async function loadFlyerAssets(root, config) {
     fonts.push(`@font-face{font-family:'${family}';font-style:normal;font-weight:${weight};font-display:block;src:url(data:font/woff2;base64,${(await readFile(file)).toString('base64')}) format('woff2');}`);
   }
   let logo = '';
-  const configured = config.brand?.logoMark || config.brand?.logoReverse || config.brand?.logo;
+  const configured = config.brand?.logoFlyer || config.brand?.logoMark || config.brand?.logoReverse || config.brand?.logo;
   if (configured && !safeUrl(configured)) {
     const candidate = configured.replace(/^\/?(?:docs\/)?assets\/logos\//,'');
     if (!candidate.includes('..') && !candidate.includes(':')) {
@@ -33,7 +33,7 @@ export async function loadFlyerAssets(root, config) {
 export function flyerHtml(template, campaign, config, format, assets = {}) {
   const date = new Date(campaign.start), tz = config.timezone;
   const image = safeUrl(campaign.flyerUrl);
-  const logo = assets.logo || safeUrl(config.brand?.logoMark || config.brand?.logoReverse || config.brand?.logo);
+  const logo = assets.logo || safeUrl(config.brand?.logoFlyer || config.brand?.logoMark || config.brand?.logoReverse || config.brand?.logo);
   const values = {
     primary:color(config.brand?.primary,'#102840'),accent:color(config.brand?.accent,'#ba0c2f'),background:color(config.brand?.background,'#f2f5f9'),
     titleSize:campaign.title.length>70?64:campaign.title.length>45?84:112,storyTitleSize:campaign.title.length>70?78:campaign.title.length>45?96:124,

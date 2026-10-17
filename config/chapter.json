@@ -19,9 +19,10 @@
     "logo": "assets/logos/primary.png",
     "shortName": "ASME",
     "logoPrimary": "assets/logos/primary.png",
-    "logoReverse": "assets/logos/mark.png",
-    "logoMark": "assets/logos/mark.png",
-    "logoMarkReverse": "assets/logos/mark.png"
+    "logoReverse": "assets/logos/social-hub.png",
+    "logoMark": "assets/logos/social-hub.png",
+    "logoMarkReverse": "assets/logos/social-hub.png",
+    "logoFlyer": "assets/logos/mark.png"
   },
   "defaultCadence": {
     "feed": {
