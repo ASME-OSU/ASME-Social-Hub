@@ -19,7 +19,9 @@ Use a chapter-owned Instagram **Business** account and Meta developer app with I
 5. Add `SECRETS_ADMIN_PAT`, a separate fine-grained token restricted to this repository with **Secrets read/write** so refresh can update the two Instagram secrets. Add Contents read access if GitHub requires it. The default workflow token cannot update Actions secrets.
 6. Run **Refresh Token** only after the long-lived token is at least 24 hours old. The workflow runs twice monthly and stores the new token and expiry. A fully expired or revoked token requires OAuth consent again; repeat steps 1–4 and run doctor.
 
-JPEGs must be publicly reachable before Instagram container creation. Render and deploy first. A custom feed/story image URL must return `image/jpeg`; uploaded JPEGs are placed in a generated chapter template. Instagram may enforce additional image/account limits. Stories are Business-only in the current reference, contain no interactive stickers, and disappear from Instagram; saved campaign metadata remains in the archive.
+JPEGs must be publicly reachable before Instagram container creation. Render and deploy first. A custom feed/story image URL must return `image/jpeg`; uploaded PNGs and JPEGs (up to 8 MB) are placed in a generated chapter template, then rendered as JPEGs for Instagram. Uploaded PNGs retain their `.png` extension in the repository. Instagram may enforce additional image/account limits. Stories are Business-only in the current reference, contain no interactive stickers, and disappear from Instagram; saved campaign metadata remains in the archive.
+
+Each campaign has separate feed, story, and GroupMe announcement switches. Turn off any combination, including all three, before saving; turning off an unsent step prevents its publication. Published posts remain published. The GroupMe switch is visible but unavailable while the chapter-wide integration is off. In bot mode its schedule follows the feed schedule even when the feed post itself is off.
 
 ## GroupMe
 

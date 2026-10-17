@@ -119,6 +119,16 @@ test('bot-only mode sends once at feed schedule without native API',async t=>{
 test('bot-only mode requires global switch and explicit announcement opt in',async t=>{
  for(const options of [{enabled:false},{announce:false}]) {const {root}=await botFixture(t,options);await dispatch({root,now:'2026-10-14T17:00:00Z',services:new Proxy({},{get(){throw Error('network');}})});}
 });
+test('feed, story and bot switches independently suppress every unchecked channel',async t=>{
+ for(let mask=0;mask<8;mask++) {
+  const {root,file}=await botFixture(t),c=JSON.parse(await readFile(file));
+  for(const [index,channel] of ['feed','story','groupme'].entries())c.campaign[channel]={...c.campaign[channel],enabled:Boolean(mask&(1<<index)),...(channel==='groupme'?{announce:Boolean(mask&4)}:{daysBefore:7,time:'12:00'})};
+  c.flyers.story='https://example.org/story.jpg';await writeJson(file,c);
+  const sent=[];const services={ig:{createContainer:async({channel})=>channel,waitForContainer:async()=>{},publishContainer:async channel=>{sent.push(channel);return channel+'-media';},getMedia:async()=>({})},postBotMessage:async()=>{sent.push('groupme');}};
+  await dispatch({root,now:'2026-10-14T17:00:00Z',services});await dispatch({root,now:'2026-10-14T18:00:00Z',services});
+  assert.deepEqual(sent,['feed','story','groupme'].filter((_,index)=>mask&(1<<index)),`channel mask ${mask}`);
+ }
+});
 test('bot-only dry run previews text without writes or network',async t=>{
  const {root,file}=await botFixture(t),before=await readFile(file,'utf8');const actions=await dispatch({root,now:'2026-10-14T17:00:00Z',dryRun:true,services:new Proxy({},{get(){throw Error('network');}})});assert.match(actions.find(a=>a.action==='announce').text,/Calendar:/);assert.equal(await readFile(file,'utf8'),before);
 });
