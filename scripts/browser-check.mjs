@@ -4,7 +4,7 @@ import {readFile,mkdir,mkdtemp,cp,writeFile,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join,resolve} from 'node:path';
 import assert from 'node:assert/strict';
-import {renderFlyers} from './render-flyers.mjs';
+import {renderFlyers,flyerHtml,fitFlyer,loadFlyerAssets} from './render-flyers.mjs';
 const port=4281,base=`http://127.0.0.1:${port}`;
 const server=spawn(process.execPath,['scripts/serve.mjs'],{env:{...process.env,PORT:String(port)},stdio:'pipe'});
 let browser;
@@ -29,11 +29,20 @@ try {
  await page.locator('[name=end]').fill('2026-11-20T20:00');
  await page.locator('[name=location]').fill('Scott E100');
  await page.locator('[name=food]').uncheck();
+ await page.locator('#advertising-details summary').click();
+ const extras={foodDetails:'Pizza; vegetarian option available',rsvpUrl:'https://example.org/register',rsvpDeadline:'2026-11-19T17:00',audience:'All majors welcome',cost:'Free',preparation:'Bring a laptop; casual dress',speaker:'Example engineer',benefit:'Practice a design skill',accessibilityContact:'Contact the event organizer'};
+ for(const [name,value] of Object.entries(extras))await page.locator(`[name=${name}]`).fill(value);
+ await page.locator('[name=rsvpUrl]').fill('https://user:secret@example.org/register');
+ await page.locator('#save-button').click();await page.waitForSelector('#form-error:not([hidden])');
+ assert.match(await page.locator('#form-error').textContent(),/without a username or password/);
+ await page.locator('[name=rsvpUrl]').fill(extras.rsvpUrl);
  const downloadPromise=page.waitForEvent('download');await page.locator('#save-button').click();
  const download=await downloadPromise;const downloaded=JSON.parse(await readFile(await download.path(),'utf8'));
  assert.equal(downloaded.campaign.groupme.enabled,false);assert.equal(downloaded.status.groupme,'skipped');
  assert.equal(await page.locator('#groupme-schedule-help').isVisible(),false);
  assert.equal(downloaded.start,'2026-11-20T23:30:00.000Z');assert.equal(downloaded.food,false);assert.equal(downloaded.demo,undefined);assert.equal(downloaded.status.feed,'pending');
+ assert.equal(downloaded.advertising.rsvpDeadline,'2026-11-19T22:00:00.000Z');
+ for(const [name,value] of Object.entries(extras))if(name!=='rsvpDeadline')assert.equal(downloaded.advertising[name],value);
  assert.equal(await page.evaluate(()=>localStorage.getItem('social-hub-connection')),null);
  await page.locator('[data-view=archive]').click();await page.locator('#year-filter').selectOption('2025-26');assert.equal(await page.locator('#archive-list .archive-row').count(),1);
  await page.locator('#search').fill('no such campaign');assert.equal(await page.locator('#archive-list .archive-row').count(),0);
@@ -58,12 +67,14 @@ try {
  await page.waitForFunction(()=>document.querySelector('#connection-label').textContent.startsWith('Connected to '));
  await page.locator('[data-view=dashboard]').click();await page.locator('#new-campaign').click();
  for(const [name,value] of Object.entries({title:'API verification event',start:'2026-11-20T18:30',end:'2026-11-20T20:00',location:'Scott E100'}))await page.locator(`[name=${name}]`).fill(value);
+ await page.locator('#advertising-details summary').click();
+ for(const [name,value] of Object.entries(extras))await page.locator(`[name=${name}]`).fill(value);
  await page.locator('#save-button').click();await page.waitForFunction(()=>!document.querySelector('#editor').open);
  assert.equal(writes.length,1);const saved=JSON.parse(Buffer.from(writes[0].content,'base64').toString());
  assert.equal(saved.title,'API verification event');assert.equal(saved.status.groupme,'skipped');assert.equal(saved.demo,undefined);assert.equal(writes[0].branch,'main');assert.equal(await page.evaluate(()=>localStorage.getItem('social-hub-connection')),null);
  // A scheduler update that arrives while an officer edits must survive that edit.
  remoteRecord=structuredClone(saved);remoteRecord.status.feed='done';remoteRecord.results.feed={mediaId:'mock-published-id',postedAt:'2026-11-13T17:00:00Z'};
- await page.locator(`[data-detail="${saved.id}"]`).click();await page.locator('[data-edit]').click();await page.locator('[name=description]').fill('Updated officer description');await page.locator('#save-button').click();await page.waitForFunction(()=>!document.querySelector('#editor').open);
+ await page.locator(`[data-detail="${saved.id}"]`).click();assert.equal(await page.locator('#detail-content a[href="https://example.org/register"]').count(),1);await page.locator('[data-edit]').click();assert.equal(await page.locator('[name=rsvpDeadline]').inputValue(),extras.rsvpDeadline);await page.locator('[name=description]').fill('Updated officer description');await page.locator('#save-button').click();await page.waitForFunction(()=>!document.querySelector('#editor').open);
  assert.equal(writes.length,2);const edited=JSON.parse(Buffer.from(writes[1].content,'base64').toString());assert.equal(edited.status.feed,'done');assert.equal(edited.results.feed.mediaId,'mock-published-id');assert.equal(writes[1].sha,'latest-file-sha');assert.equal(edited.revision,2);
  remoteRecord={...edited,revision:3};await page.locator(`[data-detail="${saved.id}"]`).click();await page.locator('[data-edit]').click();await page.locator('#save-button').click();await page.waitForSelector('#form-error:not([hidden])');assert.match(await page.locator('#form-error').textContent(),/edited since/);assert.equal(writes.length,2);await page.locator('[data-close=editor]').first().click();
  // Opt-in bot controls in an isolated browser: no credentials or live writes.
@@ -86,6 +97,11 @@ try {
  assert.equal(botSaved.campaign.groupme.enabled,true);assert.equal(botSaved.campaign.groupme.announce,true);
  assert.equal(botSaved.status.groupme,'pending');
  await botPage.close();
+ // Verify enriched layouts in both formats without adding browser dependencies to unit tests.
+ {const assets=await loadFlyerAssets(process.cwd(),{brand:{}});const campaign=downloaded,config=JSON.parse(await readFile('config/chapter.json','utf8')),template=await readFile('templates/editorial.html','utf8'),blueprint=await readFile('templates/blueprint.html','utf8');const rich={...campaign,title:'Engineering Career Connections',description:'Meet engineering professionals and learn about their work.',food:true,flyerUrl:'',advertising:{foodDetails:'Pizza, with vegetarian options',benefit:'Explore engineering careers and build professional connections.',speaker:'Chapter alumni panel',audience:'All engineering students',cost:'Free',rsvpUrl:'https://example.org/register',rsvpDeadline:'2026-11-03T18:00:00-05:00'}};
+ for(const source of [template,blueprint])for(const format of ['feed','story']){const page=await browser.newPage({viewport:{width:1080,height:format==='feed'?1350:1920}});try{await page.setContent(flyerHtml(source,rich,config,format,assets));await fitFlyer(page);assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth),1080);assert.ok(await page.evaluate(()=>{const p=document.querySelector('.page'),hero=p.querySelector('.hero'),block=p.querySelector('.block');return hero.getBoundingClientRect().bottom<=block.getBoundingClientRect().top && block.getBoundingClientRect().bottom<=p.getBoundingClientRect().bottom;}));}finally{await page.close();}}
+
+ }
  // Exercise real JPEG rendering in an isolated fixture, never add a live campaign to this repo.
  const root=await mkdtemp(join(tmpdir(),'campaign-render-'));
  try {
@@ -93,6 +109,7 @@ try {
   await mkdir(join(root,'config'));await cp('config/chapter.json',join(root,'config/chapter.json'));await cp('templates',join(root,'templates'),{recursive:true});
   await mkdir(join(root,'data/campaigns/2026-27'),{recursive:true});
   const fixture=JSON.parse(await readFile('data/campaigns/2026-27/2026-10-28-industry-night.json','utf8'));delete fixture.demo;
+  fixture.advertising={...downloaded.advertising};fixture.food=true;
   await writeFile(join(root,'data/campaigns/2026-27',fixture.id+'.json'),JSON.stringify(fixture));
   await renderFlyers({root});
   for(const format of ['feed','story'])assert.ok((await readFile(join(root,`docs/media/2026-27/${fixture.id}-${format}.jpg`))).length>10000);

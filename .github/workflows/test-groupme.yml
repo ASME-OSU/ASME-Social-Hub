@@ -1,0 +1,40 @@
+name: Test private GroupMe bot
+on:
+  workflow_dispatch:
+    inputs:
+      send_test:
+        description: Send one setup message using only GROUPME_TEST_BOT_ID
+        type: boolean
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: private-groupme-test
+  cancel-in-progress: false
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Preview or send private test
+        env:
+          GROUPME_TEST_BOT_ID: ${{ secrets.GROUPME_TEST_BOT_ID }}
+          SEND_TEST: ${{ inputs.send_test }}
+        run: |
+          node --input-type=module <<'JS'
+          import {postBotMessage} from './scripts/groupme.mjs';
+          const text='ASME Social Hub private connection test — setup only; no event is being announced.';
+          if(!process.env.GROUPME_TEST_BOT_ID) throw new Error('Save GROUPME_TEST_BOT_ID for the separate ASME Bot Testing bot.');
+          console.log('Separate test credential is present; production bot credential is not supplied to this job.');
+          console.log('Message preview: '+text);
+          if(process.env.SEND_TEST==='true') {
+            await postBotMessage(text,{env:{GROUPME_BOT_ID:process.env.GROUPME_TEST_BOT_ID}});
+            console.log('GroupMe accepted the private test message. Confirm it appeared in ASME Bot Testing.');
+          } else console.log('Preview only: no GroupMe request was sent.');
+          JS

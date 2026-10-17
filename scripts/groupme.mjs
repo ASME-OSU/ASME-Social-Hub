@@ -1,4 +1,5 @@
 import {safeJson} from './ig.mjs';
+import {advertisingLines} from './core.mjs';
 const retrySafe = message => Object.assign(new Error(message), {retrySafe:true});
 const REMINDERS = new Set([0,300,900,1800,3600,7200,86400,172800,604800]);
 const httpsLink=value=>{try{const url=new URL(value);return url.protocol==='https:'&&!url.username&&!url.password?url.href:'';}catch{return '';}};
@@ -8,15 +9,15 @@ export function botAnnouncementText(campaign,config) {
   const site=httpsLink(config.siteUrl);
   const calendar=site?httpsLink(`${site.replace(/\/$/,'')}/calendar/${encodeURIComponent(campaign.year)}/${encodeURIComponent(campaign.id)}.ics`):'';
   const flyer=httpsLink(campaign.images?.feed||campaign.flyers?.feed||campaign.flyerUrl||(site?`${site.replace(/\/$/,'')}/media/${encodeURIComponent(campaign.year)}/${encodeURIComponent(campaign.id)}-feed.jpg`:''));
-  const text=[campaign.title,`${when} (${config.timezone})`,location,campaign.food===true?'Food provided!':'',calendar?`Calendar: ${calendar}`:'',flyer?`Flyer: ${flyer}`:''].filter(Boolean).join('\n');
-  if(text.length>1000) throw new Error('GroupMe announcement exceeds 1000 characters; shorten the title, location, or links');
+  const text=[campaign.title,`${when} (${config.timezone})`,location,campaign.description || '',...advertisingLines(campaign,config),calendar?`Calendar: ${calendar}`:'',flyer?`Flyer: ${flyer}`:''].filter(Boolean).join('\n');
+  if(text.length>1000) throw new Error('GroupMe announcement exceeds 1000 characters; shorten event copy or advertising details; RSVP links are never silently omitted');
   return text;
 }
 export function eventPayload(campaign, config) {
   const reminders = campaign.campaign?.groupme?.reminders ?? [604800,86400];
   if (reminders.length > 2 || reminders.some(x => !REMINDERS.has(x))) throw new Error('Invalid GroupMe reminders');
   if (!campaign.end) throw new Error('GroupMe events require an end time');
-  return {name:campaign.title,start_at:campaign.start,end_at:campaign.end,timezone:config.timezone,description:campaign.description || '',is_all_day:Boolean(campaign.allDay),...(campaign.location?.name ? {location:campaign.location}:{}),reminders};
+  return {name:campaign.title,start_at:campaign.start,end_at:campaign.end,timezone:config.timezone,description:[campaign.description || '',...advertisingLines(campaign,config)].filter(Boolean).join('\n'),is_all_day:Boolean(campaign.allDay),...(campaign.location?.name ? {location:campaign.location}:{}),reminders};
 }
 export function createGroupMeClient({env = process.env, fetchImpl = fetch} = {}) {
   const request = async (resource, method='GET', payload) => {

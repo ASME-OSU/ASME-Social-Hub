@@ -1,7 +1,7 @@
 import { readFile, mkdir, writeFile, realpath } from 'node:fs/promises';
 import { resolve, dirname, sep, extname } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { readCampaigns, validateConfig, validateCampaign } from './core.mjs';
+import { readCampaigns, validateConfig, validateCampaign, validateAdvertising } from './core.mjs';
 
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const color = (value, fallback) => /^#[0-9a-f]{3,8}$/i.test(value || '') ? value : fallback;
@@ -30,11 +30,34 @@ export async function loadFlyerAssets(root, config) {
   }
   return {fontCss:fonts.join('\n'),logo};
 }
+export function flyerAdvertising(campaign, config) {
+  const a=campaign.advertising || {};
+  validateAdvertising(campaign.advertising);
+  const concise=(value,max=100)=>value?.trim().replace(/\s+/g,' ').slice(0,max)+(value?.trim().replace(/\s+/g,' ').length>max?'…':'');
+  const rows=[];
+  if(a.benefit?.trim()) rows.push(concise(a.benefit,120));
+  if(a.speaker?.trim()) rows.push(`Speaker: ${concise(a.speaker,90)}`);
+  const meta=[a.audience?.trim()?`For: ${concise(a.audience,65)}`:'',a.cost?.trim()?`Cost: ${concise(a.cost,65)}`:''].filter(Boolean).join(' · ');
+  if(meta) rows.push(meta);
+  if(campaign.food && a.foodDetails?.trim()) rows.push(`Food: ${a.foodDetails.trim().replace(/\s+/g,' ')}`);
+  let deadline='';
+  if(a.rsvpDeadline?.trim()) {
+    const raw=a.rsvpDeadline.trim();
+    if(/^\d{4}-\d{2}-\d{2}T.*(?:Z|[+-]\d{2}:\d{2})$/.test(raw) && Number.isFinite(Date.parse(raw))) deadline=new Intl.DateTimeFormat('en-US',{timeZone:config.timezone,month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZoneName:'short'}).format(new Date(raw));
+    else if(/^\d{4}-\d{2}-\d{2}$/.test(raw) && Number.isFinite(Date.parse(raw))) deadline=new Intl.DateTimeFormat('en-US',{timeZone:'UTC',month:'short',day:'numeric'}).format(new Date(`${raw}T12:00:00Z`));
+    else deadline=concise(raw,65);
+  }
+  if(deadline || a.rsvpUrl?.trim()) rows.push([deadline?`RSVP by ${deadline}`:'',a.rsvpUrl?.trim()?'RSVP link in caption':''].filter(Boolean).join(' · '));
+  if(!rows.length) return '';
+  return `<div class="advertising">${rows.map(row=>`<p>${escape(row)}</p>`).join('')}<small>Full event details in caption.</small></div>`;
+}
 export function flyerHtml(template, campaign, config, format, assets = {}) {
   const date = new Date(campaign.start), tz = config.timezone;
   const image = safeUrl(campaign.flyerUrl);
   const logo = assets.logo || safeUrl(config.brand?.logoFlyer || config.brand?.logoMark || config.brand?.logoReverse || config.brand?.logo);
+  const advertising=flyerAdvertising(campaign,config);
   const values = {
+    advertising,advertisingClass:advertising?'enriched':'',
     primary:color(config.brand?.primary,'#102840'),accent:color(config.brand?.accent,'#ba0c2f'),background:color(config.brand?.background,'#f2f5f9'),
     titleSize:campaign.title.length>70?64:campaign.title.length>45?84:112,storyTitleSize:campaign.title.length>70?78:campaign.title.length>45?96:124,
     fontCss:assets.fontCss || '',brand:logo ? `<img class="logo" src="${logo}" alt="${escape(config.chapterName)}">` : escape(config.chapterName),

@@ -52,3 +52,11 @@ An opted-in campaign sends one text announcement at its feed schedule (also when
 The scheduler saves a durable intent before sending. After an ambiguous failure, an officer must inspect GroupMe before reconciling state; automatic retries could duplicate a message. A saved bot credential is not a delivery test. A real test message requires chapter approval.
 
 At officer handoff, register a replacement bot with the same name/avatar under the incoming officer, replace `GROUPME_BOT_ID` in GitHub Actions, verify delivery, then retire the old bot before the outgoing owner leaves the group. Do not hand over a personal GroupMe access token.
+
+For private delivery testing, create a separate bot in **ASME Bot Testing** and save its ID as `GROUPME_TEST_BOT_ID`. The **Test private GroupMe bot** workflow defaults to preview only. Selecting `send_test` sends one setup message with the separate test credential; this job never receives the production bot credential. Confirm the message appears in the private group. Production announcements remain disabled until explicitly enabled.
+
+## Optional advertising details
+
+Expand **Event extras** when creating or editing a campaign to add food details, RSVP link and deadline, audience, cost, preparation/dress, speaker/company, attendance benefit, and accessibility contact. Blank fields are omitted. RSVP deadlines use the chapter timezone, and links must use HTTPS without embedded credentials. Use an organizational contact appropriate for public advertising; these details are saved in the public repository.
+
+Food details appear only when Food provided is checked. Captions and announcements include completed details; flyers highlight key information and direct readers to the caption for fuller instructions. Keep copy concise: Instagram captions and GroupMe announcements have provider length limits, and excessive content produces an actionable error rather than silently losing information.

@@ -30,3 +30,10 @@ test('renderer protects published, ambiguous and active-container assets but per
  assert.equal(isFlyerLocked({status:{feed:'done'}},'feed'),true);
  assert.equal(isFlyerLocked({results:{feed:{mediaId:'published'}}},'story'),false);
 });
+
+test('advertising stays compact, escapes content, and keeps full preparation in caption',()=>{
+ const rich={...campaign,title:'Career night',food:true,advertising:{foodDetails:'Pizza & vegan options',benefit:'Meet <engineers> and practice interviews',speaker:'Jordan Smith',audience:'All majors',cost:'Free',rsvpUrl:'https://example.org/register',rsvpDeadline:'2026-11-03T18:00:00-05:00',preparation:'Bring private preparation notes',accessibilityContact:'access@example.org'}};
+ for(const source of [template,blueprint]){const html=flyerHtml(source,rich,config,'feed');assert.match(html,/Food: Pizza &amp; vegan options/);assert.match(html,/Meet &lt;engineers&gt;/);assert.match(html,/Speaker: Jordan Smith/);assert.match(html,/For: All majors · Cost: Free/);assert.match(html,/RSVP by Nov 3, 6:00 PM EST/);assert.match(html,/RSVP link in caption/);assert.doesNotMatch(html,/private preparation notes|access@example.org/);assert.ok(!html.includes('{{'));}
+ assert.doesNotMatch(flyerHtml(blueprint,{...rich,food:false},config,'feed'),/Pizza &amp;/);
+ assert.throws(()=>flyerHtml(blueprint,{...rich,advertising:{foodDetails:'x'.repeat(161)}},config,'feed'),/foodDetails/);
+});

@@ -45,8 +45,9 @@ footer{display:flex;justify-content:space-between;align-items:center;font-size:2
 .flyer{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .logo{height:128px;max-width:100%;object-fit:contain;object-position:left}.photo-overlay{position:absolute;inset:0;background:color-mix(in srgb,var(--navy) 70%,transparent)}
 header,.hero,.block,footer{flex-shrink:0}footer{gap:24px}footer span:last-child{text-align:right}header{gap:24px}.tag{max-width:34%;font-size:20px;overflow-wrap:anywhere}.desc:empty{display:none}
+.advertising{margin-top:22px;font-size:23px;line-height:1.35;overflow-wrap:anywhere}.advertising p{margin:0 0 8px}.advertising small{font-size:17px;color:var(--soft)}.enriched .day{font-size:170px}.story.enriched .day{font-size:230px}.enriched .date{margin-bottom:22px}.enriched .rule{margin-bottom:22px}.enriched .desc{font-size:25px;-webkit-line-clamp:2;margin-top:20px}.enriched .advertising{max-width:850px}
 </style></head>
-<body class="{{format}}"><main class="page">{{flyer}}
+<body class="{{format}} {{advertisingClass}}"><main class="page">{{flyer}}
 <svg class="mark" viewBox="0 0 400 400" fill="none" stroke="{{background}}" stroke-width="2"><circle cx="200" cy="200" r="150"/><circle cx="200" cy="200" r="96" stroke-dasharray="10 8"/><circle cx="200" cy="200" r="14"/><path d="M200 20v360M20 200h360" stroke-dasharray="26 8 4 8"/></svg>
 <header><div class="brand">{{brand}}</div><div class="tag">{{type}}</div></header>
 <section class="hero">
@@ -54,6 +55,7 @@ header,.hero,.block,footer{flex-shrink:0}footer{gap:24px}footer span:last-child{
  <div class="rule"></div>
  <h1>{{title}}</h1>
  <p class="desc">{{description}}</p>
+ {{advertising}}
 </section>
 <section class="block {{foodClass}}">
  <div class="cell"><small>When</small><b>{{date}}</b><span>{{time}}</span></div>
