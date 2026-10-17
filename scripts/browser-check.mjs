@@ -23,6 +23,18 @@ try {
  });
  await page.reload();await page.waitForSelector('.campaign-card');
  assert.equal(await page.locator('#campaign-list .campaign-card').count(),3);
+ // Browser defaults survive reload, are local only, and never bypass the chapter switch.
+ await page.locator('[data-view=settings]').click();
+ await page.locator('#channel-defaults-form [name=feed]').uncheck();await page.locator('#channel-defaults-form [name=story]').uncheck();await page.locator('#channel-defaults-form [name=groupme]').check();
+ await page.locator('#channel-defaults-form button.primary').click();await page.reload();await page.waitForSelector('.campaign-card');
+ await page.locator('#new-campaign').click();assert.equal(await page.locator('[name=feedEnabled]').isChecked(),false);assert.equal(await page.locator('[name=storyEnabled]').isChecked(),false);
+ assert.equal(await page.locator('[name=groupmeAnnounce]').isChecked(),false);assert.equal(await page.locator('[name=groupmeAnnounce]').isDisabled(),true);
+ await page.locator('[data-close=editor]').first().click();
+ await page.locator('#campaign-list [data-detail]').first().click();await page.locator('[data-duplicate]').click();
+ assert.equal(await page.locator('[name=feedEnabled]').isChecked(),true);assert.equal(await page.locator('[name=storyEnabled]').isChecked(),true);assert.equal(await page.locator('[name=groupmeAnnounce]').isChecked(),false);
+ await page.locator('[data-close=editor]').first().click();
+ await page.locator('[data-view=settings]').click();await page.locator('#reset-channel-defaults').click();
+ await page.locator('[data-view=dashboard]').click();
  await page.locator('#new-campaign').click();
  assert.equal(await page.getByRole('dialog',{name:'Create a campaign',exact:true}).count(),1);
  assert.equal(await page.evaluate(()=>document.activeElement.id),'editor-title');
@@ -121,6 +133,8 @@ try {
  });
  await botPage.goto(base);await botPage.locator('#new-campaign').click();
  assert.equal(await botPage.locator('[name=groupmeAnnounce]').isChecked(),false);
+ await botPage.locator('[data-close=editor]').first().click();await botPage.locator('[data-view=settings]').click();await botPage.locator('#channel-defaults-form [name=groupme]').check();await botPage.locator('#channel-defaults-form button.primary').click();await botPage.reload();await botPage.locator('#new-campaign').click();
+ assert.equal(await botPage.locator('[name=groupmeAnnounce]').isChecked(),true);
  for(const [name,value] of Object.entries({title:'Bot fixture only',start:'2026-11-20T18:30',end:'2026-11-20T20:00',location:'Scott E100'}))await botPage.locator(`[name=${name}]`).fill(value);
  await botPage.locator('[name=feedEnabled]').uncheck();
  await botPage.locator('[name=groupmeAnnounce]').check();

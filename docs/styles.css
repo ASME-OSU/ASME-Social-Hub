@@ -46,3 +46,5 @@ dialog{background:var(--paper)}
  .archive-row>.archive-stats{grid-column:1/-1;grid-row:3;margin:0;padding-right:80px;justify-self:start;text-align:left}
  .archive-row>button{grid-column:1/-1;grid-row:3;justify-self:end;align-self:center;margin:0}
 }
+
+.settings-grid>.panel:last-child{grid-column:1/-1}

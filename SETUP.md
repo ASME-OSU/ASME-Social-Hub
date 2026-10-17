@@ -23,6 +23,8 @@ JPEGs must be publicly reachable before Instagram container creation. Render and
 
 Each campaign has separate feed, story, and GroupMe announcement switches. Turn off any combination, including all three, before saving; turning off an unsent step prevents its publication. Published posts remain published. The GroupMe switch is visible but unavailable while the chapter-wide integration is off. In bot mode its schedule follows the feed schedule even when the feed post itself is off.
 
+In **Settings → Default posting channels**, save preferred starting choices for feed, story, and GroupMe announcements. These non-credential preferences persist for this repository and branch in the current browser/profile; they do not sync to other browsers/devices or change existing campaigns. New manual campaigns and calendar suggestions use them. Duplicates retain the source feed/story choices and start GroupMe off. Reset restores feed/story on and GroupMe off. A GroupMe-on preference never bypasses the chapter-wide off switch. Preferences do not change whether a GitHub token is remembered.
+
 ## GroupMe
 
 Create a dedicated chapter account, add it to the target group, and obtain its user access token. Native calendar events use an **unofficial** endpoint, and only their creator can edit/delete them. Keep ownership with the chapter at handoff.
