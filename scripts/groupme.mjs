@@ -1,6 +1,17 @@
 import {safeJson} from './ig.mjs';
 const retrySafe = message => Object.assign(new Error(message), {retrySafe:true});
 const REMINDERS = new Set([0,300,900,1800,3600,7200,86400,172800,604800]);
+const httpsLink=value=>{try{const url=new URL(value);return url.protocol==='https:'&&!url.username&&!url.password?url.href:'';}catch{return '';}};
+export function botAnnouncementText(campaign,config) {
+  const when=new Intl.DateTimeFormat('en-US',{timeZone:config.timezone,dateStyle:'full',timeStyle:'short'}).format(new Date(campaign.start));
+  const location=typeof campaign.location==='string'?campaign.location:campaign.location?.name;
+  const site=httpsLink(config.siteUrl);
+  const calendar=site?httpsLink(`${site.replace(/\/$/,'')}/calendar/${encodeURIComponent(campaign.year)}/${encodeURIComponent(campaign.id)}.ics`):'';
+  const flyer=httpsLink(campaign.images?.feed||campaign.flyers?.feed||campaign.flyerUrl||(site?`${site.replace(/\/$/,'')}/media/${encodeURIComponent(campaign.year)}/${encodeURIComponent(campaign.id)}-feed.jpg`:''));
+  const text=[campaign.title,`${when} (${config.timezone})`,location,campaign.food===true?'Food provided!':'',calendar?`Calendar: ${calendar}`:'',flyer?`Flyer: ${flyer}`:''].filter(Boolean).join('\n');
+  if(text.length>1000) throw new Error('GroupMe announcement exceeds 1000 characters; shorten the title, location, or links');
+  return text;
+}
 export function eventPayload(campaign, config) {
   const reminders = campaign.campaign?.groupme?.reminders ?? [604800,86400];
   if (reminders.length > 2 || reminders.some(x => !REMINDERS.has(x))) throw new Error('Invalid GroupMe reminders');
@@ -34,6 +45,7 @@ export function createGroupMeClient({env = process.env, fetchImpl = fetch} = {})
   return {listEvents:()=>request(`list?end_at=${encodeURIComponent(new Date().toISOString())}&limit=20`),createEvent:(c,cfg)=>save('create',c,cfg),updateEvent:(id,c,cfg)=>save(`update?event_id=${encodeURIComponent(id)}`,c,cfg),deleteEvent:id=>request(`delete?event_id=${encodeURIComponent(id)}`,'DELETE')};
 }
 export async function postBotMessage(text,{env=process.env,fetchImpl=fetch}={}) {
+  if(typeof text!=='string'||!text.trim()||text.length>1000) throw new Error('GroupMe bot text must contain 1 to 1000 characters');
   if (!env.GROUPME_BOT_ID) throw new Error('GROUPME_BOT_ID is required');
   let response; try { response = await fetchImpl('https://api.groupme.com/v3/bots/post',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({bot_id:env.GROUPME_BOT_ID,text}),signal:AbortSignal.timeout(30000)}); } catch { throw new Error('GroupMe bot network request failed'); }
   if (!response.ok) throw new Error(`GroupMe bot rejected request (HTTP ${response.status})`);

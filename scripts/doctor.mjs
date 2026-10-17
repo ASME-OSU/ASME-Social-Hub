@@ -14,14 +14,15 @@ export async function doctor({root=process.cwd(),env=process.env,live=false,fetc
   add('repository',Boolean(config.repository?.owner&&config.repository?.name&&!/your[-_]?/i.test(config.repository.owner)),'Configure repository owner and name');
   const groupmeEnabled=config.integrations?.groupme?.enabled!==false;
   if(!groupmeEnabled) add('groupme',true,'Disabled in chapter configuration');
-  for(const key of ['IG_USER_ID','IG_ACCESS_TOKEN','SECRETS_ADMIN_PAT',...(groupmeEnabled?['GROUPME_TOKEN','GROUPME_GROUP_ID']:[])]) add(key,Boolean(env[key]),env[key]?'Present (value hidden)':`Missing ${key}${live?'':' — local preview remains available'}`);
+  for(const key of ['IG_USER_ID','IG_ACCESS_TOKEN','SECRETS_ADMIN_PAT',...(groupmeEnabled?(config.integrations?.groupme?.mode==='bot'?['GROUPME_BOT_ID']:['GROUPME_TOKEN','GROUPME_GROUP_ID']):[])]) add(key,Boolean(env[key]),env[key]?'Present (value hidden)':`Missing ${key}${live?'':' — local preview remains available'}`);
   add('calendar',Boolean(config.icalUrl),config.icalUrl?'Calendar configured':'Optional: set icalUrl to enable calendar suggestions');
   if(env.IG_TOKEN_EXPIRES_AT) {const assessment=assessTokenExpiry(env.IG_TOKEN_EXPIRES_AT);add('token-expiry',!assessment.warning,assessment.daysRemaining===null?'Invalid IG_TOKEN_EXPIRES_AT':`${Math.floor(assessment.daysRemaining)} days remain`);}
   else add('token-expiry',true,'Expiry cannot be inferred from an opaque token. Set IG_TOKEN_EXPIRES_AT for a local expiry warning; successful refresh logs expiry.');
   if(live) {
     const probe=async(name,fn)=>{try{await fn();add(name,true,'Read-only check passed');}catch{add(name,false,'Read-only check failed; check configuration, credentials, permissions, or API availability');}};
     await probe('instagram-live',()=>createInstagramClient({env,fetchImpl}).request('me',{fields:{fields:'id,username'}}));
-    if(groupmeEnabled) await probe('groupme-live',()=>createGroupMeClient({env,fetchImpl}).listEvents());
+    if(groupmeEnabled && config.integrations?.groupme?.mode!=='bot') await probe('groupme-live',()=>createGroupMeClient({env,fetchImpl}).listEvents());
+    if(groupmeEnabled && config.integrations?.groupme?.mode==='bot') add('groupme-live',true,'Bot credential presence checked only; no message sent. Delivery is unverified.');
     if(config.icalUrl) await probe('calendar-live',async()=>{const r=await fetchImpl(config.icalUrl,{signal:AbortSignal.timeout(30000)});if(!r.ok||!(await r.text()).includes('BEGIN:VCALENDAR'))throw new Error();});
     if(siteValid) await probe('site-live',async()=>{const r=await fetchImpl(config.siteUrl,{signal:AbortSignal.timeout(30000)});if(!r.ok)throw new Error();});
   }

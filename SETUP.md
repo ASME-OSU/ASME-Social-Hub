@@ -42,3 +42,13 @@ GitHub cron is best-effort and can be late or disabled after prolonged inactivit
 ## Current chapter integrations
 
 GroupMe is off for now (`integrations.groupme.enabled: false` in `config/chapter.json`). The dispatcher makes no GroupMe calls, including updates, cancellations, or bot announcements, while disabled. The dashboard omits GroupMe steps and new campaigns disable that channel. Instagram and newsletter calendar suggestions remain enabled. Re-enable only after configuring a sustainable account and credentials.
+
+## GroupMe bot announcements (optional)
+
+`integrations.groupme.mode: "bot"` uses only `GROUPME_BOT_ID`. Keep `enabled: false` until the chapter is ready; enable it to offer a per-campaign announcement checkbox, initially unchecked. Bot mode never creates native GroupMe events, accesses the conversation history, or uploads images using a personal account token. Leave the GroupMe bot callback blank for outbound-only use.
+
+An opted-in campaign sends one text announcement at its feed schedule (also when Instagram feed publishing is unchecked). Messages include chapter-local event time, location, food when provided, and links to the flyer and calendar. Calendar suggestions and demo campaigns do not send messages by themselves. Inspect a dry run before enabling. Edits after a successful send do not resend or update the existing message. Cancellation stops an unsent announcement; it does not remove an existing message.
+
+The scheduler saves a durable intent before sending. After an ambiguous failure, an officer must inspect GroupMe before reconciling state; automatic retries could duplicate a message. A saved bot credential is not a delivery test. A real test message requires chapter approval.
+
+At officer handoff, register a replacement bot with the same name/avatar under the incoming officer, replace `GROUPME_BOT_ID` in GitHub Actions, verify delivery, then retire the old bot before the outgoing owner leaves the group. Do not hand over a personal GroupMe access token.

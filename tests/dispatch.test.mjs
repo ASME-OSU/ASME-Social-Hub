@@ -105,3 +105,29 @@ test('chapter GroupMe switch blocks creation, updates, cancellation and bot anno
   }
  }
 });
+
+async function botFixture(t,{enabled=true,announce=true}={}) {
+ const f=await fixture(t),configFile=path.join(f.root,'config/chapter.json'),config=JSON.parse(await readFile(configFile));config.integrations={groupme:{enabled,mode:'bot'}};config.siteUrl='https://example.org/hub';await writeJson(configFile,config);
+ const c=JSON.parse(await readFile(f.file));c.campaign.feed={daysBefore:7,time:'12:00',enabled:false};c.campaign.groupme={enabled:true,announce};await writeJson(f.file,c);return f;
+}
+test('bot-only mode sends once at feed schedule without native API',async t=>{
+ const {root,file}=await botFixture(t);let calls=0;
+ const services={groupme:new Proxy({},{get(){throw Error('native must not run');}}),postBotMessage:async text=>{calls++;assert.match(text,/Meeting/);assert.match(text,/Food provided/);assert.ok(JSON.parse(await readFile(file)).results.groupme.botAttemptedAt);}};
+ await dispatch({root,now:'2026-10-14T15:59:00Z',services});assert.equal(calls,0);
+ await dispatch({root,now:'2026-10-14T16:00:00Z',services});await dispatch({root,now:'2026-10-14T17:00:00Z',services});assert.equal(calls,1);assert.equal(JSON.parse(await readFile(file)).status.groupme,'done');
+});
+test('bot-only mode requires global switch and explicit announcement opt in',async t=>{
+ for(const options of [{enabled:false},{announce:false}]) {const {root}=await botFixture(t,options);await dispatch({root,now:'2026-10-14T17:00:00Z',services:new Proxy({},{get(){throw Error('network');}})});}
+});
+test('bot-only dry run previews text without writes or network',async t=>{
+ const {root,file}=await botFixture(t),before=await readFile(file,'utf8');const actions=await dispatch({root,now:'2026-10-14T17:00:00Z',dryRun:true,services:new Proxy({},{get(){throw Error('network');}})});assert.match(actions.find(a=>a.action==='announce').text,/Calendar:/);assert.equal(await readFile(file,'utf8'),before);
+});
+test('bot-only ambiguous failures never retry, and checkpoint failure prevents send',async t=>{
+ const {root,file}=await botFixture(t);let calls=0;const services={postBotMessage:async()=>{calls++;throw Error('secret=TOKEN');}};
+ await assert.rejects(dispatch({root,now:'2026-10-14T17:00:00Z',services,checkpoint:async({campaign})=>{if(campaign.results?.groupme?.botAttemptedAt)throw Error('push');}}),/checkpoint/);assert.equal(calls,0);
+ await dispatch({root,now:'2026-10-14T17:00:00Z',services});assert.equal(calls,0);assert.equal(JSON.parse(await readFile(file)).status.groupme,'failed');
+ const c=JSON.parse(await readFile(file));delete c.results.groupme.botAttemptedAt;await writeJson(file,c);await dispatch({root,now:'2026-10-14T17:00:00Z',services});await dispatch({root,now:'2026-10-14T18:00:00Z',services});assert.equal(calls,1);assert.doesNotMatch(await readFile(file,'utf8'),/TOKEN/);
+});
+test('bot-only late and cancelled campaigns skip without sending',async t=>{
+ for(const cancelled of [false,true]) {const {root,file}=await botFixture(t);if(cancelled){const c=JSON.parse(await readFile(file));c.cancelled=true;await writeJson(file,c);}await dispatch({root,now:cancelled?'2026-10-14T17:00:00Z':'2026-10-15T16:00:01Z',services:new Proxy({},{get(){throw Error('network');}})});assert.equal(JSON.parse(await readFile(file)).status.groupme,'skipped');}
+});

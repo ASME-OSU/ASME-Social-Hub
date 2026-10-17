@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { validateConfig, validateCampaign, fireAt, captionFor, readCampaigns, writeJson } from './core.mjs';
 import { buildArchive } from './archive.mjs';
+import { botAnnouncementText } from './groupme.mjs';
 
 function safeHint(error) {
   const message=String(error?.message || '');
@@ -33,6 +34,34 @@ export async function dispatch({root=process.cwd(),now=new Date(),dryRun=false,s
         // Global integration switch also blocks updates, cancellations, and bot messages.
         if(channel==='groupme' && config.integrations?.groupme?.enabled===false) continue;
         const result=c.results?.[channel] || {};
+        if(channel==='groupme' && config.integrations?.groupme?.mode==='bot') {
+          if(c.campaign?.groupme?.enabled!==true || c.campaign?.groupme?.announce!==true || result.botSentAt) continue;
+          const due=fireAt(c,'feed',config);
+          if(result.botAttemptedAt) {
+            actions.push({id:c.id,channel,action:'announce',outcome:'failed',error:{code:'BOT_RECONCILIATION_REQUIRED',stage:'bot'}});
+            if(!dryRun && c.status.groupme!=='failed') { c.status.groupme='failed';c.results.groupme=result;result.error={code:'BOT_RECONCILIATION_REQUIRED',stage:'bot',at:now.toISOString()};log(channel,'Inspect GroupMe before clearing botAttemptedAt; announcement outcome is unresolved');await save(); }
+            continue;
+          }
+          if(c.cancelled || now>=new Date(c.start) || (+now>=+due && +now-+due>86400000)) {
+            if(c.status?.groupme!=='skipped') { actions.push({id:c.id,channel,action:'skip',reason:c.cancelled?'cancelled':'announcement-window-missed'}); if(!dryRun) { c.status.groupme='skipped'; c.results.groupme=result; result.skipReason=c.cancelled?'cancelled':'announcement-window-missed'; log(channel,'Bot announcement skipped'); await save(); } }
+            continue;
+          }
+          if(now<due) continue;
+          const action={id:c.id,channel,action:'announce',fireAt:due.toISOString()};actions.push(action);
+          try {
+            const text=botAnnouncementText(c,config);
+            if(dryRun) { action.text=text; continue; }
+            c.results.groupme=result;result.botText=text;result.botAttemptedAt=now.toISOString();await save();
+            await services.postBotMessage(text);
+            result.botSentAt=now.toISOString();delete result.error;delete result.skipReason;c.status.groupme='done';log(channel,'Bot announcement sent');
+          } catch(error) {
+            if(error.persistenceFailure) throw error;
+            action.outcome='failed';action.error={code:result.botAttemptedAt?'BOT_OUTCOME_UNKNOWN':'BOT_PREPARATION_FAILED',stage:'bot',hint:result.botAttemptedAt?'Inspect GroupMe before clearing botAttemptedAt; this message will not automatically retry.':'Check announcement length, event date, timezone, and links.'};
+            if(!dryRun) { c.results.groupme=result;result.error={...action.error,at:now.toISOString()};c.status.groupme='failed';log(channel,action.error.hint); }
+          }
+          if(!dryRun) await save();
+          continue;
+        }
         const disabled=c.campaign?.[channel]?.enabled===false;
         if(disabled && !(channel==='groupme' && c.cancelled && result.eventId)) {
           if(!dryRun && !result.mediaId && !(channel==='groupme' && result.eventId) && c.status[channel]!=='skipped') { c.status[channel]='skipped'; c.results[channel]=result; result.skipReason='disabled'; log(channel,'Channel disabled'); await save(); }

@@ -66,6 +66,26 @@ try {
  await page.locator(`[data-detail="${saved.id}"]`).click();await page.locator('[data-edit]').click();await page.locator('[name=description]').fill('Updated officer description');await page.locator('#save-button').click();await page.waitForFunction(()=>!document.querySelector('#editor').open);
  assert.equal(writes.length,2);const edited=JSON.parse(Buffer.from(writes[1].content,'base64').toString());assert.equal(edited.status.feed,'done');assert.equal(edited.results.feed.mediaId,'mock-published-id');assert.equal(writes[1].sha,'latest-file-sha');assert.equal(edited.revision,2);
  remoteRecord={...edited,revision:3};await page.locator(`[data-detail="${saved.id}"]`).click();await page.locator('[data-edit]').click();await page.locator('#save-button').click();await page.waitForSelector('#form-error:not([hidden])');assert.match(await page.locator('#form-error').textContent(),/edited since/);assert.equal(writes.length,2);await page.locator('[data-close=editor]').first().click();
+ // Opt-in bot controls in an isolated browser: no credentials or live writes.
+ const botPage=await browser.newPage({viewport:{width:1440,height:1080}});
+ await botPage.clock.install({time:new Date('2026-10-15T16:00:00Z')});
+ await botPage.route('**/config/chapter.json',async route=>{
+  const response=await route.fetch(),config=await response.json();
+  config.integrations.groupme={enabled:true,mode:'bot'};
+  await route.fulfill({json:config});
+ });
+ await botPage.goto(base);await botPage.locator('#new-campaign').click();
+ assert.equal(await botPage.locator('[name=groupmeAnnounce]').isChecked(),false);
+ for(const [name,value] of Object.entries({title:'Bot fixture only',start:'2026-11-20T18:30',end:'2026-11-20T20:00',location:'Scott E100'}))await botPage.locator(`[name=${name}]`).fill(value);
+ await botPage.locator('[name=feedEnabled]').uncheck();
+ await botPage.locator('[name=groupmeAnnounce]').check();
+ assert.match(await botPage.locator('#schedule-preview').textContent(),/GroupMe announcement/);
+ const botDownloadPromise=botPage.waitForEvent('download');await botPage.locator('#save-button').click();
+ const botDownload=await botDownloadPromise,botSaved=JSON.parse(await readFile(await botDownload.path(),'utf8'));
+ assert.equal(botSaved.campaign.feed.enabled,false);
+ assert.equal(botSaved.campaign.groupme.enabled,true);assert.equal(botSaved.campaign.groupme.announce,true);
+ assert.equal(botSaved.status.groupme,'pending');
+ await botPage.close();
  // Exercise real JPEG rendering in an isolated fixture, never add a live campaign to this repo.
  const root=await mkdtemp(join(tmpdir(),'campaign-render-'));
  try {
