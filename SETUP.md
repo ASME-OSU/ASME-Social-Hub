@@ -45,11 +45,11 @@ GitHub cron is best-effort and can be late or disabled after prolonged inactivit
 
 ## Current chapter integrations
 
-GroupMe is off for now (`integrations.groupme.enabled: false` in `config/chapter.json`). The dispatcher makes no GroupMe calls, including updates, cancellations, or bot announcements, while disabled. The dashboard omits GroupMe steps and new campaigns disable that channel. Instagram and newsletter calendar suggestions remain enabled. Re-enable only after configuring a sustainable account and credentials.
+GroupMe bot announcements are enabled (`integrations.groupme.enabled: true`, `mode: "bot"` in `config/chapter.json`). Each campaign must opt in; browser defaults can preselect that choice for new campaigns. Existing calendar suggestions and demo data do not send announcements. Set `enabled: false` to pause every GroupMe call. Instagram and newsletter calendar suggestions remain enabled.
 
 ## GroupMe bot announcements (optional)
 
-`integrations.groupme.mode: "bot"` uses only `GROUPME_BOT_ID`. Keep `enabled: false` until the chapter is ready; enable it to offer a per-campaign announcement checkbox, initially unchecked. Bot mode never creates native GroupMe events, accesses the conversation history, or uploads images using a personal account token. Leave the GroupMe bot callback blank for outbound-only use.
+`integrations.groupme.mode: "bot"` uses only `GROUPME_BOT_ID`. The per-campaign announcement checkbox starts unchecked unless an officer saves a browser default. Use `enabled: false` as the chapter-wide pause switch. Bot mode never creates native GroupMe events, accesses the conversation history, or uploads images using a personal account token. Leave the GroupMe bot callback blank for outbound-only use.
 
 An opted-in campaign sends one text announcement at its feed schedule (also when Instagram feed publishing is unchecked). Messages include chapter-local event time, location, food when provided, and links to the flyer and calendar. Calendar suggestions and demo campaigns do not send messages by themselves. Inspect a dry run before enabling. Edits after a successful send do not resend or update the existing message. Cancellation stops an unsent announcement; it does not remove an existing message.
 
@@ -64,3 +64,5 @@ For private delivery testing, create a separate bot in **ASME Bot Testing** and 
 Expand **Event extras** when creating or editing a campaign to add food details, RSVP link and deadline, audience, cost, preparation/dress, speaker/company, attendance benefit, and accessibility contact. Blank fields are omitted. RSVP deadlines use the chapter timezone, and links must use HTTPS without embedded credentials. Use an organizational contact appropriate for public advertising; these details are saved in the public repository.
 
 Food details appear only when Food provided is checked. Captions and announcements include completed details; flyers highlight key information and direct readers to the caption for fuller instructions. Keep copy concise: Instagram captions and GroupMe announcements have provider length limits, and excessive content produces an actionable error rather than silently losing information.
+
+Stories are generated as one static 1080×1920 JPEG from the event fields and selected chapter template. The publisher sends the image as a Story, without a visible feed caption or interactive music, polls, or link stickers. Story artwork therefore omits references to a caption. The scheduled dispatcher runs hourly at minute 17; scheduled times are targets and GitHub Actions can run late.

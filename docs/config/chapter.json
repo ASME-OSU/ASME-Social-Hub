@@ -69,7 +69,7 @@
   "defaultTemplate": "blueprint",
   "integrations": {
     "groupme": {
-      "enabled": false,
+      "enabled": true,
       "mode": "bot"
     }
   }

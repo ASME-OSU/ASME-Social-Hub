@@ -17,9 +17,10 @@ try {
  await page.goto(base);await page.waitForSelector('#campaign-list .empty');
  assert.equal(await page.locator('.campaign-card').count(),0);
  assert.ok(await page.locator('#suggestions .suggestion').count()>0);
+ await page.locator('#new-campaign').click();assert.equal(await page.locator('[name=groupmeAnnounce]').isDisabled(),false);assert.equal(await page.locator('[name=groupmeAnnounce]').isChecked(),false);await page.locator('[data-close=editor]').first().click();
  await page.route('**/config/chapter.json',async route=>{
   const response=await route.fetch();const config=await response.json();
-  await route.fulfill({json:{...config,showExamples:true}});
+  config.integrations.groupme.enabled=false;await route.fulfill({json:{...config,showExamples:true}});
  });
  await page.reload();await page.waitForSelector('.campaign-card');
  assert.equal(await page.locator('#campaign-list .campaign-card').count(),3);

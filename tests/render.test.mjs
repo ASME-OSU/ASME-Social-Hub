@@ -37,3 +37,8 @@ test('advertising stays compact, escapes content, and keeps full preparation in 
  assert.doesNotMatch(flyerHtml(blueprint,{...rich,food:false},config,'feed'),/Pizza &amp;/);
  assert.throws(()=>flyerHtml(blueprint,{...rich,advertising:{foodDetails:'x'.repeat(161)}},config,'feed'),/foodDetails/);
 });
+
+test('story artwork does not promise a feed caption or link sticker',()=>{
+ const rich={...campaign,advertising:{rsvpUrl:'https://example.org/register',rsvpDeadline:'2026-11-03T18:00:00-05:00',audience:'All majors'}};
+ for(const source of [template,blueprint]){const html=flyerHtml(source,rich,config,'story');assert.doesNotMatch(html,/details in caption|link in caption/);assert.match(html,/RSVP by Nov 3/);assert.match(html,/All majors/);}
+});

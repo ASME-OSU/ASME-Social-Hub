@@ -25,7 +25,7 @@ Reviewed and implemented with an Astra sub-agent, followed by local browser and 
 
 ## Operational behavior
 
-Chapter-wide GroupMe posting remains disabled. Its per-campaign switch explains that state. No social posts or GroupMe messages were sent during this work. Turning a channel off prevents an unsent step; it does not remove a published post.
+The audit preserved the chapter-wide GroupMe pause. GroupMe bot announcements were subsequently enabled at the chapter’s request, with per-campaign opt-in and browser defaults. No social posts or GroupMe messages were sent during the audit. Turning a channel off prevents an unsent step; it does not remove a published post.
 
 Uploaded PNGs and JPEGs serve as source artwork for the chapter template. Generated publishing assets remain JPEG. Direct feed/story URL overrides still require publicly reachable JPEGs.
 

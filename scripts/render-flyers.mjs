@@ -30,7 +30,7 @@ export async function loadFlyerAssets(root, config) {
   }
   return {fontCss:fonts.join('\n'),logo};
 }
-export function flyerAdvertising(campaign, config) {
+export function flyerAdvertising(campaign, config, format='feed') {
   const a=campaign.advertising || {};
   validateAdvertising(campaign.advertising);
   const concise=(value,max=100)=>value?.trim().replace(/\s+/g,' ').slice(0,max)+(value?.trim().replace(/\s+/g,' ').length>max?'…':'');
@@ -47,15 +47,15 @@ export function flyerAdvertising(campaign, config) {
     else if(/^\d{4}-\d{2}-\d{2}$/.test(raw) && Number.isFinite(Date.parse(raw))) deadline=new Intl.DateTimeFormat('en-US',{timeZone:'UTC',month:'short',day:'numeric'}).format(new Date(`${raw}T12:00:00Z`));
     else deadline=concise(raw,65);
   }
-  if(deadline || a.rsvpUrl?.trim()) rows.push([deadline?`RSVP by ${deadline}`:'',a.rsvpUrl?.trim()?'RSVP link in caption':''].filter(Boolean).join(' · '));
+  if(deadline || (format!=='story'&&a.rsvpUrl?.trim())) rows.push([deadline?`RSVP by ${deadline}`:'',format!=='story'&&a.rsvpUrl?.trim()?'RSVP link in caption':''].filter(Boolean).join(' · '));
   if(!rows.length) return '';
-  return `<div class="advertising">${rows.map(row=>`<p>${escape(row)}</p>`).join('')}<small>Full event details in caption.</small></div>`;
+  return `<div class="advertising">${rows.map(row=>`<p>${escape(row)}</p>`).join('')}${format==='story'?'':'<small>Full event details in caption.</small>'}</div>`;
 }
 export function flyerHtml(template, campaign, config, format, assets = {}) {
   const date = new Date(campaign.start), tz = config.timezone;
   const image = safeUrl(campaign.flyerUrl);
   const logo = assets.logo || safeUrl(config.brand?.logoFlyer || config.brand?.logoMark || config.brand?.logoReverse || config.brand?.logo);
-  const advertising=flyerAdvertising(campaign,config);
+  const advertising=flyerAdvertising(campaign,config,format);
   const values = {
     advertising,advertisingClass:advertising?'enriched':'',
     primary:color(config.brand?.primary,'#102840'),accent:color(config.brand?.accent,'#ba0c2f'),background:color(config.brand?.background,'#f2f5f9'),
