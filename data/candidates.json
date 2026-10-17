@@ -1,22 +1,6 @@
 {
-  "generatedAt": "2026-10-16T11:53:17.129Z",
+  "generatedAt": "2026-10-17T11:10:02.734Z",
   "events": [
-    {
-      "id": "6b6r3vahedesilnk814v81q811@google.com::2026-10-15T00:00:00.000Z",
-      "title": "Autumn Break - no classes, offices open",
-      "start": "2026-10-15T00:00:00.000Z",
-      "end": "2026-10-17T00:00:00.000Z",
-      "allDay": true,
-      "location": "",
-      "description": "",
-      "url": "https://calendar.google.com/calendar/ical/c93730cdacb567b0f010d1367080e3028ec5c7657d9713b675ac9e5c437b9fba%40group.calendar.google.com/public/basic.ics",
-      "updated": "2026-07-09T22:51:31.000Z",
-      "source": {
-        "kind": "ical",
-        "uid": "6b6r3vahedesilnk814v81q811@google.com::2026-10-15T00:00:00.000Z",
-        "calendarUid": "6b6r3vahedesilnk814v81q811@google.com"
-      }
-    },
     {
       "id": "5n4j886meo63ojjrbue0b56i19@google.com::2026-10-19T00:00:00.000Z",
       "title": "Second-session classes begin",
