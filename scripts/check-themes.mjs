@@ -14,12 +14,14 @@ export async function checkThemes(browser,base){
  for(const theme of ['light','dark']){
   const context=await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'reduce',colorScheme:theme});
   try{
-   const page=await context.newPage();await page.route('**/config/chapter.json',async route=>{const response=await route.fetch(),config=await response.json();await route.fulfill({json:{...config,showExamples:true}});});
+   const page=await context.newPage();await page.route('**/config/chapter.json',async route=>{const response=await route.fetch(),config=await response.json();await route.fulfill({json:{...config,showExamples:true,socialLinks:{...config.socialLinks,facebook:'https://www.facebook.com/chapter-test-fixture/',linktree:'https://linktr.ee/chapter-test-fixture'}}});});
    await page.goto(base);await page.locator('.campaign-card').first().waitFor();
+   assert.equal(await page.locator('.sidebar-social a').count(),4);
+   for(const label of ['Instagram','LinkedIn','Facebook','Linktree']){const link=page.locator('.sidebar-social').getByRole('link',{name:label+' (opens in a new tab)',exact:true});assert.equal(await link.getAttribute('target'),'_blank');assert.match(await link.getAttribute('rel'),/noopener/);assert.equal(await link.locator('svg').count(),1);}
    assert.equal(await page.evaluate(()=>getComputedStyle(document.documentElement).colorScheme),theme,'System theme should control native fields');
    assert.equal(await page.locator('#sidebar').evaluate(e=>e.getBoundingClientRect().width),240);
    await checkContrast(page,['h1','.subtle','.stat-label','.stat small','.campaign-card h3','.campaign-card .card-info','.card-footer button','#new-campaign','nav button.active']);
-   await page.locator('#header-sidebar-toggle').click();await page.waitForFunction(()=>document.querySelector('aside').getBoundingClientRect().width===72);await page.reload();await page.locator('.campaign-card').first().waitFor();assert.equal(await page.locator('#header-sidebar-toggle').getAttribute('aria-expanded'),'false');
+   await page.locator('#header-sidebar-toggle').click();await page.waitForFunction(()=>document.querySelector('aside').getBoundingClientRect().width===72);await page.reload();await page.locator('.campaign-card').first().waitFor();assert.equal(await page.locator('#header-sidebar-toggle').getAttribute('aria-expanded'),'false');assert.equal(await page.locator('.sidebar-social').isVisible(),true);
    await page.locator('#header-sidebar-toggle').click();await page.waitForFunction(()=>document.querySelector('aside').getBoundingClientRect().width===240);
    await page.locator('[data-view=settings]').click();await checkContrast(page,['#settings-form h2','#settings-form label','#settings-connection-state','#settings-form input[name=owner]','#channel-defaults-form .subtle','#channel-defaults-form button.primary']);
    await page.locator('[data-view=dashboard]').click();await page.locator('#new-campaign').click();await checkContrast(page,['#editor-title','#editor .field-help','#editor input[name=title]','#editor .food-segments .yes','#editor .channel-switch .switch-on','#save-button']);await page.locator('[data-close=editor]').first().click();
@@ -29,6 +31,8 @@ export async function checkThemes(browser,base){
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'Expanded tablet layout must fit');
    await page.setViewportSize({width:700,height:1000});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'Expanded narrow tablet layout must fit');
    await page.setViewportSize({width:390,height:844});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+   await page.locator('.mobile-social-menu summary').click();assert.equal(await page.locator('.header-social a').count(),4);assert.equal(await page.locator('.header-social').isVisible(),true);await page.locator('.mobile-social-menu summary').click();
+   assert.equal(await page.locator('.footer-social a').count(),4);assert.equal(await page.locator('.footer-social').isVisible(),true);assert.equal(await page.locator('.sidebar-social').isVisible(),false);
    assert.equal(await page.locator('.sidebar-header').isVisible(),false);assert.equal(await page.locator('#header-sidebar-toggle').isVisible(),false);
    for(const button of await page.locator('nav button').all()){assert.ok(await button.evaluate(e=>{const r=e.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight;}),'Every mobile navigation button must stay inside the visible bottom bar');}
   }finally{await context.close();}

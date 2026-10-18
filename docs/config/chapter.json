@@ -72,5 +72,11 @@
       "enabled": true,
       "mode": "bot"
     }
+  },
+  "socialLinks": {
+    "instagram": "https://www.instagram.com/asmeohiostate/",
+    "linkedin": "https://www.linkedin.com/company/asme-osu/",
+    "facebook": "https://www.facebook.com/ASMEatOSU",
+    "linktree": "https://linktr.ee/asmeohiostate"
   }
 }
