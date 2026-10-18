@@ -1,0 +1,66 @@
+import assert from 'node:assert/strict';
+import {readFile,mkdtemp,mkdir,cp,writeFile,rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {flyerHtml,fitFlyer,loadFlyerAssets,renderFlyers} from './render-flyers.mjs';
+import {validateCampaign} from './core.mjs';
+
+export async function checkStoryDesigns(browser,base){
+ const context=await browser.newContext({viewport:{width:1440,height:1080},reducedMotion:'reduce'});
+ const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));let saved;const files=new Map(),writes=[];
+ try{
+  await page.clock.install({time:new Date('2026-10-18T16:00:00Z')});
+  await page.route('**/data/archive-index.json',r=>r.fulfill({json:{campaigns:[]}}));
+  await page.route('https://api.github.com/**',async route=>{
+   const req=route.request(),url=new URL(req.url());
+   if(req.method()==='PUT'){const body=JSON.parse(req.postData()),bytes=Buffer.from(body.content,'base64');writes.push(body);if(url.pathname.includes('/assets/uploads/'))files.set(decodeURIComponent(url.pathname.split('/contents/')[1]),bytes);else saved=JSON.parse(bytes.toString());return route.fulfill({json:{commit:{sha:'story-test'}}});}
+   if(url.pathname.endsWith('/config/chapter.json'))return route.fulfill({json:{content:Buffer.from('{}').toString('base64')}});
+   if(saved&&url.pathname.endsWith('/'+saved.id+'.json'))return route.fulfill({json:{sha:'story-sha',content:Buffer.from(JSON.stringify(saved)).toString('base64')}});
+   return route.fulfill({status:404,json:{message:'Not Found'}});
+  });
+  await page.route('https://raw.githubusercontent.com/**',route=>{const key=new URL(route.request().url()).pathname.split('/main/')[1],bytes=files.get(key);return bytes?route.fulfill({contentType:'image/png',headers:{'Access-Control-Allow-Origin':'*'},body:bytes}):route.fulfill({status:404});});
+  await page.goto(base);await page.locator('#new-campaign:not([disabled])').waitFor();
+  const image=async (colors,width=320,height=400)=>Buffer.from((await page.evaluate(({colors,width,height})=>{const canvas=document.createElement('canvas');canvas.width=width;canvas.height=height;const ctx=canvas.getContext('2d');colors.forEach((color,i)=>{ctx.fillStyle=color;ctx.fillRect(0,i*height/colors.length,width,height/colors.length);});return canvas.toDataURL('image/png').split(',')[1];},{colors,width,height})),'base64');
+  const first=await image(['#123d44','#ffb44b','#f2eee5']),second=await image(['#7043a0','#f7a7c6','#d7efff']),neutral=await image(['#ffffff','#000000','#999999']),transparent=await image(['rgba(0,0,0,0)','#123d44','#ffb44b']),wide=await image(['#7043a0','#f7a7c6'],800,200);
+  await page.locator('#new-campaign').click();await page.locator('[name=storyBackground][value=color-wash]').check();
+  await page.waitForFunction(()=>{const f=document.querySelector('#artwork-preview-frame');return f.style.visibility==='visible'&&f.contentDocument?.querySelector('.page.color-wash');});
+  assert.match(await page.frameLocator('#artwork-preview-frame').locator('.block').textContent(),/Choose a date/);
+  await page.locator('[name=flyer]').setInputFiles({name:'transparent.png',mimeType:'image/png',buffer:transparent});await page.waitForFunction(()=>document.querySelector('#story-palette-note').textContent.startsWith('Colors sampled'));assert.match(await page.locator('#story-palette').getAttribute('aria-label'),/#123d44/);
+  await page.locator('[name=flyer]').setInputFiles({name:'colors.png',mimeType:'image/png',buffer:first});
+  await page.waitForFunction(()=>document.querySelector('#story-palette-note').textContent.startsWith('Colors sampled'));
+  assert.match(await page.locator('#story-palette').getAttribute('aria-label'),/#123d44/);
+  for(const [name,value]of Object.entries({title:'Story background fixture',start:'2026-11-20T18:30',end:'2026-11-20T20:00',location:'Scott E100',description:'Private fixture used only for local verification.'}))await page.locator(`[name=${name}]`).fill(value);
+  for(const background of ['color-wash','blueprint-rings','folded-paper']){
+   await page.locator(`[name=storyBackground][value=${background}]`).check();
+   await page.waitForFunction(background=>{const f=document.querySelector('#artwork-preview-frame');return f.style.visibility==='visible'&&f.contentDocument?.querySelector('.page.'+background)&&f.contentDocument.querySelector('img.story-flyer')?.complete;},background);
+   assert.equal(await page.frameLocator('#artwork-preview-frame').locator('img.story-flyer').evaluate(img=>getComputedStyle(img).objectFit),'contain');
+  }
+  await page.locator('#story-design-controls').screenshot({path:'test-results/story-design-controls.png'});
+  await page.locator('[name=storyFlyerColors]').uncheck();await page.waitForFunction(()=>document.querySelector('#story-palette-note').textContent==='Using chapter colors.');assert.match(await page.locator('#story-palette').getAttribute('aria-label'),/#102840/);await page.locator('[name=storyFlyerColors]').check();
+  await page.locator('[data-close=editor]').first().click();await page.locator('[data-view=settings]').click();await page.locator('[name=token]').fill('mock-story-credential');await page.locator('#settings-form button.primary').click();await page.waitForFunction(()=>document.querySelector('#connection-label').textContent==='Connected');
+  await page.locator('[data-view=dashboard]').click();await page.locator('#new-campaign').click();
+  for(const [name,value]of Object.entries({title:'Story background fixture',start:'2026-11-20T18:30',end:'2026-11-20T20:00',location:'Scott E100'}))await page.locator(`[name=${name}]`).fill(value);
+  await page.locator('[name=storyBackground][value=blueprint-rings]').check();
+  await page.locator('[name=flyer]').setInputFiles({name:'first.png',mimeType:'image/png',buffer:first});await page.locator('[name=flyer]').setInputFiles({name:'second.png',mimeType:'image/png',buffer:second});
+  await page.waitForFunction(()=>document.querySelector('#story-palette-note').textContent.startsWith('Colors sampled')&&document.querySelector('#story-palette').getAttribute('aria-label').includes('#7043a0'));
+  const paletteBefore=await page.locator('#story-palette').getAttribute('aria-label');await page.locator('#save-button').click();await page.waitForFunction(()=>!document.querySelector('#editor').open);
+  assert.equal(saved.storyDesign.background,'blueprint-rings');assert.equal(saved.storyDesign.paletteSource,'flyer');assert.ok(saved.storyDesign.palette.includes('#7043a0'));validateCampaign(saved);assert.equal(writes.length,2);
+  await page.locator(`#campaign-list [data-detail="${saved.id}"]`).click();await page.locator('[data-edit]').click();assert.equal(await page.locator('[name=storyBackground]:checked').inputValue(),'blueprint-rings');assert.equal(await page.locator('#story-palette').getAttribute('aria-label'),paletteBefore);
+  await page.locator('[name=flyer]').setInputFiles({name:'neutral.png',mimeType:'image/png',buffer:neutral});await page.waitForFunction(()=>document.querySelector('#story-palette-note').textContent.includes('mostly neutral'));assert.match(await page.locator('#story-palette').getAttribute('aria-label'),/#102840/);
+  await page.locator('#clear-flyer').click();await page.waitForFunction(()=>document.querySelector('#story-palette').getAttribute('aria-label').includes('#7043a0'));
+  await page.locator('[name=storyImage]').fill('https://fixture.example/custom.jpg');assert.equal(await page.locator('[name=storyBackground]').first().isDisabled(),true);assert.match(await page.locator('#story-palette-note').textContent(),/custom Story image/);await page.locator('[name=storyImage]').fill('');assert.equal(await page.locator('[name=storyBackground]').first().isDisabled(),false);
+  await page.waitForFunction(()=>{const f=document.querySelector('#artwork-preview-frame');return f.style.visibility==='visible'&&f.contentDocument?.querySelector('.page.blueprint-rings');});
+  const previewBackground=await page.frameLocator('#artwork-preview-frame').locator('.page').evaluate(e=>getComputedStyle(e).backgroundImage);
+  await page.locator('[data-close=editor]').first().click();await page.locator(`#campaign-list [data-detail="${saved.id}"]`).click();await page.locator('[data-duplicate]').click();assert.equal(await page.locator('[name=storyBackground]:checked').inputValue(),'blueprint-rings');assert.match(await page.locator('#story-palette').getAttribute('aria-label'),/#7043a0/);
+  await page.setViewportSize({width:390,height:844});assert.equal(await page.locator('#editor').evaluate(e=>e.scrollWidth<=e.clientWidth),true);await page.locator('#story-design-controls').screenshot({path:'test-results/story-design-controls-mobile.png'});await page.locator('[data-close=editor]').first().click();
+  // A displayed remote image without CORS access must fall back to chapter colors.
+  const denied={...saved,id:'cors-fixture',flyerUrl:'https://cors-denied.example/flyer.png',storyDesign:{background:'color-wash',paletteSource:'flyer'}};
+  await page.route('**/data/archive-index.json',r=>r.fulfill({json:{campaigns:[denied]}}));await page.route('https://cors-denied.example/**',r=>r.fulfill({contentType:'image/png',headers:{'Access-Control-Allow-Origin':'https://different.example'},body:first}));await page.reload();await page.locator('[data-view=dashboard]').click();await page.locator('#campaign-list [data-detail]').first().click();await page.locator('[data-edit]').click();await page.waitForFunction(()=>document.querySelector('#story-palette-note').textContent.includes('could not be sampled'),null,{timeout:10000}).catch(async error=>{console.log('Palette diagnostic',await page.locator('#story-palette-note').textContent(),await page.locator('[name=title]').inputValue());throw error;});assert.match(await page.locator('#story-palette').getAttribute('aria-label'),/#102840/);await page.locator('[data-close=editor]').first().click();
+  // Shared preview/backend composition, fitting, and actual JPEG generation.
+  const config=JSON.parse(await readFile('config/chapter.json','utf8')),assets=await loadFlyerAssets(process.cwd(),config),template=await readFile('templates/refined-blueprint.html','utf8');
+  assert.equal(flyerHtml(template,saved,config,'feed',assets),flyerHtml(template,{...saved,storyDesign:undefined},config,'feed',assets),'Story styling must not alter feed output');
+  const renderPage=await browser.newPage({viewport:{width:1080,height:1920}});try{await renderPage.route('https://raw.githubusercontent.com/**',r=>r.request().url().includes('broken')?r.abort():r.fulfill({contentType:'image/png',body:r.request().url().endsWith('?wide')?wide:second}));for(const background of ['color-wash','blueprint-rings','folded-paper'])for(const long of [false,true]){const campaign={...saved,flyerUrl:saved.flyerUrl+(long?'?wide':''),title:long?'Engineering Design Night: Build, Test, and Improve Your Next Mechanical Assembly':saved.title,advertising:long?{foodDetails:'Pizza, with vegetarian options',benefit:'Explore mechanical design and build professional connections.',speaker:'Chapter alumni panel',audience:'All engineering students',cost:'Free',rsvpDeadline:'2026-11-19T17:00:00-05:00'}:{},storyDesign:{...saved.storyDesign,background}};await renderPage.setContent(flyerHtml(template,campaign,config,'story',assets));await fitFlyer(renderPage);assert.ok(await renderPage.locator('img.story-flyer').evaluate(img=>img.complete&&img.naturalWidth>0));if(background==='blueprint-rings'&&!long)assert.equal(await renderPage.locator('.page').evaluate(e=>getComputedStyle(e).backgroundImage),previewBackground);}await renderPage.setContent(flyerHtml(template,{...saved,flyerUrl:'https://raw.githubusercontent.com/fixture/broken.png'},config,'story',assets));await assert.rejects(()=>fitFlyer(renderPage),/uploaded flyer could not load/);}finally{await renderPage.close();}
+  const root=await mkdtemp(join(tmpdir(),'story-design-render-'));try{await mkdir(join(root,'docs/assets'),{recursive:true});await cp('docs/assets/fonts',join(root,'docs/assets/fonts'),{recursive:true});await cp('docs/assets/logos',join(root,'docs/assets/logos'),{recursive:true});await mkdir(join(root,'config'));await cp('config/chapter.json',join(root,'config/chapter.json'));await cp('templates',join(root,'templates'),{recursive:true});await mkdir(join(root,'data/campaigns/2026-27'),{recursive:true});await writeFile(join(root,'data/campaigns/2026-27',saved.id+'.json'),JSON.stringify({...saved,flyerUrl:''}));await renderFlyers({root});assert.ok((await readFile(join(root,`docs/media/2026-27/${saved.id}-story.jpg`))).length>10000);}finally{await rm(root,{recursive:true,force:true});}
+  assert.deepEqual(errors,[]);console.log('Story design checks passed: sampling, replacement races, neutral/CORS fallback, saved palettes, edit/duplicate, overrides, mobile, fitting, and shared rendering.');
+ }finally{await context.close();}
+}

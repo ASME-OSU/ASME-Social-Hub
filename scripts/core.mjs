@@ -1,3 +1,4 @@
+import {validateStoryDesign} from '../docs/story-design.mjs';
 import { readdir, readFile, mkdir, writeFile, rename } from 'node:fs/promises';
 import path from 'node:path';
 
@@ -52,6 +53,7 @@ export function validateCampaign(c) {
   assert(typeof c.food === 'boolean', 'Food must be a boolean');
   if (c.template !== undefined) assert(['blueprint','editorial','refined-blueprint','editorial-poster','assembly-card'].includes(c.template), 'Invalid campaign template');
   validateAdvertising(c.advertising);
+  validateStoryDesign(c.storyDesign);
   for (const ch of ['feed','story']) if (c.campaign?.[ch]) assert(cadenceValid(c.campaign[ch]), `Invalid ${ch} cadence`);
   assert(!c.campaign?.groupme?.createAt || c.campaign.groupme.createAt === 'immediately', 'GroupMe createAt supports immediately only');
   if(c.revision!==undefined) assert(Number.isInteger(c.revision) && c.revision>=0, 'Invalid revision');

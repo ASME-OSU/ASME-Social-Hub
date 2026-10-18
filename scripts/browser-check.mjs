@@ -1,3 +1,4 @@
+import {checkStoryDesigns} from './check-story-designs.mjs';
 import {checkThemes} from './check-themes.mjs';
 import {chromium} from 'playwright';
 import {spawn} from 'node:child_process';
@@ -13,6 +14,7 @@ try {
  for(let i=0;i<50;i++){try{if((await fetch(base)).ok)break;}catch{}await new Promise(r=>setTimeout(r,100));}
  browser=await chromium.launch({headless:true});
  await checkThemes(browser,base);
+ await checkStoryDesigns(browser,base);
  const page=await browser.newPage({viewport:{width:1440,height:1080},timezoneId:'America/Los_Angeles'});
  await page.clock.install({time:new Date('2026-10-15T16:00:00Z')});
  const errors=[];page.on('pageerror',e=>errors.push(e.message));

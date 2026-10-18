@@ -57,7 +57,7 @@ export async function renderFlyers({root = process.cwd(), force = false} = {}) {
   const config = JSON.parse(await readFile(resolve(root,'config/chapter.json'),'utf8'));
   validateConfig(config);
   const assets = await loadFlyerAssets(root,config);
-  const rendererSource = await readFile(new URL('../docs/flyer-render.mjs',import.meta.url),'utf8');
+  const rendererSource = await Promise.all(['flyer-render.mjs','story-design.mjs'].map(name=>readFile(new URL('../docs/'+name,import.meta.url),'utf8')));
   const { chromium } = await import('playwright');
   const browser = await chromium.launch({headless:true});
   let count = 0;

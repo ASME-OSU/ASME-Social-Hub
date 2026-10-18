@@ -5,7 +5,7 @@ const styles=new Set(['blueprint','editorial','refined-blueprint','editorial-pos
 const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const imageURL=value=>{try{const url=new URL(value);return url.protocol==='https:'&&!url.username&&!url.password?url.href:'';}catch{return '';}};
 
-export function createFlyerPreview({form,getConfig,getExisting,getUpload}) {
+export function createFlyerPreview({form,getConfig,getExisting,getUpload,getStoryDesign}) {
   const details=document.querySelector('#artwork-preview'),frame=document.querySelector('#artwork-preview-frame'),stage=frame.parentElement,status=document.querySelector('#artwork-preview-status'),caption=document.querySelector('#artwork-preview-caption');
   const templates=new Map();let format='feed',timer,revision=0;
   function resize(){const height=format==='story'?1920:1350;stage.style.aspectRatio=`1080 / ${height}`;frame.style.height=`${height}px`;frame.style.transform=`scale(${stage.clientWidth/1080})`;}
@@ -22,12 +22,12 @@ export function createFlyerPreview({form,getConfig,getExisting,getUpload}) {
       if(missingDate)source=source.replace(/{{(date|day|month|shortDate|time)}}/g,(_,key)=>({date:'Choose a date',day:'—',month:'DATE',shortDate:'Choose a date',time:'Choose a time'}[key]));
       const advertising={};for(const key of ['foodDetails','benefit','speaker','audience','cost','rsvpUrl'])if(f[key].value.trim())advertising[key]=f[key].value.trim();
       if(f.rsvpDeadline.value)advertising.rsvpDeadline=fromLocal(f.rsvpDeadline.value,config.timezone);
-      const campaign={title:f.title.value.trim()||'Your event title',description:f.description.value.trim(),start,type:f.type.value,location:f.location.value.trim()||'Building and room',food:f.food.checked,advertising,flyerUrl:imageURL(getExisting()?.flyerUrl)};
-      const upload=getUpload();if(upload?.startsWith('blob:'))source=source.replace('{{flyer}}',`<img class="flyer" src="${escape(upload)}" alt=""><div class="photo-overlay"></div>`);
+      const campaign={title:f.title.value.trim()||'Your event title',description:f.description.value.trim(),start,type:f.type.value,location:f.location.value.trim()||'Building and room',food:f.food.checked,advertising,storyDesign:getStoryDesign(),flyerUrl:imageURL(getExisting()?.flyerUrl)};
+      const upload=getUpload();
       const direct=imageURL(f[channel+'Image'].value),logo=config.brand?.logoFlyer||config.brand?.logoMark||config.brand?.logo;
       if(f[channel+'Image'].value.trim()&&!direct)throw Error('Use an HTTPS image URL without embedded credentials to preview a custom image.');
       const fontCss=`@font-face{font-family:Inter;font-weight:100 900;src:url("${new URL('./assets/fonts/inter-latin.woff2',document.baseURI)}")}@font-face{font-family:'DM Serif Display';font-weight:400;src:url("${new URL('./assets/fonts/dm-serif-display-latin.woff2',document.baseURI)}")}`;
-      const assets={fontCss,logo:logo?new URL(logo,document.baseURI).href:''};
+      const assets={fontCss,flyer:upload,previewMissingDate:missingDate,logo:logo?new URL(logo,document.baseURI).href:''};
       const html=direct?`<!doctype html><html><head><style>*{margin:0}html,body{width:1080px;height:${height}px;background:#102840}img{width:100%;height:100%;object-fit:contain}</style></head><body><img src="${escape(direct)}" alt="Custom ${label} image"></body></html>`:flyerHtml(source,campaign,config,channel,assets);
       const csp=`<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; font-src 'self'; img-src 'self' https: data: blob:;">`;
       frame.onload=async()=>{
@@ -46,7 +46,8 @@ export function createFlyerPreview({form,getConfig,getExisting,getUpload}) {
   function schedule(){clearTimeout(timer);timer=setTimeout(update,180);}
   form.addEventListener('input',schedule);form.addEventListener('change',schedule);
   details.addEventListener('toggle',()=>{if(details.open)update();});
-  document.querySelectorAll('[data-preview-format]').forEach(button=>button.addEventListener('click',()=>{format=button.dataset.previewFormat;document.querySelectorAll('[data-preview-format]').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));update();}));
+  function setFormat(value){format=value;document.querySelectorAll('[data-preview-format]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.previewFormat===format)));update();}
+  document.querySelectorAll('[data-preview-format]').forEach(button=>button.addEventListener('click',()=>setFormat(button.dataset.previewFormat)));
   document.querySelector('#editor').addEventListener('close',()=>{++revision;clearTimeout(timer);frame.onload=null;frame.removeAttribute('srcdoc');status.textContent='';});
-  return {update,schedule};
+  return {update,schedule,showStory:()=>setFormat('story')};
 }

@@ -1,3 +1,4 @@
+import {renderStoryDesign,validateStoryDesign} from './story-design.mjs';
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const color = (value, fallback) => /^#[0-9a-f]{3,8}$/i.test(value || '') ? value : fallback;
 const safeUrl = value => { try { return new URL(value).protocol === 'https:' ? escape(value) : ''; } catch { return ''; } };
@@ -23,11 +24,12 @@ export function flyerAdvertising(campaign, config, format='feed') {
 }
 export function flyerHtml(template, campaign, config, format, assets = {}) {
   const date = new Date(campaign.start), tz = config.timezone;
-  const image = safeUrl(campaign.flyerUrl);
+  validateStoryDesign(campaign.storyDesign);
+  const image = assets.flyer?.startsWith('blob:')?escape(assets.flyer):safeUrl(assets.flyer||campaign.flyerUrl);
   const logo = assets.logo || safeUrl(config.brand?.logoFlyer || config.brand?.logoMark || config.brand?.logoReverse || config.brand?.logo);
   const advertising=flyerAdvertising(campaign,config,format);
   const values = {
-    advertising,advertisingClass:advertising?'enriched':'',
+    flyerSource:image,advertising,advertisingClass:advertising?'enriched':'',
     primary:color(config.brand?.primary,'#102840'),accent:color(config.brand?.accent,'#ba0c2f'),background:color(config.brand?.background,'#f2f5f9'),
     titleSize:campaign.title.length>70?64:campaign.title.length>45?84:112,storyTitleSize:campaign.title.length>70?78:campaign.title.length>45?96:124,
     fontCss:assets.fontCss || '',brand:logo ? `<img class="logo" src="${logo}" alt="${escape(config.chapterName)}">` : escape(config.chapterName),
@@ -43,11 +45,13 @@ export function flyerHtml(template, campaign, config, format, assets = {}) {
     flyer:image ? `<img class="flyer" src="${image}" alt=""><div class="photo-overlay"></div>` : '',
     logo:logo ? `<img class="logo" src="${logo}" alt="">` : ''
   };
+  if(assets.previewMissingDate)Object.assign(values,{date:'Choose a date',day:'—',month:'DATE',shortDate:'Choose a date',time:'Choose a time'});
+  if(format==='story'&&campaign.storyDesign?.background&&campaign.storyDesign.background!=='template')return renderStoryDesign({campaign,config,assets,values});
   return template.replace(/{{(\w+)}}/g,(_,key)=>values[key] ?? '');
 }
 export async function fitFlyerDocument(doc = document) {
     await doc.fonts.ready;
-    await Promise.all([...doc.images].map(image => image.decode().catch(() => {})));
+    await Promise.all([...doc.images].map(image => image.decode().catch(() => {if(image.classList.contains('story-flyer'))throw Error('The uploaded flyer could not load. Check its URL or upload the image again.');})));
     const page = doc.querySelector('.page');
     if (!page) return;
     const title = page.querySelector('h1');
