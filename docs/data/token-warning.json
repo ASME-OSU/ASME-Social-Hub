@@ -1,1 +1,6 @@
-{"status":"unknown","checkedAt":"2026-10-18T00:14:36.608Z"}
+{
+  "status": "unknown",
+  "warning": false,
+  "configured": true,
+  "checkedAt": "2026-10-18T03:27:57.780Z"
+}
