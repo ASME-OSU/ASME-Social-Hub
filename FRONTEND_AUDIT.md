@@ -30,3 +30,11 @@ The audit preserved the chapter-wide GroupMe pause. GroupMe bot announcements we
 Uploaded PNGs and JPEGs serve as source artwork for the chapter template. Generated publishing assets remain JPEG. Direct feed/story URL overrides still require publicly reachable JPEGs.
 
 This was a focused usability and accessibility audit, not a formal accessibility certification.
+
+## Follow-up to PR #2 — October 18, 2026
+
+Fixed the dark-mode regression caused by setting semantic `--navy`, `--scarlet`, and `--ice` values inline from chapter configuration. Branding now uses separate `--brand-*` tokens, while theme tokens control text and surfaces. Filled controls retain dark brand backgrounds with white text; dark-mode secondary text is lighter, and native form controls follow the selected theme.
+
+The blueprint sidebar now uses a 240px expanded layout, a larger centered Social Hub logo, calmer connection messaging, and one header collapse control. Tablet rail mode can explicitly expand and retains that choice. Mobile hides the entire sidebar header and fits all navigation buttons within the bottom bar and safe-area bounds.
+
+Validation: all 63 unit tests, syntax/configuration checks, and the full browser suite passed. Added browser regression checks measure 4.5:1 text contrast on representative dashboard, settings, and editor controls in both themes; verify system/explicit theme selection and persistence; exercise desktop/tablet collapse; and check mobile overflow and navigation bounds. Inspected desktop, tablet, mobile, settings, and editor screenshots in light and dark modes. QA examples remain isolated and are not production campaigns.
