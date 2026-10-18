@@ -84,7 +84,9 @@ export async function renderFlyers({root = process.cwd(), force = false} = {}) {
           await page.setContent(flyerHtml(template,campaign,config,format,assets),{waitUntil:'networkidle'});
           await fitFlyer(page);
           await mkdir(dirname(target),{recursive:true});
-          await page.screenshot({path:target,type:'jpeg',quality:93});
+          const uploaded=page.locator('img.uploaded-feed');
+          if(await uploaded.count())await uploaded.screenshot({path:target,type:'jpeg',quality:93});
+          else await page.screenshot({path:target,type:'jpeg',quality:93});
           await mkdir(dirname(marker),{recursive:true});
           await writeFile(marker,revision);
           console.log(`Rendered ${campaign.id} ${format}`); count++;

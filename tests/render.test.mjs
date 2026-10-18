@@ -12,6 +12,15 @@ test('flyer displays chapter-local time and optional food line',()=>{
  const html=flyerHtml(template,{...campaign,food:true},config,'story');assert.match(html,/6:00 PM EST/);assert.match(html,/Food provided/);assert.ok(!html.includes('{{'));
 });
 const blueprint=await readFile(new URL('../templates/blueprint.html',import.meta.url),'utf8');
+test('feed uploads bypass every template and Story treatment without adding event artwork',()=>{
+ const uploaded={...campaign,flyerUrl:'https://example.org/flyer.png?x=1&y=2',storyDesign:{background:'folded-paper'}};
+ const html=flyerHtml(template,uploaded,config,'feed');
+ assert.equal(html,flyerHtml(blueprint,uploaded,config,'feed'));
+ assert.match(html,/class="flyer uploaded-feed"/);assert.match(html,/flyer.png\?x=1&amp;y=2/);
+ assert.doesNotMatch(html,/<h1|class="logo"|photo-overlay|Food provided|A &amp; B/);
+ assert.match(html,/height:auto/);
+ assert.match(flyerHtml(template,uploaded,config,'feed',{flyer:'blob:local-upload'}),/src="blob:local-upload"/);
+});
 test('blueprint omits food cell, provides missing location and photo overlay',()=>{
  const html=flyerHtml(blueprint,{...campaign,title:'An engineering event with a very long title that still needs a clear and readable layout',location:{},flyerUrl:'https://example.org/photo.jpg'},config,'story');
  assert.match(html,/block nofood/);assert.ok(!html.includes('<small>Food</small>'));assert.match(html,/Location to be announced/);assert.match(html,/photo-overlay/);assert.match(html,/object-fit:cover/);assert.match(html,/270px 84px 360px/);assert.ok(!html.includes('{{'));

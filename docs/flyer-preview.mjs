@@ -7,14 +7,14 @@ const imageURL=value=>{try{const url=new URL(value);return url.protocol==='https
 
 export function createFlyerPreview({form,getConfig,getExisting,getUpload,getStoryDesign}) {
   const details=document.querySelector('#artwork-preview'),frame=document.querySelector('#artwork-preview-frame'),stage=frame.parentElement,status=document.querySelector('#artwork-preview-status'),caption=document.querySelector('#artwork-preview-caption');
-  const templates=new Map();let format='feed',timer,revision=0;
-  function resize(){const height=format==='story'?1920:1350;stage.style.aspectRatio=`1080 / ${height}`;frame.style.height=`${height}px`;frame.style.transform=`scale(${stage.clientWidth/1080})`;}
+  const templates=new Map();let format='feed',feedHeight=1350,timer,revision=0;
+  function resize(){const height=format==='story'?1920:feedHeight;stage.style.aspectRatio=`1080 / ${height}`;frame.style.height=`${height}px`;frame.style.transform=`scale(${stage.clientWidth/1080})`;}
   new ResizeObserver(resize).observe(stage);
   async function template(name){if(!templates.has(name))templates.set(name,fetch(`./templates/${name}.html`).then(response=>{if(!response.ok)throw Error('Preview could not load. Try again when your connection is available.');return response.text();}).catch(error=>{templates.delete(name);throw error;}));return templates.get(name);}
   async function update(){
     const current=++revision,config=getConfig();if(!config||!document.querySelector('#editor').open||!details.open)return;
     const f=form.elements,channel=format,label=channel==='feed'?'Feed':'Story',height=channel==='story'?1920:1350;
-    resize();stage.hidden=false;frame.style.visibility='hidden';status.textContent='Updating preview…';
+    feedHeight=1350;resize();stage.hidden=false;frame.style.visibility='hidden';status.textContent='Updating preview…';
     try{
       const name=f.template.value;if(!styles.has(name))throw Error('Choose a flyer style to preview.');
       let source=await template(name);if(current!==revision)return;
@@ -36,8 +36,10 @@ export function createFlyerPreview({form,getConfig,getExisting,getUpload,getStor
         try{
           await Promise.race([direct?Promise.all([...doc.images].map(image=>image.decode().catch(()=>{throw Error('Custom image could not load. Check the image URL.');}))):fitFlyerDocument(doc),new Promise((_,reject)=>{timeout=setTimeout(()=>reject(Error('Preview is taking too long. Check image URLs and try again.')),8000);})]);
           if(current!==revision)return;
-          frame.style.visibility='visible';status.textContent=direct?'Custom image override. The selected style applies to generated artwork only.':(!f.title.value.trim()||missingDate||!f.location.value.trim()?'Placeholder text is shown for empty fields.':'Preview updated with your event details.');
-          caption.textContent=`${label} preview · 1080 × ${height}${f[channel+'Enabled'].checked?'':' · channel is off'}`;
+          const uploaded=doc.querySelector('img.uploaded-feed');
+          if(uploaded){feedHeight=Math.round(1080*uploaded.naturalHeight/uploaded.naturalWidth);resize();}
+          frame.style.visibility='visible';status.textContent=direct?'Custom image override. The selected style applies to generated artwork only.':uploaded?'Your uploaded flyer is used directly for the feed, without added text, borders, or a background.':(!f.title.value.trim()||missingDate||!f.location.value.trim()?'Placeholder text is shown for empty fields.':'Preview updated with your event details.');
+          caption.textContent=`${label} preview · 1080 × ${uploaded?feedHeight:height}${f[channel+'Enabled'].checked?'':' · channel is off'}`;
         }catch(error){if(current===revision){stage.hidden=true;status.textContent=error.message;}}finally{clearTimeout(timeout);}
       };
       frame.srcdoc=html.replace('<head>',`<head>${csp}<meta name="preview-revision" content="${current}">`);
