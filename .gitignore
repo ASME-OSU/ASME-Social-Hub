@@ -7,3 +7,8 @@ test-results/
 playwright-report/
 coverage/
 .local/
+
+# Finder/iCloud conflict copies in generated and test trees.
+docs/**/* 2.json
+docs/**/* 2.mjs
+tests/**/* 2.mjs

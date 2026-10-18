@@ -1,6 +1,6 @@
-import fs from 'node:fs/promises';
 import path from 'node:path';
 import {pathToFileURL} from 'node:url';
+import {readCampaigns,writeJson} from './core.mjs';
 import {createInstagramClient} from './ig.mjs';
 export async function collectInsights(campaign,{client=createInstagramClient(),now=new Date()}={}) {
   campaign.results ||= {}; campaign.results.insights ||= [];
@@ -20,10 +20,11 @@ export async function collectInsights(campaign,{client=createInstagramClient(),n
   }
   return campaign;
 }
-export async function main(root=process.cwd()) {
-  const base=path.join(root,'data/campaigns');
-  for(const year of await fs.readdir(base)) for(const filename of await fs.readdir(path.join(base,year))) if(filename.endsWith('.json')) {
-    const file=path.join(base,year,filename); const campaign=JSON.parse(await fs.readFile(file,'utf8')); const before=JSON.stringify(campaign); await collectInsights(campaign); if(JSON.stringify(campaign)!==before) await fs.writeFile(file,JSON.stringify(campaign,null,2)+'\n');
+export async function main(root=process.cwd(),options={}) {
+  for(const campaign of await readCampaigns(root)) {
+    const before=JSON.stringify(campaign);
+    await collectInsights(campaign,options);
+    if(JSON.stringify(campaign)!==before) await writeJson(path.join(root,'data/campaigns',campaign.year,`${campaign.id}.json`),campaign);
   }
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href) main().catch(()=>{console.error('Insights collection failed; check configuration and credentials.');process.exitCode=1;});

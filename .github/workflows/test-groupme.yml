@@ -29,7 +29,9 @@ jobs:
         run: |
           node --input-type=module <<'JS'
           import {postBotMessage} from './scripts/groupme.mjs';
-          const text='ASME Social Hub private connection test — setup only; no event is being announced.';
+          import {readFile} from 'node:fs/promises';
+          const config=JSON.parse(await readFile('config/chapter.json','utf8'));
+          const text=`${config.chapterName} private connection test — setup only; no event is being announced.`;
           if(!process.env.GROUPME_TEST_BOT_ID) throw new Error('Save GROUPME_TEST_BOT_ID for the separate ASME Bot Testing bot.');
           console.log('Separate test credential is present; production bot credential is not supplied to this job.');
           console.log('Message preview: '+text);

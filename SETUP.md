@@ -66,3 +66,11 @@ Expand **Event extras** when creating or editing a campaign to add food details,
 Food details appear only when Food provided is checked. Captions and announcements include completed details; flyers highlight key information and direct readers to the caption for fuller instructions. Keep copy concise: Instagram captions and GroupMe announcements have provider length limits, and excessive content produces an actionable error rather than silently losing information.
 
 Stories are generated as one static 1080×1920 JPEG from the event fields and selected chapter template. The publisher sends the image as a Story, without a visible feed caption or interactive music, polls, or link stickers. Story artwork therefore omits references to a caption. The scheduled dispatcher runs hourly at minute 17; scheduled times are targets and GitHub Actions can run late.
+
+## Flyer styles and maintenance feedback
+
+Choose **Flyer style** in the campaign editor: **Refined blueprint**, **Editorial poster**, or **Assembly card**. The choice is saved per campaign and preserved when editing or duplicating. The default is Refined blueprint; legacy Blueprint and Editorial values remain supported for older records. Both feed and Story artwork use the simpler circular chapter logo configured by `brand.logoFlyer`. The dashboard corner logo and tab icon use the separate Social Hub branding.
+
+The renderer fits long titles and optional event details before saving JPEGs. Shorten copy if it reports insufficient space. Actions caches revision markers, but missing images are always regenerated and published assets remain protected.
+
+Settings displays a renewal warning when a known Instagram expiry is within 14 days or has passed. Unknown expiry does not invent a deadline. Each maintenance check replaces the previous status, and warnings show when their last check is stale. Issue imports now comment with validation guidance on authorized failures; success is confirmed and the issue closed after the campaign commit is pushed.

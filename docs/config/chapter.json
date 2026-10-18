@@ -22,7 +22,7 @@
     "logoReverse": "assets/logos/social-hub.png",
     "logoMark": "assets/logos/social-hub.png",
     "logoMarkReverse": "assets/logos/social-hub.png",
-    "logoFlyer": "assets/logos/mark.png"
+    "logoFlyer": "assets/logos/chapter-simple.png"
   },
   "defaultCadence": {
     "feed": {
@@ -66,7 +66,7 @@
       "food": false
     }
   ],
-  "defaultTemplate": "blueprint",
+  "defaultTemplate": "refined-blueprint",
   "integrations": {
     "groupme": {
       "enabled": true,

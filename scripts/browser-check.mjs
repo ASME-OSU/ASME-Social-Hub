@@ -1,6 +1,6 @@
 import {chromium} from 'playwright';
 import {spawn} from 'node:child_process';
-import {readFile,mkdir,mkdtemp,cp,writeFile,rm} from 'node:fs/promises';
+import {readFile,mkdir,mkdtemp,cp,writeFile,rm,stat} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join,resolve} from 'node:path';
 import assert from 'node:assert/strict';
@@ -39,6 +39,8 @@ try {
  await page.locator('#new-campaign').click();
  assert.equal(await page.getByRole('dialog',{name:'Create a campaign',exact:true}).count(),1);
  assert.equal(await page.evaluate(()=>document.activeElement.id),'editor-title');
+ assert.equal(await page.locator('[name=template]').inputValue(),'refined-blueprint');
+ await page.locator('[name=template]').selectOption('assembly-card');await page.locator('[name=type]').selectOption('workshop');assert.equal(await page.locator('[name=template]').inputValue(),'assembly-card');
  await page.locator('[name=title]').fill('Browser verification event');
  await page.locator('[name=start]').fill('2026-11-20T18:30');
  await page.locator('[name=end]').fill('2026-11-20T20:00');
@@ -54,7 +56,7 @@ try {
  await page.locator('[name=rsvpUrl]').fill(extras.rsvpUrl);
  const downloadPromise=page.waitForEvent('download');await page.locator('#save-button').click();
  const download=await downloadPromise;const downloaded=JSON.parse(await readFile(await download.path(),'utf8'));
- assert.equal(downloaded.campaign.groupme.enabled,false);assert.equal(downloaded.status.groupme,'skipped');
+ assert.equal(downloaded.template,'assembly-card');assert.equal(downloaded.campaign.groupme.enabled,false);assert.equal(downloaded.status.groupme,'skipped');
  assert.equal(await page.locator('#groupme-schedule-help').isVisible(),false);
  assert.equal(downloaded.start,'2026-11-20T23:30:00.000Z');assert.equal(downloaded.food,false);assert.equal(downloaded.demo,undefined);assert.equal(downloaded.status.feed,'pending');
  assert.equal(downloaded.advertising.rsvpDeadline,'2026-11-19T22:00:00.000Z');
@@ -89,14 +91,15 @@ try {
  await page.waitForFunction(()=>document.querySelector('#connection-label').textContent.startsWith('Connected to '));
  await page.locator('[data-view=dashboard]').click();await page.locator('#new-campaign').click();
  for(const [name,value] of Object.entries({title:'API verification event',start:'2026-11-20T18:30',end:'2026-11-20T20:00',location:'Scott E100'}))await page.locator(`[name=${name}]`).fill(value);
+ await page.locator('[name=template]').selectOption('editorial-poster');
  await page.locator('#advertising-details summary').click();
  for(const [name,value] of Object.entries(extras))await page.locator(`[name=${name}]`).fill(value);
  await page.locator('#save-button').click();await page.waitForFunction(()=>!document.querySelector('#editor').open);
  assert.equal(writes.length,1);const saved=JSON.parse(Buffer.from(writes[0].content,'base64').toString());
- assert.equal(saved.title,'API verification event');assert.equal(saved.status.groupme,'skipped');assert.equal(saved.demo,undefined);assert.equal(writes[0].branch,'main');assert.equal(await page.evaluate(()=>localStorage.getItem('social-hub-connection')),null);
+ assert.equal(saved.template,'editorial-poster');assert.equal(saved.title,'API verification event');assert.equal(saved.status.groupme,'skipped');assert.equal(saved.demo,undefined);assert.equal(writes[0].branch,'main');assert.equal(await page.evaluate(()=>localStorage.getItem('social-hub-connection')),null);
  // A scheduler update that arrives while an officer edits must survive that edit.
  remoteRecord=structuredClone(saved);remoteRecord.status.feed='done';remoteRecord.results.feed={mediaId:'mock-published-id',postedAt:'2026-11-13T17:00:00Z'};
- await page.locator(`#campaign-list [data-detail="${saved.id}"]`).click();assert.equal(await page.locator('#detail-content a[href="https://example.org/register"]').count(),1);await page.locator('[data-edit]').click();assert.equal(await page.locator('[name=rsvpDeadline]').inputValue(),extras.rsvpDeadline);await page.locator('[name=description]').fill('Updated officer description');await page.locator('#save-button').click();await page.waitForFunction(()=>!document.querySelector('#editor').open);
+ await page.locator(`#campaign-list [data-detail="${saved.id}"]`).click();assert.equal(await page.locator('#detail-content a[href="https://example.org/register"]').count(),1);await page.locator('[data-edit]').click();assert.equal(await page.locator('[name=template]').inputValue(),'editorial-poster');assert.equal(await page.locator('[name=rsvpDeadline]').inputValue(),extras.rsvpDeadline);await page.locator('[name=description]').fill('Updated officer description');await page.locator('#save-button').click();await page.waitForFunction(()=>!document.querySelector('#editor').open);
  assert.equal(writes.length,2);const edited=JSON.parse(Buffer.from(writes[1].content,'base64').toString());assert.equal(edited.status.feed,'done');assert.equal(edited.results.feed.mediaId,'mock-published-id');assert.equal(writes[1].sha,'latest-file-sha');assert.equal(edited.revision,2);
  remoteRecord={...edited,revision:3};await page.locator(`#campaign-list [data-detail="${saved.id}"]`).click();await page.locator('[data-edit]').click();await page.locator('#save-button').click();await page.waitForSelector('#form-error:not([hidden])');assert.match(await page.locator('#form-error').textContent(),/edited since/);assert.equal(writes.length,2);await page.locator('[data-close=editor]').first().click();
  // All channels may be off, and PNG uploads retain their format in the real save payload.
@@ -146,12 +149,26 @@ try {
  assert.equal(botSaved.campaign.groupme.enabled,true);assert.equal(botSaved.campaign.groupme.announce,true);
  assert.equal(botSaved.status.groupme,'pending');
  await botPage.close();
+ // Expiry warnings use dates, clear healthy states, and never need a live token.
+ let warningData={status:'warning',expiresAt:'2026-10-20T16:00:00Z',checkedAt:'2026-10-15T16:00:00Z'};
+ await page.route('**/data/token-warning.json',route=>route.fulfill({json:warningData}));
+ await page.reload();await page.locator('[data-view=settings]').click();await page.locator('#token-warning').waitFor({state:'visible'});assert.match(await page.locator('#token-warning').textContent(),/in 5 days/);
+ for(const status of ['healthy','unknown']){warningData={status,checkedAt:'2026-10-15T16:00:00Z'};await page.reload();await page.locator('[data-view=settings]').click();assert.equal(await page.locator('#token-warning').isVisible(),false);}
  // Verify enriched layouts in both formats without adding browser dependencies to unit tests.
- {const assets=await loadFlyerAssets(process.cwd(),{brand:{}});const campaign=downloaded,config=JSON.parse(await readFile('config/chapter.json','utf8')),template=await readFile('templates/editorial.html','utf8'),blueprint=await readFile('templates/blueprint.html','utf8');const rich={...campaign,title:'Engineering Career Connections',description:'Meet engineering professionals and learn about their work.',food:true,flyerUrl:'',advertising:{foodDetails:'Pizza, with vegetarian options',benefit:'Explore engineering careers and build professional connections.',speaker:'Chapter alumni panel',audience:'All engineering students',cost:'Free',rsvpUrl:'https://example.org/register',rsvpDeadline:'2026-11-03T18:00:00-05:00'}};
- for(const source of [template,blueprint])for(const format of ['feed','story']){const page=await browser.newPage({viewport:{width:1080,height:format==='feed'?1350:1920}});try{await page.setContent(flyerHtml(source,rich,config,format,assets));await fitFlyer(page);assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth),1080);assert.ok(await page.evaluate(()=>{const p=document.querySelector('.page'),hero=p.querySelector('.hero'),block=p.querySelector('.block');return hero.getBoundingClientRect().bottom<=block.getBoundingClientRect().top && block.getBoundingClientRect().bottom<=p.getBoundingClientRect().bottom;}));}finally{await page.close();}}
- for(const format of ['feed','story']){
+ {const assets=await loadFlyerAssets(process.cwd(),JSON.parse(await readFile('config/chapter.json','utf8')));const campaign=downloaded,config=JSON.parse(await readFile('config/chapter.json','utf8')),template=await readFile('templates/editorial.html','utf8'),blueprint=await readFile('templates/blueprint.html','utf8');const rich={...campaign,title:'Engineering Career Connections',description:'Meet engineering professionals and learn about their work.',food:true,flyerUrl:'',advertising:{foodDetails:'Pizza, with vegetarian options',benefit:'Explore engineering careers and build professional connections.',speaker:'Chapter alumni panel',audience:'All engineering students',cost:'Free',rsvpUrl:'https://example.org/register',rsvpDeadline:'2026-11-03T18:00:00-05:00'}};
+ for(const name of ['blueprint','editorial','refined-blueprint','editorial-poster','assembly-card'])for(const format of ['feed','story'])for(const variant of ['rich','long','simple']){
+  const source=await readFile(`templates/${name}.html`,'utf8'),height=format==='feed'?1350:1920;
+  const fixture=variant==='rich'?rich:variant==='long'?{...rich,title:'Engineering Design Night: Build, Test, and Improve Your Next Mechanical Assembly',location:'Scott Laboratory, E100 — Enter through the main entrance'}:{...rich,food:false,advertising:{},description:''};
+  const layoutPage=await browser.newPage({viewport:{width:1080,height}});
+  try{await layoutPage.setContent(flyerHtml(source,fixture,config,format,assets));await fitFlyer(layoutPage);assert.equal(await layoutPage.evaluate(()=>document.documentElement.scrollWidth),1080);assert.ok(await layoutPage.evaluate(()=>{const p=document.querySelector('.page'),hero=p.querySelector('.hero'),block=p.querySelector('.block');return hero.getBoundingClientRect().bottom<=block.getBoundingClientRect().top+1 && block.getBoundingClientRect().bottom<=p.getBoundingClientRect().bottom;}));
+   if(variant==='simple')assert.equal(await layoutPage.locator('.cell.food').count(),0);
+   if(!['blueprint','editorial'].includes(name)&&variant==='rich')await layoutPage.screenshot({path:`test-results/${name}-${format}.jpg`,type:'jpeg',quality:90});
+  }catch(error){throw new Error(`${name}/${format}/${variant}: ${error.message}`);}finally{await layoutPage.close();}
+ }
+ for(const name of ['blueprint','refined-blueprint','editorial-poster','assembly-card'])for(const format of ['feed','story']){
+  const pngTemplate=await readFile(`templates/${name}.html`,'utf8');
   const pngPage=await browser.newPage({viewport:{width:1080,height:format==='feed'?1350:1920}});
-  try{await pngPage.route('https://fixture.example/flyer.png',route=>route.fulfill({contentType:'image/png',body:pngBytes}));await pngPage.setContent(flyerHtml(blueprint,{...rich,flyerUrl:'https://fixture.example/flyer.png'},config,format,assets));await fitFlyer(pngPage);assert.ok(await pngPage.locator('img.flyer').evaluate(img=>img.complete&&img.naturalWidth>0));const jpeg=await pngPage.screenshot({type:'jpeg'});assert.equal(jpeg.subarray(0,3).toString('hex'),'ffd8ff');}finally{await pngPage.close();}
+  try{await pngPage.route('https://fixture.example/flyer.png',route=>route.fulfill({contentType:'image/png',body:pngBytes}));await pngPage.setContent(flyerHtml(pngTemplate,{...rich,flyerUrl:'https://fixture.example/flyer.png'},config,format,assets));await fitFlyer(pngPage);assert.ok(await pngPage.locator('img.flyer').evaluate(img=>img.complete&&img.naturalWidth>0));const jpeg=await pngPage.screenshot({type:'jpeg'});assert.equal(jpeg.subarray(0,3).toString('hex'),'ffd8ff');}finally{await pngPage.close();}
  }
 
  }
@@ -166,7 +183,10 @@ try {
   await writeFile(join(root,'data/campaigns/2026-27',fixture.id+'.json'),JSON.stringify(fixture));
   await renderFlyers({root});
   for(const format of ['feed','story'])assert.ok((await readFile(join(root,`docs/media/2026-27/${fixture.id}-${format}.jpg`))).length>10000);
-  await cp(join(root,`docs/media/2026-27/${fixture.id}-feed.jpg`),'test-results/flyer-feed.jpg');
+  const target=join(root,`docs/media/2026-27/${fixture.id}-feed.jpg`),before=(await stat(target)).mtimeMs;
+  await renderFlyers({root});assert.equal((await stat(target)).mtimeMs,before,'Unchanged media should be cached');
+  await rm(target);await renderFlyers({root});assert.ok((await readFile(target)).length>10000,'Missing media must regenerate even with a cached marker');
+  await cp(target,'test-results/flyer-feed.jpg');
   await cp(join(root,`docs/media/2026-27/${fixture.id}-story.jpg`),'test-results/flyer-story.jpg');
  } finally {await rm(root,{recursive:true,force:true});}
  console.log('Browser checks passed: export, timezone, food toggle, examples, duplication, archive filters, mobile layout, console, GitHub writes, preserved scheduler state, edit conflicts, and real JPEG rendering.');

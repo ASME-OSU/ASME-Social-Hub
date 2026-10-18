@@ -50,6 +50,7 @@ export function validateCampaign(c) {
   for (const key of ['start','end']) assert(typeof c[key] === 'string' && /(Z|[+-]\d\d:\d\d)$/.test(c[key]) && Number.isFinite(Date.parse(c[key])), `Invalid ${key}; include timezone offset`);
   assert(Date.parse(c.end) > Date.parse(c.start), 'End must follow start');
   assert(typeof c.food === 'boolean', 'Food must be a boolean');
+  if (c.template !== undefined) assert(['blueprint','editorial','refined-blueprint','editorial-poster','assembly-card'].includes(c.template), 'Invalid campaign template');
   validateAdvertising(c.advertising);
   for (const ch of ['feed','story']) if (c.campaign?.[ch]) assert(cadenceValid(c.campaign[ch]), `Invalid ${ch} cadence`);
   assert(!c.campaign?.groupme?.createAt || c.campaign.groupme.createAt === 'immediately', 'GroupMe createAt supports immediately only');
@@ -94,7 +95,10 @@ export function captionFor(c, config) {
   let extended = template;
   values.extraAdvertising = extras;
   if (extras) extended = template.includes('{hashtags}') ? template.replace('{hashtags}', '{extraAdvertising}\n{hashtags}') : `${template}\n{extraAdvertising}`;
-  const caption = extended.replace(/\{(\w+)\}/g,(_,k)=>values[k]??'').split('\n').map(l=>l.trim()).filter(Boolean).join('\n');
+  const caption = extended.split(/\r?\n/).flatMap(line => {
+    const rendered = line.replace(/\{(\w+)\}/g,(_,k)=>values[k]??'').trim();
+    return line.trim() && !rendered ? [] : [rendered];
+  }).join('\n').replace(/\n{3,}/g,'\n\n').trim();
   assert(caption.length <= 2200, 'Instagram caption exceeds 2200 characters; shorten the description or advertising details');
   return caption;
 }

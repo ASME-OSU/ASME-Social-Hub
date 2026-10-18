@@ -5,6 +5,7 @@ import {readCampaigns} from './core.mjs';
 import {refreshCandidates} from './ical.mjs';
 import {postBotMessage} from './groupme.mjs';
 import {assessTokenExpiry} from './refresh-token.mjs';
+import {writeTokenWarning} from './token-warning.mjs';
 const exec = promisify(execFile);
 const task = process.argv[2];
 const config = JSON.parse(await readFile('config/chapter.json','utf8'));
@@ -12,10 +13,8 @@ if(task === 'calendar') {
   if(config.icalUrl) await refreshCandidates();
   else console.log('Calendar suggestions are disabled until icalUrl is configured.');
 } else if(task === 'expiry') {
-  if(!process.env.IG_ACCESS_TOKEN) {console.log('Instagram publishing is not configured.');process.exit(0);}
-  const assessment = assessTokenExpiry(process.env.IG_TOKEN_EXPIRES_AT);
+  const assessment = await writeTokenWarning();
   console.log(`Instagram token expiry: ${assessment.status}`);
-  if(assessment.warning) await writeFile('data/token-warning.json',JSON.stringify({status:assessment.status,checkedAt:new Date().toISOString()}));
 } else if(task === 'alert') {
   if(!process.env.GH_TOKEN || !process.env.GITHUB_REPOSITORY) throw new Error('GitHub workflow context required');
   const campaigns = await readCampaigns(process.cwd());

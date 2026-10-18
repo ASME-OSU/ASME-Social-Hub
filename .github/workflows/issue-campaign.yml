@@ -22,9 +22,17 @@ jobs:
         with:
           node-version: 22
       - name: Import validated campaign from authorized officer
+        id: import
         env:
           GH_TOKEN: ${{ github.token }}
         run: node scripts/import-issue.mjs
+      - name: Explain invalid authorized request
+        if: failure() && steps.import.outputs.authorized == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh issue comment "$ISSUE_NUMBER" --body 'Campaign import failed validation. Check that the Campaign JSON field contains fenced JSON with a unique ID, a future event in the active year, valid dates with timezone offsets, and supported campaign fields. Correct the request and reopen this issue to retry.'
       - name: Commit imported campaign
         run: |
           git config user.name 'github-actions[bot]'
@@ -34,6 +42,13 @@ jobs:
             git commit -m 'Import officer campaign request'
             git push origin HEAD:main
           fi
+      - name: Confirm durable import and close request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh issue comment "$ISSUE_NUMBER" --body 'Campaign imported and committed to the repository. Rendering and publishing will run next; scheduling follows the enabled campaign channels.'
+          gh issue close "$ISSUE_NUMBER"
   publish:
     needs: import
     uses: ./.github/workflows/run.yml

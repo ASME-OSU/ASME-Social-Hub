@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -18,8 +19,12 @@ jobs:
           IG_API_VERSION: ${{ vars.IG_API_VERSION || 'v25.0' }}
         run: |
           node --input-type=module <<'NODE'
+          import {readFile} from 'node:fs/promises';
+          const config=JSON.parse(await readFile('config/chapter.json','utf8'));
+          const expectedHandle=String(config.instagramHandle||'').replace(/^@/,'').trim().toLowerCase();
           const {IG_ACCESS_TOKEN: token, IG_USER_ID: expectedId, IG_API_VERSION: version} = process.env;
           const fail = message => { console.error(message); process.exit(1); };
+          if (!/^[a-z0-9._]{1,30}$/.test(expectedHandle)) fail('Configure a valid instagramHandle in config/chapter.json.');
           if (!token || !expectedId) fail('Missing IG_ACCESS_TOKEN or IG_USER_ID repository secret.');
           if (!/^v\d+\.\d+$/.test(version)) fail('Invalid IG_API_VERSION repository variable.');
           try {
@@ -32,8 +37,8 @@ jobs:
             if (!response.ok) fail(`Instagram identity check failed (HTTP ${response.status}). Check token validity and basic permission.`);
             const account = await response.json();
             if (String(account.user_id) !== expectedId.trim()) fail('Instagram account ID does not match IG_USER_ID.');
-            if (account.username !== 'asmeohiostate') fail('Token belongs to a different Instagram account.');
-            console.log('PASS: Instagram token is valid and belongs to @asmeohiostate.');
+            if (String(account.username).toLowerCase() !== expectedHandle) fail('Token belongs to a different Instagram account.');
+            console.log(`PASS: Instagram token is valid and belongs to @${expectedHandle}.`);
             console.log('PASS: Instagram account ID matches the configured secret.');
             console.log('No posts were created. Publishing and insights permissions still require separate verification.');
           } catch {

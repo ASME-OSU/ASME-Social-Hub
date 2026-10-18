@@ -48,3 +48,5 @@ dialog{background:var(--paper)}
 }
 
 .settings-grid>.panel:last-child{grid-column:1/-1}
+
+.token-warning{border:1px solid var(--line);border-left:3px solid var(--signal);background:var(--paper);padding:16px 20px;margin:0 0 24px;font-size:13px;line-height:1.7;color:var(--ink)}.token-warning.expired{border-left-color:var(--scarlet)}

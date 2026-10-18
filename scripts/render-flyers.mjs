@@ -1,7 +1,15 @@
-import { readFile, mkdir, writeFile, realpath } from 'node:fs/promises';
+import { readFile, mkdir, writeFile, realpath, stat } from 'node:fs/promises';
 import { resolve, dirname, sep, extname } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { readCampaigns, validateConfig, validateCampaign, validateAdvertising } from './core.mjs';
+
+
+export const FLYER_TEMPLATES = Object.freeze(['blueprint','editorial','refined-blueprint','editorial-poster','assembly-card']);
+export function selectFlyerTemplate(campaign, config) {
+  const name = [campaign.template, config.eventTypes?.find(type => type.id === campaign.type)?.template, config.defaultTemplate, 'editorial'].find(value => value !== undefined);
+  if (!FLYER_TEMPLATES.includes(name)) throw new Error('Invalid flyer template name');
+  return name;
+}
 
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const color = (value, fallback) => /^#[0-9a-f]{3,8}$/i.test(value || '') ? value : fallback;
@@ -65,7 +73,8 @@ export function flyerHtml(template, campaign, config, format, assets = {}) {
     foodClass:campaign.food ? '' : 'nofood',foodCell:campaign.food ? '<div class="cell food"><small>Food</small><b>Provided</b></div>' : '',
     format, chapter:escape(config.chapterName),school:escape(config.school),handle:escape(config.instagramHandle),
     type:escape(config.eventTypes.find(t=>t.id === campaign.type)?.name || campaign.type),
-    title:escape(campaign.title),description:escape(campaign.description),location:escape(campaign.location?.name || 'Location to be announced'),
+    title:escape(campaign.title),description:escape(campaign.description),location:escape(campaign.location?.name || (typeof campaign.location === 'string' ? campaign.location : '') || 'Location to be announced'),
+    shortDate:escape(new Intl.DateTimeFormat('en-US',{timeZone:tz,weekday:'short',month:'short',day:'numeric'}).format(date)),
     date:escape(new Intl.DateTimeFormat('en-US',{timeZone:tz,weekday:'long',...(template.includes('{{day}}') ? {} : {month:'long',day:'numeric'})}).format(date)),
     time:escape(new Intl.DateTimeFormat('en-US',{timeZone:tz,hour:'numeric',minute:'2-digit',timeZoneName:'short'}).format(date)),
     food:campaign.food ? '<div class="food">Food provided</div>' : '',
@@ -84,11 +93,22 @@ export async function fitFlyer(page) {
     const hero = page.querySelector('.hero');
     const fixed = [...page.children].filter(el => ['HEADER','FOOTER'].includes(el.tagName) || el.classList.contains('block'));
     const style = getComputedStyle(page);
-    const budget = page.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom) - fixed.reduce((sum,el)=>sum+el.getBoundingClientRect().height,0) - 96;
-    for (let size=parseFloat(getComputedStyle(title).fontSize); size>44 && (hero.getBoundingClientRect().height>budget || title.getBoundingClientRect().height>size*3.2); size-=2) title.style.fontSize=`${size-2}px`;
+    const gaps = Math.max(96, (parseFloat(style.rowGap) || 0) * fixed.length);
+    const budget = page.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom) - fixed.reduce((sum,el)=>sum+el.getBoundingClientRect().height,0) - gaps;
+    // Decorative artwork gives up space before text; the complete event details remain visible.
+    const artwork = hero.querySelector('.artwork');
+    if (artwork) {
+      for (let height=artwork.getBoundingClientRect().height; height>100 && hero.getBoundingClientRect().height>budget; height-=10) artwork.style.height=`${Math.max(100,height-10)}px`;
+    }
+    for (let size=parseFloat(getComputedStyle(title).fontSize); size>44 && (hero.getBoundingClientRect().height>budget || title.getBoundingClientRect().height>size*3.2); size-=2) title.style.fontSize=`${Math.max(44,size-2)}px`;
     if (hero.getBoundingClientRect().height > budget) throw new Error('Flyer text exceeds the available layout; shorten the title or location');
+    const bounds=page.getBoundingClientRect(), contentBottom=bounds.bottom-parseFloat(style.paddingBottom);
+    const block=page.querySelector('.block'), footer=page.querySelector('footer');
+    if (block && hero.getBoundingClientRect().bottom>block.getBoundingClientRect().top+1) throw new Error('Flyer event details overlap the title');
+    if (footer && footer.getBoundingClientRect().bottom>contentBottom+1) throw new Error('Flyer text exceeds the safe publishing area');
   });
 }
+
 export function isFlyerLocked(campaign, format) {
   const result = campaign.results?.[format] || {};
   if (result.mediaId || result.publishAttemptedAt || campaign.status?.[format] === 'done') return true;
@@ -106,16 +126,16 @@ export async function renderFlyers({root = process.cwd(), force = false} = {}) {
     for (const campaign of await readCampaigns(root)) {
       validateCampaign(campaign);
       if (campaign.demo || campaign.cancelled) continue;
-      const templateName=config.eventTypes?.find(t=>t.id===campaign.type)?.template || config.defaultTemplate || 'editorial';
-      if(!/^[a-z0-9-]+$/.test(templateName)) throw new Error('Invalid flyer template name');
+      const templateName=selectFlyerTemplate(campaign,config);
       const template=await readFile(resolve(root,`templates/${templateName}.html`),'utf8');
       for (const format of ['feed','story']) {
         const target = resolve(root,`docs/media/${campaign.year}/${campaign.id}-${format}.jpg`);
         const marker = resolve(root,`.local/render/${campaign.year}/${campaign.id}-${format}.revision`);
-        const revision = JSON.stringify({campaign,brand:config.brand,template,assets});
+        const revision = JSON.stringify({campaign,config,template,assets});
         // Published media are immutable; regenerating must never change an existing posted asset.
         if (isFlyerLocked(campaign,format)) continue;
-        if (!force && await readFile(marker,'utf8').catch(()=>null) === revision) continue;
+        const existingImage = await stat(target).catch(()=>null);
+        if (!force && existingImage?.isFile() && existingImage.size > 0 && await readFile(marker,'utf8').catch(()=>null) === revision) continue;
         const page = await browser.newPage({viewport:{width:1080,height:format === 'feed' ? 1350 : 1920},deviceScaleFactor:1});
         try {
           await page.route('**/*', route => {

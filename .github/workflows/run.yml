@@ -47,6 +47,14 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+      - name: Cache flyer revision markers
+        if: inputs.task == 'render'
+        uses: actions/cache@v4
+        with:
+          path: .local/render
+          key: flyer-markers-${{ runner.os }}-v2-${{ hashFiles('scripts/render-flyers.mjs', 'config/**', 'templates/**', 'docs/assets/fonts/**', 'docs/assets/logos/**') }}-${{ hashFiles('data/campaigns/**') }}
+          restore-keys: |
+            flyer-markers-${{ runner.os }}-v2-${{ hashFiles('scripts/render-flyers.mjs', 'config/**', 'templates/**', 'docs/assets/fonts/**', 'docs/assets/logos/**') }}-
       - name: Render pending campaign flyers
         if: inputs.task == 'render'
         run: |
