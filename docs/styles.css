@@ -141,3 +141,7 @@ input::placeholder,textarea::placeholder{color:var(--muted);opacity:1}
 :root[data-theme="dark"] .linkedin-white{display:block}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .linkedin-blue{display:none}:root:not([data-theme="light"]) .linkedin-white{display:block}}
 @media(max-width:699px){.nav-icon,.nav-icon svg{width:20px;height:20px}}
+
+.social-brand-facebook{display:block;width:25px;height:25px;flex-shrink:0}
+.workspace>footer{display:none}
+@media(max-width:699px){.workspace>footer{display:flex}}

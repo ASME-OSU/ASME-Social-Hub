@@ -110,7 +110,8 @@ try {
  await page.locator('[data-view=settings]').click();await page.locator('[name=token]').fill('mock-token-not-a-credential');await page.locator('#settings-form button.primary').click();
  await page.waitForFunction(()=>document.querySelector('#settings-form').getAttribute('aria-busy')==='true');
  assert.equal(await page.locator('#settings-form button.primary').isDisabled(),true);releaseVerification();
- await page.waitForFunction(()=>document.querySelector('#connection-label').textContent.startsWith('Connected to '));
+ await page.waitForFunction(()=>document.querySelector('#connection-label').textContent==='Connected');
+ assert.equal(await page.locator('#header-connection-text').textContent(),'Connected');assert.equal(await page.locator('#settings-connection-state').textContent(),'Connected');
  await page.locator('[data-view=dashboard]').click();await page.locator('#new-campaign').click();
  for(const [name,value] of Object.entries({title:'API verification event',start:'2026-11-20T18:30',end:'2026-11-20T20:00',location:'Scott E100'}))await page.locator(`[name=${name}]`).fill(value);
  await page.locator('[name=template]').selectOption('editorial-poster');
