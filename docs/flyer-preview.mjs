@@ -1,3 +1,4 @@
+import {feedImageIssue,measureImage} from './image-policy.mjs';
 import {flyerHtml,fitFlyerDocument} from './flyer-render.mjs';
 import {fromLocal} from './time.mjs';
 
@@ -6,10 +7,33 @@ const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;'
 const imageURL=value=>{try{const url=new URL(value);return url.protocol==='https:'&&!url.username&&!url.password?url.href:'';}catch{return '';}};
 
 export function createFlyerPreview({form,getConfig,getExisting,getUpload,getStoryDesign}) {
-  const details=document.querySelector('#artwork-preview'),frame=document.querySelector('#artwork-preview-frame'),stage=frame.parentElement,status=document.querySelector('#artwork-preview-status'),caption=document.querySelector('#artwork-preview-caption');
+  const details=document.querySelector('#artwork-preview'),frame=document.querySelector('#artwork-preview-frame'),inlineStage=frame.parentElement,status=document.querySelector('#artwork-preview-status'),caption=document.querySelector('#artwork-preview-caption');
+  const expanded=document.querySelector('#preview-dialog'),canvas=document.querySelector('#preview-dialog-canvas'),expandedStage=document.querySelector('.expanded-preview-stage'),zoom=document.querySelector('#preview-zoom');
+  let stage=inlineStage,opener=null;
+  const logoCache=new Map();
   const templates=new Map();let format='feed',previewHeight=1350,timer,revision=0;
-  function resize(){const height=previewHeight;stage.style.aspectRatio=`1080 / ${height}`;stage.style.setProperty("--preview-aspect",1080/height);frame.style.height=`${height}px`;frame.style.transform=`scale(${stage.clientWidth/1080})`;}
-  new ResizeObserver(resize).observe(stage);
+  function resize(){
+    const height=previewHeight;frame.style.height=`${height}px`;
+    if(expanded.open){const scale=zoom.value==='1'?1:Math.max(.05,Math.min(1,(canvas.clientWidth-32)/1080,(canvas.clientHeight-32)/height));stage.style.width=`${1080*scale}px`;stage.style.height=`${height*scale}px`;frame.style.transform=`scale(${scale})`;}
+    else{
+      stage.style.aspectRatio=`1080 / ${height}`;
+      if(matchMedia('(min-width:960px)').matches){const pane=document.querySelector('.editor-preview-pane'),style=getComputedStyle(pane),help=document.querySelector('#preview-scroll-help'),helpStyle=getComputedStyle(help),chrome=details.getBoundingClientRect().height-stage.getBoundingClientRect().height,available=pane.clientHeight-parseFloat(style.paddingTop)-parseFloat(style.paddingBottom)-chrome-help.getBoundingClientRect().height-parseFloat(helpStyle.marginBottom)-4;stage.style.maxWidth=`${Math.max(140,available*1080/height)}px`;}
+      else stage.style.maxWidth='';
+      frame.style.transform=`scale(${stage.clientWidth/1080})`;
+    }
+  }
+  new ResizeObserver(resize).observe(inlineStage);new ResizeObserver(resize).observe(canvas);new ResizeObserver(resize).observe(document.querySelector('.editor-preview-pane'));
+  function openPreview(trigger=document.activeElement){
+    opener=trigger;details.open=true;
+    if(!expanded.open){expanded.showModal();stage=expandedStage;stage.hidden=false;stage.append(frame);}
+    document.querySelector('#preview-dialog-title').textContent=format==='story'?'Story preview':'Feed preview';resize();update();
+  }
+  function closePreview(){if(expanded.open)expanded.close();}
+  expanded.addEventListener('close',()=>{inlineStage.append(frame);stage=inlineStage;resize();if(document.querySelector('#editor').open){opener?.focus();update();}});
+  document.querySelector('#enlarge-preview').addEventListener('click',event=>openPreview(event.currentTarget));
+  document.querySelector('#mobile-preview').addEventListener('click',event=>openPreview(event.currentTarget));
+  document.querySelector('#close-preview').addEventListener('click',closePreview);
+  zoom.addEventListener('change',resize);
   async function template(name){if(!templates.has(name))templates.set(name,fetch(`./templates/${name}.html`).then(response=>{if(!response.ok)throw Error('Preview could not load. Try again when your connection is available.');return response.text();}).catch(error=>{templates.delete(name);throw error;}));return templates.get(name);}
   async function update(){
     const current=++revision,config=getConfig();if(!config||!document.querySelector('#editor').open||!details.open)return;
@@ -27,7 +51,9 @@ export function createFlyerPreview({form,getConfig,getExisting,getUpload,getStor
       const direct=imageURL(f[channel+'Image'].value),logo=config.brand?.logoFlyer||config.brand?.logoMark||config.brand?.logoReverse||config.brand?.logo;
       if(f[channel+'Image'].value.trim()&&!direct)throw Error('Use an HTTPS image URL without embedded credentials to preview a custom image.');
       const fontCss=`@font-face{font-family:Inter;font-weight:100 900;src:url("${new URL('./assets/fonts/inter-latin.woff2',document.baseURI)}")}@font-face{font-family:'DM Serif Display';font-weight:400;src:url("${new URL('./assets/fonts/dm-serif-display-latin.woff2',document.baseURI)}")}`;
-      const assets={fontCss,flyer:upload,previewMissingDate:missingDate,logo:logo?new URL(logo,document.baseURI).href:''};
+      let logoURL=logo?new URL(logo,document.baseURI).href:'';
+      if(logoURL){if(!logoCache.has(logoURL))logoCache.set(logoURL,measureImage(logoURL).then(()=>true,()=>false));if(!await logoCache.get(logoURL))logoURL='';if(current!==revision)return;}
+      const assets={fontCss,flyer:upload,previewMissingDate:missingDate,logo:logoURL,logoResolved:true};
       const html=direct?`<!doctype html><html><head><style>*{margin:0}html,body{width:1080px;background:#fff}img{display:block;width:1080px;height:auto}</style></head><body><img src="${escape(direct)}" alt="Custom ${label} image"></body></html>`:flyerHtml(source,campaign,config,channel,assets);
       const csp=`<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; font-src 'self'; img-src 'self' https: data: blob:;">`;
       frame.onload=async()=>{
@@ -41,7 +67,16 @@ export function createFlyerPreview({form,getConfig,getExisting,getUpload,getStor
           if(original){previewHeight=Math.round(1080*original.naturalHeight/original.naturalWidth);resize();}
           frame.style.visibility='visible';status.textContent=direct?'Custom image override. Showing the original image proportions; it publishes directly from its URL.':uploaded?'Your uploaded flyer is used directly for the feed, without added text, borders, or a background.':(!f.title.value.trim()||missingDate||!f.location.value.trim()?'Placeholder text is shown for empty fields.':'Preview updated with your event details.');
           caption.textContent=`${label} preview · 1080 × ${previewHeight}${f[channel+'Enabled'].checked?'':' · channel is off'}`;
-        }catch(error){if(current===revision){stage.hidden=true;status.textContent=error.message;}}finally{clearTimeout(timeout);}
+          const issue=channel==='feed'&&original?feedImageIssue(original.naturalWidth,original.naturalHeight):'';
+          if(issue)status.textContent=issue;
+          const artwork=doc.querySelector('.artwork');
+          if(channel==='story'&&artwork&&artwork.clientHeight<600)status.textContent+=' The flyer was reduced to fit the event details; enlarge the preview to review it.';
+          const summary=[campaign.title,!missingDate?new Intl.DateTimeFormat('en-US',{timeZone:config.timezone,dateStyle:'medium',timeStyle:'short'}).format(new Date(start)):'Date not chosen',campaign.location,campaign.food?'Food provided':'',campaign.description].filter(Boolean).join('. ');
+          document.querySelector('#artwork-preview-summary').textContent=summary;document.querySelector('#preview-dialog-summary').textContent=summary;
+          document.querySelector('#preview-dialog-status').textContent=status.textContent;
+          document.querySelector('#preview-dialog-title').textContent=label+' preview';resize();
+
+        }catch(error){if(current===revision){stage.hidden=true;status.textContent=error.message;document.querySelector('#preview-dialog-status').textContent=error.message;}}finally{clearTimeout(timeout);}
       };
       frame.srcdoc=html.replace('<head>',`<head>${csp}<meta name="preview-revision" content="${current}">`);
     }catch(error){if(current===revision){stage.hidden=true;status.textContent=error.message;}}
@@ -50,9 +85,10 @@ export function createFlyerPreview({form,getConfig,getExisting,getUpload,getStor
   const artworkFields=new Set(['title','description','start','type','location','food','foodDetails','benefit','speaker','audience','cost','rsvpUrl','rsvpDeadline','template','flyer','feedImage','storyImage','feedEnabled','storyEnabled','storyBackground','storyFlyerColors']);
   const artworkChange=event=>{if(artworkFields.has(event.target.name))schedule();};
   form.addEventListener('input',artworkChange);form.addEventListener('change',artworkChange);
-  details.addEventListener('toggle',()=>{if(details.open)update();});
+  details.addEventListener('toggle',()=>{if(!details.open&&matchMedia('(min-width:960px)').matches){details.open=true;return;}if(details.open)update();});
+  matchMedia('(min-width:960px)').addEventListener('change',event=>{if(event.matches)details.open=true;});
   function setFormat(value){clearTimeout(timer);format=value;document.querySelectorAll('[data-preview-format]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.previewFormat===format)));update();}
   document.querySelectorAll('[data-preview-format]').forEach(button=>button.addEventListener('click',()=>setFormat(button.dataset.previewFormat)));
-  document.querySelector('#editor').addEventListener('close',()=>{++revision;clearTimeout(timer);frame.onload=null;frame.removeAttribute('srcdoc');status.textContent='';});
-  return {update,schedule,showStory:()=>setFormat('story')};
+  document.querySelector('#editor').addEventListener('close',()=>{++revision;clearTimeout(timer);closePreview();frame.onload=null;frame.removeAttribute('srcdoc');status.textContent='';});
+  return {update,schedule,showStory:()=>{setFormat('story');if(matchMedia('(max-width:959px)').matches&&document.querySelector('#editor').open)openPreview();}};
 }

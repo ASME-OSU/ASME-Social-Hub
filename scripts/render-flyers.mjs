@@ -1,3 +1,4 @@
+import {feedImageIssue} from '../docs/image-policy.mjs';
 import { readFile, mkdir, writeFile, realpath, stat } from 'node:fs/promises';
 import { resolve, dirname, sep, extname } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -57,7 +58,7 @@ export async function renderFlyers({root = process.cwd(), force = false} = {}) {
   const config = JSON.parse(await readFile(resolve(root,'config/chapter.json'),'utf8'));
   validateConfig(config);
   const assets = await loadFlyerAssets(root,config);
-  const rendererSource = await Promise.all(['flyer-render.mjs','story-design.mjs'].map(name=>readFile(new URL('../docs/'+name,import.meta.url),'utf8')));
+  const rendererSource = await Promise.all(['flyer-render.mjs','story-design.mjs','image-policy.mjs'].map(name=>readFile(new URL('../docs/'+name,import.meta.url),'utf8')));
   const { chromium } = await import('playwright');
   const browser = await chromium.launch({headless:true});
   let count = 0;
@@ -85,7 +86,7 @@ export async function renderFlyers({root = process.cwd(), force = false} = {}) {
           await fitFlyer(page);
           await mkdir(dirname(target),{recursive:true});
           const uploaded=page.locator('img.uploaded-feed');
-          if(await uploaded.count())await uploaded.screenshot({path:target,type:'jpeg',quality:93});
+          if(await uploaded.count()){const {width,height}=await uploaded.evaluate(image=>({width:image.naturalWidth,height:image.naturalHeight}));const issue=feedImageIssue(width,height);if(campaign.campaign?.feed?.enabled&&issue)throw Error(issue);await uploaded.screenshot({path:target,type:'jpeg',quality:93});}
           else await page.screenshot({path:target,type:'jpeg',quality:93});
           await mkdir(dirname(marker),{recursive:true});
           await writeFile(marker,revision);

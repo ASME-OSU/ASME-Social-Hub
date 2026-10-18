@@ -28,3 +28,10 @@ test('GroupMe advertising preserves RSVP and logistics in bot and native event',
  const config={timezone:'America/New_York'};const text=botAnnouncementText(campaign,config);assert.match(text,/RSVP: https:\/\/example.org\/register/);assert.match(text,/Bring \/ dress: Bring your laptop/);assert.match(text,/Speaker: Dr. Lee/);assert.doesNotMatch(text,/Must stay hidden|Food provided/);assert.match(eventPayload(campaign,config).description,/RSVP:/);
  assert.throws(()=>botAnnouncementText({...campaign,description:'x'.repeat(1000)},config),/1000 characters/);
 });
+
+test('Instagram preflight rejects tall feed artwork before a container write while allowing Stories',async()=>{
+ const jpeg=new Uint8Array([255,216,255,192,0,17,8,7,128,4,56,3,1,17,0,2,17,0,3,17,0,255,217]);
+ let writes=0;const client=createInstagramClient({env:{IG_USER_ID:'1',IG_ACCESS_TOKEN:'secret'},fetchImpl:async(url,options)=>{if(options?.method==='POST'){writes++;return Response.json({id:'story-container'});}return new Response(jpeg,{headers:{'content-type':'image/jpeg'}});}});
+ await assert.rejects(()=>client.createContainer({channel:'feed',imageUrl:'https://example.org/tall.jpg'}),/Story only/);assert.equal(writes,0);
+ assert.equal(await client.createContainer({channel:'story',imageUrl:'https://example.org/tall.jpg'}),'story-container');assert.equal(writes,1);
+});

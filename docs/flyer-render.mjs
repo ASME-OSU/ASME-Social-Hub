@@ -27,7 +27,7 @@ export function flyerHtml(template, campaign, config, format, assets = {}) {
   validateStoryDesign(campaign.storyDesign);
   const image = assets.flyer?.startsWith('blob:')?escape(assets.flyer):safeUrl(assets.flyer||campaign.flyerUrl);
   if(format==='feed'&&image)return `<!doctype html><html><head><style>*{box-sizing:border-box;margin:0}html,body{width:1080px;background:#fff}img.uploaded-feed{display:block;width:1080px;height:auto}</style></head><body><img class="flyer uploaded-feed" src="${image}" alt="Uploaded flyer"></body></html>`;
-  const logo = assets.logo || safeUrl(config.brand?.logoFlyer || config.brand?.logoMark || config.brand?.logoReverse || config.brand?.logo);
+  const logo = (assets.logoResolved?assets.logo:assets.logo || safeUrl(config.brand?.logoFlyer || config.brand?.logoMark || config.brand?.logoReverse || config.brand?.logo));
   const advertising=flyerAdvertising(campaign,config,format);
   const values = {
     flyerSource:image,advertising,advertisingClass:advertising?'enriched':'',
@@ -52,7 +52,7 @@ export function flyerHtml(template, campaign, config, format, assets = {}) {
 }
 export async function fitFlyerDocument(doc = document) {
     await doc.fonts.ready;
-    await Promise.all([...doc.images].map(image => image.decode().catch(() => {if(image.classList.contains('story-flyer')||image.classList.contains('uploaded-feed'))throw Error('The uploaded flyer could not load. Check its URL or upload the image again.');})));
+    await Promise.all([...doc.images].map(image => image.decode().catch(() => {if(image.classList.contains('logo')){image.replaceWith(doc.createTextNode(image.alt||doc.body.dataset.chapter||'Chapter'));return;}if(image.classList.contains('story-flyer')||image.classList.contains('uploaded-feed'))throw Error('The uploaded flyer could not load. Check its URL or upload the image again.');})));
     const page = doc.querySelector('.page');
     if (!page) return;
     const title = page.querySelector('h1');

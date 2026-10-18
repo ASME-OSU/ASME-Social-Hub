@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {STORY_BACKGROUNDS,validateStoryDesign,paletteFromPixels,resolveStoryPalette,renderStoryDesign} from '../docs/story-design.mjs';
 test('Story design accepts only known treatments and normalized persisted colors',()=>{
-  validateStoryDesign(undefined);validateStoryDesign({background:'color-wash',paletteSource:'flyer'});validateStoryDesign({background:'color-wash',paletteSource:'chapter'});assert.throws(()=>validateStoryDesign({background:'color-wash',paletteSource:'other'}));
+  validateStoryDesign({background:'color-wash',paletteSource:'custom',palette:['#123456','#abcdef','#ffffff']});validateStoryDesign(undefined);validateStoryDesign({background:'color-wash',paletteSource:'flyer'});validateStoryDesign({background:'color-wash',paletteSource:'chapter'});assert.throws(()=>validateStoryDesign({background:'color-wash',paletteSource:'other'}));
   for(const background of Object.keys(STORY_BACKGROUNDS))validateStoryDesign({background,palette:['#123456','#abcdef','#ffffff']});
   for(const value of [null,[],{}, {background:'evil'}, {background:'template',extra:1},{background:'color-wash',palette:['#ABCDEF','#123456','#ffffff']},{background:'color-wash',palette:['#fff']}])assert.throws(()=>validateStoryDesign(value));
 });
@@ -23,4 +23,9 @@ test('treatments retain uncropped flyer, escaped values, and fitter structure',(
     const html=renderStoryDesign({campaign:{title:'UNTRUSTED',storyDesign:{background}},config:{},values:{title:'Safe &amp; title',flyerSource:'https://example.org/a.png?a=1&amp;b=2',foodClass:'nofood'}});
     assert.match(html,/object-fit:contain/);assert.match(html,/<section class="hero">/);assert.match(html,/class="artwork flyer-card"/);assert.match(html,/Safe &amp; title/);assert.doesNotMatch(html,/UNTRUSTED/);assert.match(html,/padding:230px 70px 280px/);
   }
+});
+
+test('blueprint grid uses dark lines on bright palettes',()=>{
+ const html=renderStoryDesign({campaign:{storyDesign:{background:'blueprint-rings',palette:['#eeffee','#dd0000','#ffffff']}},config:{},values:{}});
+ assert.match(html,/#10284020 1px/);assert.match(html,/stroke="#102840"/);
 });

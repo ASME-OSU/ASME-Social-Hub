@@ -78,3 +78,8 @@ test('new production templates escape content, render complete dates, and suppor
   }
  }
 });
+
+test('a failed preview logo resolution uses chapter text instead of retrying the bad URL',()=>{
+ const html=flyerHtml(template,campaign,{...config,brand:{logoFlyer:'https://example.org/missing.png'}},'story',{logo:'',logoResolved:true});
+ assert.doesNotMatch(html,/missing.png/);assert.match(html,/A chapter/);
+});

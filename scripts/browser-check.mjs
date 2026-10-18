@@ -39,10 +39,10 @@ try {
  await page.route('https://preview.example/custom.jpg',route=>route.fulfill({contentType:'image/jpeg',body:overrideJpeg}));
  await page.locator('[name=feedImage]').fill('https://preview.example/custom.jpg');await page.waitForFunction(()=>document.querySelector('#artwork-preview-status').textContent.startsWith('Custom image override'));assert.equal(await preview.locator('img').getAttribute('src'),'https://preview.example/custom.jpg');
  await page.locator('[name=feedImage]').fill('');await page.waitForFunction(()=>document.querySelector('#artwork-preview-frame').contentDocument?.querySelector('h1')?.textContent==='Blueprint preview night'&&document.querySelector('#artwork-preview-frame').style.visibility==='visible');
- await page.locator('[data-preview-format=story]').click();await page.waitForFunction(()=>document.querySelector('#artwork-preview-caption').textContent.includes('1080 × 1920'));assert.match(await preview.locator('body').getAttribute('class'),/^story/);
+ await page.locator('#editor [data-preview-format=story]').click();await page.waitForFunction(()=>document.querySelector('#artwork-preview-caption').textContent.includes('1080 × 1920'));assert.match(await preview.locator('body').getAttribute('class'),/^story/);
  await mkdir('test-results',{recursive:true});await page.locator('#artwork-preview').screenshot({path:'test-results/editor-preview-story.png'});
  await page.setViewportSize({width:390,height:844});await page.locator('#artwork-preview').scrollIntoViewIfNeeded();assert.equal(await page.locator('#editor').evaluate(e=>e.scrollWidth<=e.clientWidth),true,'Preview must fit the mobile editor');await page.locator('#artwork-preview').screenshot({path:'test-results/editor-preview-mobile.png'});
- await page.setViewportSize({width:1440,height:1080});await page.locator('[data-preview-format=feed]').click();await page.waitForFunction(()=>document.querySelector('#artwork-preview-caption').textContent.includes('1080 × 1350'));
+ await page.setViewportSize({width:1440,height:1080});await page.locator('#editor [data-preview-format=feed]').click();await page.waitForFunction(()=>document.querySelector('#artwork-preview-caption').textContent.includes('1080 × 1350'));
  await page.locator('[data-close=editor]').first().click();
  await page.route('**/config/chapter.json',async route=>{
   const response=await route.fetch();const config=await response.json();

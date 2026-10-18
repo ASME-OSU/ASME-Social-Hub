@@ -162,7 +162,7 @@ input::placeholder,textarea::placeholder{color:var(--muted);opacity:1}
 .sample-wash{background:radial-gradient(ellipse at top right,var(--story-color-2),transparent 75%),radial-gradient(ellipse at bottom left,var(--story-color-3),transparent 75%),var(--story-color-1)}
 .sample-rings{background:repeating-radial-gradient(circle at right,#ffffff50 0 1px,transparent 1px 15px),var(--story-color-1)}
 .sample-paper{background:linear-gradient(145deg,transparent 40%,var(--story-color-2) 40% 64%,transparent 64%),linear-gradient(30deg,var(--story-color-3) 30%,var(--story-color-1) 30% 75%,var(--story-color-3) 75%)}
-.story-palette-row{display:flex;align-items:center;gap:14px;margin-top:12px;flex-wrap:wrap}.story-palette{display:flex;gap:6px}.story-palette span{display:block;width:25px;height:25px;border:1px solid var(--line);border-radius:50%}#story-resample{font-size:11px;padding:6px 10px;min-height:36px}
+.story-palette-row{display:flex;align-items:center;gap:14px;margin-top:12px;flex-wrap:wrap}.story-palette{display:flex;gap:6px}.story-palette span{display:block;width:25px;height:25px;border:1px solid var(--line);border-radius:50%}
 @media(max-width:699px){.story-style-options{grid-template-columns:repeat(2,minmax(0,1fr))}.story-design-controls{padding:14px}.story-sample{height:80px}}
 
 /* Campaign editor: stable artwork beside the scrolling event fields. */
@@ -175,7 +175,7 @@ input::placeholder,textarea::placeholder{color:var(--muted);opacity:1}
 .editor-fields{min-width:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding:24px 32px;scroll-padding:24px}
 .editor-preview-pane{container-type:size;min-width:0;overflow-y:auto;overscroll-behavior:contain;padding:24px;background:var(--ice);border-left:1px solid var(--line)}
 .editor-preview-pane .artwork-preview{margin:0;padding:18px}
-.editor-preview-pane .artwork-preview-stage{width:min(100%,320px,max(140px,calc((100cqh - 230px) * var(--preview-aspect,.8))))}
+.editor-preview-pane .artwork-preview-stage{width:min(100%,400px)}
 #editor .dialog-footer{padding:16px 32px;box-shadow:0 -4px 12px #10284008}
 #editor .dialog-footer>span{width:auto;flex:1;min-width:160px}
 #editor .dialog-footer #save-button{margin-left:0}
@@ -198,3 +198,39 @@ input::placeholder,textarea::placeholder{color:var(--muted);opacity:1}
  #editor .dialog-footer #save-button{margin-left:auto}
  .editor-preview-pane .artwork-preview-stage{width:min(100%,260px)}
 }
+/* Review follow-ups: readable controls, inspection zoom, and visible keyboard focus. */
+:root{--focus:#765000}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--focus:#f4ca64}}
+:root[data-theme="dark"]{--focus:#f4ca64}
+:root[data-theme="light"]{--focus:#765000}
+:focus-visible,button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,.mobile-social-menu summary:focus-visible,.story-style-options input:focus-visible+.story-choice{outline:3px solid var(--focus);outline-offset:3px}
+.preview-formats button[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.preview-formats button[aria-pressed=true]::before{content:'✓ ';font-weight:700}
+#editor label:not(.check),#editor .field-help{font-size:13px;letter-spacing:normal;text-transform:none}
+.story-choice b{font-size:13px}
+.story-palette{gap:12px;flex-wrap:wrap}
+.story-palette label{display:grid;gap:5px;font-size:13px;margin:0}
+.story-palette input[type=color]{display:block;width:56px;height:44px;padding:3px;border:1px solid var(--line);background:var(--paper);border-radius:4px;cursor:pointer}
+.story-palette input:disabled{cursor:not-allowed}
+#story-reset-colors{font-size:13px;padding:8px 12px;min-height:44px}
+.sample-template{background:linear-gradient(#ffffff12 1px,transparent 1px) 0 0/12px 12px,linear-gradient(90deg,#ffffff12 1px,transparent 1px) 0 0/12px 12px,var(--brand-primary,#102840)}
+#mobile-preview{display:none}
+.editor-preview-pane .artwork-preview-stage{width:min(100%,400px)}
+.preview-scroll-help{font-size:13px;margin:0 0 12px}
+.preview-text-summary{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+#preview-dialog{width:calc(100% - 32px);max-width:1440px;height:calc(100dvh - 32px);max-height:calc(100dvh - 32px);overflow:hidden;padding:0}
+#preview-dialog[open]{display:flex;flex-direction:column}
+.preview-dialog-heading{display:flex;align-items:center;gap:16px;padding:16px 24px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.preview-dialog-heading h2{font-size:24px;margin:0 auto 0 0}
+.preview-dialog-heading .preview-formats{margin:0}
+.preview-zoom-label{display:flex;align-items:center;gap:8px;margin:0;font-size:13px}
+.preview-zoom-label select{width:auto;margin:0;min-height:44px;padding:8px}
+#preview-dialog-status{margin:0;padding:12px 24px;font-size:13px}
+#preview-dialog-canvas{flex:1;min-height:0;overflow:auto;background:var(--canvas);overscroll-behavior:contain;scrollbar-gutter:stable}
+.expanded-preview-stage{position:relative;margin:16px auto;background:white;pointer-events:none}
+@media(min-width:960px){.editor-preview-pane summary{list-style:none;cursor:default}.editor-preview-pane summary::-webkit-details-marker{display:none}}
+@media(max-width:959px){#mobile-preview{display:inline-flex}.editor-preview-pane .artwork-preview-stage{width:min(100%,340px)}}
+@media(max-height:700px) and (min-width:960px){#editor .dialog-heading{padding:12px 24px}#editor .dialog-heading .eyebrow{display:none}#editor .dialog-heading h2{font-size:28px}#editor .dialog-footer{padding:12px 24px}}
+@media(max-width:699px){#editor #save-hint{display:none}#editor .dialog-footer{gap:8px;flex-wrap:nowrap;padding:12px 16px max(12px,env(safe-area-inset-bottom))}#editor .dialog-footer button{font-size:12px;padding:10px}#editor .dialog-footer #save-button{margin-left:auto}.editor-preview-pane .artwork-preview-stage{width:min(100%,300px)}#preview-dialog{width:100%;height:100dvh;max-height:100dvh;border-radius:0}.preview-dialog-heading{padding:12px 16px;gap:10px}.preview-dialog-heading h2{font-size:22px;width:100%}#close-preview{margin-left:auto}#preview-dialog-status{padding:10px 16px}}
+
+.editor-preview-pane .artwork-preview-stage{width:min(100%,400px)}

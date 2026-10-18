@@ -1,3 +1,4 @@
+import {feedImageIssue,jpegDimensions} from '../docs/image-policy.mjs';
 // Instagram Login API. Credentials never appear in URLs or diagnostic messages.
 export async function safeJson(response, service) {
   let body; try { body = await response.json(); } catch { throw new Error(`${service}: invalid JSON (HTTP ${response.status})`); }
@@ -34,6 +35,12 @@ export function createInstagramClient({env = process.env, fetchImpl = fetch, sle
       const url = new URL(imageUrl); if (url.protocol !== 'https:') throw new Error('Instagram image must be a public HTTPS URL');
       let response; try { response = await fetchImpl(url, {signal:AbortSignal.timeout(30000)}); } catch { throw new Error('Public flyer is unreachable'); }
       if (!response.ok || !/^image\/jpeg\b/i.test(response.headers.get('content-type') || '')) throw new Error('Public flyer must return HTTP success and image/jpeg');
+      const reader=response.body?.getReader();if(!reader)throw Error('Public flyer could not be read');
+      const chunks=[];let size=0;
+      try{while(true){const {done,value}=await reader.read();if(done)break;size+=value.length;if(size>=8*1024*1024){await reader.cancel();throw Error('Public flyer must be smaller than 8 MB');}chunks.push(value);}}finally{reader.releaseLock();}
+      const bytes=new Uint8Array(size);let offset=0;for(const chunk of chunks){bytes.set(chunk,offset);offset+=chunk.length;}
+      const dimensions=jpegDimensions(bytes);if(!dimensions)throw Error('Public flyer must contain a readable JPEG image');
+      if(channel==='feed'){const issue=feedImageIssue(dimensions.width,dimensions.height);if(issue)throw Error(issue);}
       const body = await request(`${env.IG_USER_ID}/media`, {method:'POST', fields:{image_url:imageUrl, ...(channel === 'story' ? {media_type:'STORIES'} : {caption:caption || ''})}});
       if (!body.id) throw new Error('Instagram container response missing ID');
       return String(body.id);
