@@ -16,8 +16,9 @@ export async function checkThemes(browser,base){
   try{
    const page=await context.newPage();await page.route('**/config/chapter.json',async route=>{const response=await route.fetch(),config=await response.json();await route.fulfill({json:{...config,showExamples:true,socialLinks:{...config.socialLinks,facebook:'https://www.facebook.com/chapter-test-fixture/',linktree:'https://linktr.ee/chapter-test-fixture'}}});});
    await page.goto(base);await page.locator('.campaign-card').first().waitFor();
+   assert.equal(await page.locator('nav .nav-icon svg').count(),3);
    assert.equal(await page.locator('.sidebar-social a').count(),4);
-   for(const label of ['Instagram','LinkedIn','Facebook','Linktree']){const link=page.locator('.sidebar-social').getByRole('link',{name:label+' (opens in a new tab)',exact:true});assert.equal(await link.getAttribute('target'),'_blank');assert.match(await link.getAttribute('rel'),/noopener/);assert.equal(await link.locator('svg').count(),1);}
+   for(const label of ['Instagram','LinkedIn','Facebook','Linktree']){const link=page.locator('.sidebar-social').getByRole('link',{name:label+' (opens in a new tab)',exact:true});assert.equal(await link.getAttribute('target'),'_blank');assert.match(await link.getAttribute('rel'),/noopener/);assert.ok(await link.locator('svg,img').count()>0);for(const image of await link.locator('img').all())assert.ok(await image.evaluate(async img=>{await img.decode();return img.naturalWidth>0;}),'Brand image must load');}
    assert.equal(await page.evaluate(()=>getComputedStyle(document.documentElement).colorScheme),theme,'System theme should control native fields');
    assert.equal(await page.locator('#sidebar').evaluate(e=>e.getBoundingClientRect().width),240);
    await checkContrast(page,['h1','.subtle','.stat-label','.stat small','.campaign-card h3','.campaign-card .card-info','.card-footer button','#new-campaign','nav button.active']);

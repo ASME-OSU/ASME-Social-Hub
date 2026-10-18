@@ -128,3 +128,16 @@ input::placeholder,textarea::placeholder{color:var(--muted);opacity:1}
  .header-social .social-link{color:var(--ink);border-color:var(--line)}
  .header-social .social-link:hover{background:var(--ice);border-color:var(--navy)}
 }
+
+/* Official social marks and a consistent vector navigation set. */
+.nav-icon{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;flex-shrink:0}
+.nav-icon svg{display:block;width:22px;height:22px}
+.social-brand-image{display:block;object-fit:contain;flex-shrink:0}
+.social-brand-linktree{display:block;flex-shrink:0;width:22px;height:26px}
+.linkedin-white{display:none}
+.sidebar-social .linkedin-blue{display:none}
+.sidebar-social .linkedin-white{display:block}
+:root[data-theme="dark"] .linkedin-blue{display:none}
+:root[data-theme="dark"] .linkedin-white{display:block}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .linkedin-blue{display:none}:root:not([data-theme="light"]) .linkedin-white{display:block}}
+@media(max-width:699px){.nav-icon,.nav-icon svg{width:20px;height:20px}}
