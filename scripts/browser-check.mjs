@@ -17,7 +17,27 @@ try {
  await page.goto(base);await page.waitForSelector('#campaign-list .empty');
  assert.equal(await page.locator('.campaign-card').count(),0);
  assert.ok(await page.locator('#suggestions .suggestion').count()>0);
- await page.locator('#new-campaign').click();assert.equal(await page.locator('[name=groupmeAnnounce]').isDisabled(),false);assert.equal(await page.locator('[name=groupmeAnnounce]').isChecked(),false);await page.locator('[data-close=editor]').first().click();
+ await page.locator('#new-campaign').click();assert.equal(await page.locator('[name=groupmeAnnounce]').isDisabled(),false);assert.equal(await page.locator('[name=groupmeAnnounce]').isChecked(),false);
+ const preview=page.frameLocator('#artwork-preview-frame');
+ await page.waitForFunction(()=>document.querySelector('#artwork-preview-frame').style.visibility==='visible');
+ assert.equal(await preview.locator('h1').textContent(),'Your event title');assert.match(await preview.locator('.block').textContent(),/Choose a date/);
+ await page.locator('[name=title]').fill('Blueprint preview night');await page.locator('[name=location]').fill('Scott E100');await page.locator('[name=start]').fill('2026-11-20T18:30');
+ await page.waitForFunction(()=>document.querySelector('#artwork-preview-frame').contentDocument?.querySelector('h1')?.textContent==='Blueprint preview night'&&document.querySelector('#artwork-preview-frame').style.visibility==='visible');
+ assert.match(await preview.locator('.block').textContent(),/Fri, Nov 20/);assert.match(await preview.locator('.block').textContent(),/6:30 PM EST/);
+ for(const name of ['editorial-poster','assembly-card','refined-blueprint']){
+  await page.locator('[name=template]').selectOption(name);
+  await page.waitForFunction(name=>{const frame=document.querySelector('#artwork-preview-frame');return frame.style.visibility==='visible'&&frame.srcdoc.includes(name==='assembly-card'?'assembly-art':name==='refined-blueprint'?'technical-art':'width:22px');},name);
+  assert.equal(await preview.locator('h1').textContent(),'Blueprint preview night');
+ }
+ const overrideJpeg=await page.screenshot({type:'jpeg'});
+ await page.route('https://preview.example/custom.jpg',route=>route.fulfill({contentType:'image/jpeg',body:overrideJpeg}));
+ await page.locator('[name=feedImage]').fill('https://preview.example/custom.jpg');await page.waitForFunction(()=>document.querySelector('#artwork-preview-status').textContent.startsWith('Custom image override'));assert.equal(await preview.locator('img').getAttribute('src'),'https://preview.example/custom.jpg');
+ await page.locator('[name=feedImage]').fill('');await page.waitForFunction(()=>document.querySelector('#artwork-preview-frame').contentDocument?.querySelector('h1')?.textContent==='Blueprint preview night'&&document.querySelector('#artwork-preview-frame').style.visibility==='visible');
+ await page.locator('[data-preview-format=story]').click();await page.waitForFunction(()=>document.querySelector('#artwork-preview-caption').textContent.includes('1080 × 1920'));assert.match(await preview.locator('body').getAttribute('class'),/^story/);
+ await mkdir('test-results',{recursive:true});await page.locator('#artwork-preview').screenshot({path:'test-results/editor-preview-story.png'});
+ await page.setViewportSize({width:390,height:844});await page.locator('#artwork-preview').scrollIntoViewIfNeeded();assert.equal(await page.locator('#editor').evaluate(e=>e.scrollWidth<=e.clientWidth),true,'Preview must fit the mobile editor');await page.locator('#artwork-preview').screenshot({path:'test-results/editor-preview-mobile.png'});
+ await page.setViewportSize({width:1440,height:1080});await page.locator('[data-preview-format=feed]').click();await page.waitForFunction(()=>document.querySelector('#artwork-preview-caption').textContent.includes('1080 × 1350'));
+ await page.locator('[data-close=editor]').first().click();
  await page.route('**/config/chapter.json',async route=>{
   const response=await route.fetch();const config=await response.json();
   config.integrations.groupme.enabled=false;await route.fulfill({json:{...config,showExamples:true}});
@@ -112,6 +132,7 @@ try {
  await page.locator('#save-button').click();await page.waitForSelector('#form-error:not([hidden])');assert.equal(writes.length,2);
  const pngBytes=await readFile('docs/assets/logos/social-hub-512.png');
  await page.locator('[name=flyer]').setInputFiles({name:'chapter.png',mimeType:'image/png',buffer:pngBytes});
+ await page.waitForFunction(()=>{const frame=document.querySelector('#artwork-preview-frame'),img=frame.contentDocument?.querySelector('img.flyer');return frame.style.visibility==='visible'&&img?.src.startsWith('blob:')&&img.complete&&img.naturalWidth>0;});
  await page.locator('#flyer-preview').waitFor({state:'visible'});assert.match(await page.locator('#flyer-feedback').textContent(),/chapter.png/);assert.equal(writes.length,2);
  await page.locator('#clear-flyer').click();assert.equal(await page.locator('[name=flyer]').inputValue(),'');assert.equal(await page.locator('#flyer-selection').isVisible(),false);
  await page.locator('[name=flyer]').setInputFiles({name:'chapter.png',mimeType:'image/png',buffer:pngBytes});
@@ -189,5 +210,5 @@ try {
   await cp(target,'test-results/flyer-feed.jpg');
   await cp(join(root,`docs/media/2026-27/${fixture.id}-story.jpg`),'test-results/flyer-story.jpg');
  } finally {await rm(root,{recursive:true,force:true});}
- console.log('Browser checks passed: export, timezone, food toggle, examples, duplication, archive filters, mobile layout, console, GitHub writes, preserved scheduler state, edit conflicts, and real JPEG rendering.');
+ console.log('Browser checks passed: live flyer preview, style and format switching, custom image overrides, uploaded artwork, mobile preview, export, timezone, food toggle, examples, duplication, archive filters, mobile layout, console, GitHub writes, preserved scheduler state, edit conflicts, and real JPEG rendering.');
 } finally {if(browser)await browser.close();server.kill();}
