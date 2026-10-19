@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-19T17:42:45.593Z",
+  "generatedAt": "2026-10-19T19:54:31.157Z",
   "activeYear": "2026-27",
   "config": {
     "timezone": "America/New_York",
@@ -23,7 +23,7 @@
     "status": "unknown",
     "warning": false,
     "configured": true,
-    "checkedAt": "2026-10-19T17:42:45.325Z",
+    "checkedAt": "2026-10-19T19:54:30.860Z",
     "expiresAt": null,
     "daysRemaining": null
   },
@@ -1155,7 +1155,7 @@
             "daysBefore": 7,
             "time": "14:30"
           },
-          "status": "pending",
+          "status": "skipped",
           "mediaId": null,
           "postedAt": null,
           "eventId": null,
@@ -1195,7 +1195,7 @@
             "createAt": "immediately",
             "announce": true
           },
-          "status": "pending",
+          "status": "skipped",
           "mediaId": null,
           "postedAt": null,
           "eventId": null,
