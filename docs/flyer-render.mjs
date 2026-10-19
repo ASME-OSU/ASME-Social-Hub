@@ -43,7 +43,7 @@ export function flyerHtml(template, campaign, config, format, assets = {}) {
     date:escape(new Intl.DateTimeFormat('en-US',{timeZone:tz,weekday:'long',...(template.includes('{{day}}') ? {} : {month:'long',day:'numeric'})}).format(date)),
     time:escape(new Intl.DateTimeFormat('en-US',{timeZone:tz,hour:'numeric',minute:'2-digit',timeZoneName:'short'}).format(date)),
     food:campaign.food ? '<div class="food">Food provided</div>' : '',
-    flyer:image ? `<img class="flyer" src="${image}" alt=""><div class="photo-overlay"></div>` : '',
+    flyer:image && format!=='story' ? `<img class="flyer" src="${image}" alt=""><div class="photo-overlay"></div>` : '',
     logo:logo ? `<img class="logo" src="${logo}" alt="">` : ''
   };
   if(assets.previewMissingDate)Object.assign(values,{date:'Choose a date',day:'—',month:'DATE',shortDate:'Choose a date',time:'Choose a time'});
@@ -55,6 +55,20 @@ export async function fitFlyerDocument(doc = document) {
     await Promise.all([...doc.images].map(image => image.decode().catch(() => {if(image.classList.contains('logo')){image.replaceWith(doc.createTextNode(image.alt||doc.body.dataset.chapter||'Chapter'));return;}if(image.classList.contains('story-flyer')||image.classList.contains('uploaded-feed'))throw Error('The uploaded flyer could not load. Check its URL or upload the image again.');})));
     const page = doc.querySelector('.page');
     if (!page) return;
+    if(page.classList.contains('flyer-showcase')){
+      const hero=page.querySelector('.hero'),artwork=page.querySelector('.artwork'),caption=page.querySelector('.showcase-caption'),image=page.querySelector('.story-flyer'),style=doc.defaultView.getComputedStyle(page);
+      const available=page.clientHeight-parseFloat(style.paddingTop)-parseFloat(style.paddingBottom);
+      caption.style.width='100%';
+      for(let i=0;i<4;i++){
+        const height=available-caption.getBoundingClientRect().height;
+        if(height<400)throw Error('Story details take too much space; shorten the location');
+        artwork.style.height=`${height}px`;
+        const width=Math.min(page.clientWidth-parseFloat(style.paddingLeft)-parseFloat(style.paddingRight),height*image.naturalWidth/image.naturalHeight);
+        caption.style.width=`${width}px`;image.style.width=`${width}px`;
+      }
+      if(hero.getBoundingClientRect().height>available+2)throw Error('Story details exceed the safe publishing area');
+      return;
+    }
     const title = page.querySelector('h1');
     const hero = page.querySelector('.hero');
     const fixed = [...page.children].filter(el => ['HEADER','FOOTER'].includes(el.tagName) || el.classList.contains('block'));

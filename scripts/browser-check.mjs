@@ -141,7 +141,7 @@ try {
  await page.locator('[name=flyer]').setInputFiles({name:'chapter.png',mimeType:'image/png',buffer:pngBytes});
  await page.waitForFunction(()=>{const frame=document.querySelector('#artwork-preview-frame'),img=frame.contentDocument?.querySelector('img.flyer');return frame.style.visibility==='visible'&&img?.src.startsWith('blob:')&&img.complete&&img.naturalWidth>0;});
  assert.equal(await preview.locator('img.uploaded-feed').count(),1);assert.equal(await preview.locator('h1,.logo,.photo-overlay').count(),0);assert.match(await page.locator('#artwork-preview-caption').textContent(),/1080 × 1080/);
- await page.locator('#flyer-preview').waitFor({state:'visible'});assert.match(await page.locator('#flyer-feedback').textContent(),/chapter.png/);assert.equal(writes.length,2);
+ await page.locator('#flyer-preview').waitFor({state:'visible'});assert.match(await page.locator('#flyer-image-list').textContent(),/chapter.png/);assert.equal(writes.length,2);
  await page.locator('#clear-flyer').click();assert.equal(await page.locator('[name=flyer]').inputValue(),'');assert.equal(await page.locator('#flyer-selection').isVisible(),false);
  await page.locator('[name=flyer]').setInputFiles({name:'chapter.png',mimeType:'image/png',buffer:pngBytes});
  await page.locator('#save-button').click();await page.waitForFunction(()=>!document.querySelector('#editor').open);
@@ -197,7 +197,7 @@ try {
  for(const name of ['blueprint','refined-blueprint','editorial-poster','assembly-card'])for(const format of ['feed','story']){
   const pngTemplate=await readFile(`templates/${name}.html`,'utf8');
   const pngPage=await browser.newPage({viewport:{width:1080,height:format==='feed'?1350:1920}});
-  try{await pngPage.route('https://fixture.example/flyer.png',route=>route.fulfill({contentType:'image/png',body:pngBytes}));await pngPage.setContent(flyerHtml(pngTemplate,{...rich,flyerUrl:'https://fixture.example/flyer.png'},config,format,assets));await fitFlyer(pngPage);assert.ok(await pngPage.locator('img.flyer').evaluate(img=>img.complete&&img.naturalWidth>0));const uploaded=pngPage.locator('img.uploaded-feed');
+  try{await pngPage.route('https://fixture.example/flyer.png',route=>route.fulfill({contentType:'image/png',body:pngBytes}));await pngPage.setContent(flyerHtml(pngTemplate,{...rich,flyerUrl:'https://fixture.example/flyer.png'},config,format,assets));await fitFlyer(pngPage);if(format==='feed')assert.ok(await pngPage.locator('img.flyer').evaluate(img=>img.complete&&img.naturalWidth>0));else assert.equal(await pngPage.locator('img.flyer,.photo-overlay').count(),0);const uploaded=pngPage.locator('img.uploaded-feed');
    if(format==='feed'){assert.equal(await uploaded.count(),1);assert.equal(await pngPage.locator('h1,.logo,.photo-overlay').count(),0);assert.deepEqual(await uploaded.evaluate(img=>({width:img.clientWidth,height:img.clientHeight})),{width:1080,height:1080});}
    const jpeg=format==='feed'?await uploaded.screenshot({type:'jpeg'}):await pngPage.screenshot({type:'jpeg'});assert.equal(jpeg.subarray(0,3).toString('hex'),'ffd8ff');
    if(format==='feed'){const dimensions=await pngPage.evaluate(async uri=>{const image=new Image();image.src=uri;await image.decode();return [image.naturalWidth,image.naturalHeight];},'data:image/jpeg;base64,'+jpeg.toString('base64'));assert.deepEqual(dimensions,[1080,1080]);}}finally{await pngPage.close();}

@@ -1,3 +1,4 @@
+import {feedImageUrls} from '../docs/carousel.mjs';
 import { readFile, mkdir, rmdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -79,14 +80,15 @@ export async function dispatch({root=process.cwd(),now=new Date(),dryRun=false,s
           try {
             if(result.publishAttemptedAt) throw new Error('Publication outcome requires reconciliation');
             if(result.preparedRevision !== undefined && result.preparedRevision !== (c.revision??0)) {
-              delete result.containerId; delete result.image; delete result.caption;
+              delete result.containerId; delete result.image; delete result.images; delete result.caption;
             }
             result.preparedRevision=c.revision??0;
-            const imageUrl=result.image || c.flyers?.[channel] || c.images?.[channel] || (config.siteUrl ? `${config.siteUrl.replace(/\/$/,'')}/media/${c.year}/${c.id}-${channel}.jpg` : null);
+            const imageUrls=channel==='feed'?(result.images||feedImageUrls(c,config)):[];
+            const imageUrl=result.image || imageUrls[0] || c.flyers?.[channel] || c.images?.[channel] || (config.siteUrl ? `${config.siteUrl.replace(/\/$/,'')}/media/${c.year}/${c.id}-${channel}.jpg` : null);
             if(!imageUrl || !/^https:\/\//.test(imageUrl)) throw new Error('Public HTTPS flyer URL is required');
             await services.ig.checkPublishingLimit?.();
-            result.image=imageUrl; result.caption=captionFor(c,config);
-            if(!result.containerId) { result.containerId=await services.ig.createContainer({campaign:c,channel,imageUrl,caption:result.caption,config}); await save(); }
+            result.image=imageUrl;if(channel==='feed')result.images=imageUrls.length?imageUrls:[imageUrl]; result.caption=captionFor(c,config);
+            if(!result.containerId) { result.containerId=await services.ig.createContainer({campaign:c,channel,imageUrl,imageUrls:channel==='feed'?result.images:undefined,caption:result.caption,config}); await save(); }
             await services.ig.waitForContainer(result.containerId);
             result.publishAttemptedAt=now.toISOString(); await save();
             try { const published=await services.ig.publishContainer(result.containerId); result.mediaId=typeof published==='string'?published:published.mediaId || published.id; if(!result.mediaId) throw new Error('Missing publication identifier'); } catch(e) { if(e.retrySafe) delete result.publishAttemptedAt; throw e; }

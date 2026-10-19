@@ -1,3 +1,4 @@
+import {flyerSources,mediaName} from '../docs/carousel.mjs';
 import {feedImageIssue} from '../docs/image-policy.mjs';
 import { readFile, mkdir, writeFile, realpath, stat } from 'node:fs/promises';
 import { resolve, dirname, sep, extname } from 'node:path';
@@ -58,7 +59,7 @@ export async function renderFlyers({root = process.cwd(), force = false} = {}) {
   const config = JSON.parse(await readFile(resolve(root,'config/chapter.json'),'utf8'));
   validateConfig(config);
   const assets = await loadFlyerAssets(root,config);
-  const rendererSource = await Promise.all(['flyer-render.mjs','story-design.mjs','image-policy.mjs'].map(name=>readFile(new URL('../docs/'+name,import.meta.url),'utf8')));
+  const rendererSource = await Promise.all(['flyer-render.mjs','story-design.mjs','image-policy.mjs','carousel.mjs'].map(name=>readFile(new URL('../docs/'+name,import.meta.url),'utf8')));
   const { chromium } = await import('playwright');
   const browser = await chromium.launch({headless:true});
   let count = 0;
@@ -68,9 +69,12 @@ export async function renderFlyers({root = process.cwd(), force = false} = {}) {
       if (campaign.demo || campaign.cancelled) continue;
       const templateName=selectFlyerTemplate(campaign,config);
       const template=await readFile(resolve(root,`templates/${templateName}.html`),'utf8');
+      const sources=flyerSources(campaign);
       for (const format of ['feed','story']) {
-        const target = resolve(root,`docs/media/${campaign.year}/${campaign.id}-${format}.jpg`);
-        const marker = resolve(root,`.local/render/${campaign.year}/${campaign.id}-${format}.revision`);
+       const imageCount=format==='feed'&&!campaign.images?.feed&&!campaign.flyers?.feed?Math.max(1,sources.length):1;
+       for(let imageIndex=0;imageIndex<imageCount;imageIndex++){
+        const target = resolve(root,`docs/media/${campaign.year}/${mediaName(campaign,format,imageIndex)}`);
+        const marker = resolve(root,`.local/render/${campaign.year}/${mediaName(campaign,format,imageIndex)}.revision`);
         const revision = JSON.stringify({campaign,config,template,assets,rendererSource});
         // Published media are immutable; regenerating must never change an existing posted asset.
         if (isFlyerLocked(campaign,format)) continue;
@@ -82,7 +86,7 @@ export async function renderFlyers({root = process.cwd(), force = false} = {}) {
             const requestUrl = new URL(route.request().url());
             return requestUrl.protocol === 'https:' ? route.continue() : route.abort();
           });
-          await page.setContent(flyerHtml(template,campaign,config,format,assets),{waitUntil:'networkidle'});
+          await page.setContent(flyerHtml(template,{...campaign,flyerUrl:sources[format==='feed'?imageIndex:0]||campaign.flyerUrl},config,format,assets),{waitUntil:'networkidle'});
           await fitFlyer(page);
           await mkdir(dirname(target),{recursive:true});
           const uploaded=page.locator('img.uploaded-feed');
@@ -92,6 +96,7 @@ export async function renderFlyers({root = process.cwd(), force = false} = {}) {
           await writeFile(marker,revision);
           console.log(`Rendered ${campaign.id} ${format}`); count++;
         } finally { await page.close(); }
+       }
       }
     }
   } finally { await browser.close(); }

@@ -1,3 +1,4 @@
+import {validateFlyerSources} from '../docs/carousel.mjs';
 import {validateStoryDesign} from '../docs/story-design.mjs';
 import { readdir, readFile, mkdir, writeFile, rename } from 'node:fs/promises';
 import path from 'node:path';
@@ -45,6 +46,7 @@ export function advertisingLines(c, config) {
   ].filter(Boolean);
 }
 export function validateCampaign(c) {
+  validateFlyerSources(c);
   assert(c && /^[a-zA-Z0-9][a-zA-Z0-9_-]*$/.test(c.id), 'Invalid campaign id');
   assert(/^\d{4}-\d{2}$/.test(c.year), 'Invalid campaign year');
   assert(typeof c.title === 'string' && c.title.trim(), 'Campaign title is required');
