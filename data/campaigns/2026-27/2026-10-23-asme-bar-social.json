@@ -77,7 +77,9 @@
     },
     "story": {},
     "groupme": {
-      "skipReason": "announcement-window-missed"
+      "skipReason": "announcement-window-missed",
+      "botText": "ASME Bar Social\nFriday, October 23, 2026 at 6:30 PM (America/New_York)\nThe Horseshoe Country Bar & More, 2159 N High St, Columbus, OH 43201, USA\nJoin ASME this Friday, October 23, for our Bar Social at Horseshoe Bar! Come hang out, catch up with friends, and kick off the weekend with us!\n\n📍 Horseshoe Bar, Columbus\n🗓️ Friday, October 23\n🕡 6:30–8:30 PM\n\nDrinks are on ASME while the tab lasts!\n\n18+ to enter | 21+ to drink\n\nSee you there!\n\n#ASME #OhioState #ASMEOSU #BuckeyeEngineers\nFood provided! Drinks on ASME while the tab lasts\nCalendar: https://asme-osu.github.io/ASME-Social-Hub/calendar/2026-27/2026-10-23-asme-bar-social.ics\nFlyer: https://raw.githubusercontent.com/ASME-OSU/ASME-Social-Hub/main/assets/uploads/2026-10-23-asme-bar-social-1792429992154-1.png",
+      "botAttemptedAt": "2026-10-19T22:46:29.582Z"
     },
     "insights": []
   },
