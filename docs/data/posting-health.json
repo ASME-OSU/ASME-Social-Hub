@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-19T14:28:02.076Z",
+  "generatedAt": "2026-10-19T17:13:51.109Z",
   "activeYear": "2026-27",
   "config": {
     "timezone": "America/New_York",
@@ -23,7 +23,7 @@
     "status": "unknown",
     "warning": false,
     "configured": true,
-    "checkedAt": "2026-10-19T14:28:01.896Z",
+    "checkedAt": "2026-10-19T17:13:50.865Z",
     "expiresAt": null,
     "daysRemaining": null
   },
@@ -1119,6 +1119,83 @@
             "announce": false
           },
           "status": "done",
+          "mediaId": null,
+          "postedAt": null,
+          "eventId": null,
+          "syncedRevision": null,
+          "botSentAt": null,
+          "deletedAt": null,
+          "publishAttemptedAt": null,
+          "createAttemptedAt": null,
+          "botAttemptedAt": null
+        }
+      }
+    },
+    {
+      "id": "2026-10-23-asme-bar-social",
+      "year": "2026-27",
+      "title": "ASME Bar Social",
+      "start": "2026-10-23T22:30:00.000Z",
+      "end": "2026-10-24T00:30:00.000Z",
+      "demo": false,
+      "cancelled": false,
+      "archived": false,
+      "source": {
+        "uid": "51ktvdb5pj9l342194d7ance14@google.com::2026-10-23T22:30:00.000Z",
+        "calendarUid": "51ktvdb5pj9l342194d7ance14@google.com"
+      },
+      "revision": 1,
+      "channels": {
+        "feed": {
+          "enabled": true,
+          "dueAt": "2026-10-16T18:30:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "daysBefore": 7,
+            "time": "14:30"
+          },
+          "status": "pending",
+          "mediaId": null,
+          "postedAt": null,
+          "eventId": null,
+          "syncedRevision": null,
+          "botSentAt": null,
+          "deletedAt": null,
+          "publishAttemptedAt": null,
+          "createAttemptedAt": null,
+          "botAttemptedAt": null
+        },
+        "story": {
+          "enabled": true,
+          "dueAt": "2026-10-22T16:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "daysBefore": 1,
+            "time": "12:00"
+          },
+          "status": "pending",
+          "mediaId": null,
+          "postedAt": null,
+          "eventId": null,
+          "syncedRevision": null,
+          "botSentAt": null,
+          "deletedAt": null,
+          "publishAttemptedAt": null,
+          "createAttemptedAt": null,
+          "botAttemptedAt": null
+        },
+        "groupme": {
+          "enabled": true,
+          "dueAt": "2026-10-16T18:30:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "createAt": "immediately",
+            "announce": true
+          },
+          "status": "pending",
           "mediaId": null,
           "postedAt": null,
           "eventId": null,
