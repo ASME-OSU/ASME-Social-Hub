@@ -1,0 +1,72 @@
+{
+  "id": "2026-10-23-asme-bar-social",
+  "year": "2026-27",
+  "type": "social",
+  "title": "ASME Bar Social",
+  "start": "2026-10-23T22:30:00.000Z",
+  "end": "2026-10-24T00:30:00.000Z",
+  "location": {
+    "name": "The Horseshoe Country Bar & More, 2159 N High St, Columbus, OH 43201, USA"
+  },
+  "description": "Join ASME this Friday, October 23, for our Bar Social at Horseshoe Bar! Come hang out, catch up with friends, and kick off the weekend with us!\n\n📍 Horseshoe Bar, Columbus\n🗓️ Friday, October 23\n🕡 6:30–8:30 PM\n\nDrinks are on ASME while the tab lasts!\n\n18+ to enter | 21+ to drink\n\nSee you there!\n\n#ASME #OhioState #ASMEOSU #BuckeyeEngineers",
+  "food": true,
+  "template": "refined-blueprint",
+  "storyDesign": {
+    "background": "folded-paper",
+    "paletteSource": "flyer",
+    "palette": [
+      "#2d0603",
+      "#8f0b0b",
+      "#e2dcdc"
+    ]
+  },
+  "advertising": {
+    "foodDetails": "Drinks on ASME while the tab lasts"
+  },
+  "source": {
+    "kind": "ical",
+    "uid": "51ktvdb5pj9l342194d7ance14@google.com::2026-10-23T22:30:00.000Z",
+    "calendarUid": "51ktvdb5pj9l342194d7ance14@google.com"
+  },
+  "campaign": {
+    "groupme": {
+      "createAt": "immediately",
+      "reminders": [
+        604800,
+        86400
+      ],
+      "enabled": true,
+      "announce": true
+    },
+    "feed": {
+      "daysBefore": 7,
+      "time": "14:30",
+      "enabled": true
+    },
+    "story": {
+      "daysBefore": 1,
+      "time": "12:00",
+      "enabled": true
+    }
+  },
+  "notes": "",
+  "images": {
+    "feed": "",
+    "story": ""
+  },
+  "revision": 1,
+  "cancelled": false,
+  "status": {
+    "feed": "pending",
+    "story": "pending",
+    "groupme": "pending"
+  },
+  "results": {
+    "feed": {},
+    "story": {},
+    "groupme": {},
+    "insights": []
+  },
+  "log": [],
+  "flyerUrl": "https://raw.githubusercontent.com/ASME-OSU/ASME-Social-Hub/main/assets/uploads/2026-10-23-asme-bar-social-1792429992154-1.png"
+}
