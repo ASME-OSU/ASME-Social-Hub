@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-19T19:54:31.157Z",
+  "generatedAt": "2026-10-19T20:49:00.283Z",
   "activeYear": "2026-27",
   "config": {
     "timezone": "America/New_York",
@@ -23,7 +23,7 @@
     "status": "unknown",
     "warning": false,
     "configured": true,
-    "checkedAt": "2026-10-19T19:54:30.860Z",
+    "checkedAt": "2026-10-19T20:49:00.046Z",
     "expiresAt": null,
     "daysRemaining": null
   },
@@ -1144,16 +1144,16 @@
         "uid": "51ktvdb5pj9l342194d7ance14@google.com::2026-10-23T22:30:00.000Z",
         "calendarUid": "51ktvdb5pj9l342194d7ance14@google.com"
       },
-      "revision": 1,
+      "revision": 2,
       "channels": {
         "feed": {
           "enabled": true,
-          "dueAt": "2026-10-16T18:30:00.000Z",
+          "dueAt": "2026-10-19T21:00:00.000Z",
           "scheduleInvalid": false,
           "immediate": false,
           "schedule": {
-            "daysBefore": 7,
-            "time": "14:30"
+            "daysBefore": 4,
+            "time": "17:00"
           },
           "status": "skipped",
           "mediaId": null,
@@ -1188,7 +1188,7 @@
         },
         "groupme": {
           "enabled": true,
-          "dueAt": "2026-10-16T18:30:00.000Z",
+          "dueAt": "2026-10-19T21:00:00.000Z",
           "scheduleInvalid": false,
           "immediate": false,
           "schedule": {

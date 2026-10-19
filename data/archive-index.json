@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-19T19:54:30.360Z",
+  "generatedAt": "2026-10-19T20:49:00.225Z",
   "campaigns": [
     {
       "id": "2026-11-12-fall-social",
@@ -198,8 +198,8 @@
           "announce": true
         },
         "feed": {
-          "daysBefore": 7,
-          "time": "14:30",
+          "daysBefore": 4,
+          "time": "17:00",
           "enabled": true
         },
         "story": {
@@ -213,7 +213,7 @@
         "feed": "",
         "story": ""
       },
-      "revision": 1,
+      "revision": 2,
       "cancelled": false,
       "status": {
         "feed": "skipped",
