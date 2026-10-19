@@ -39,8 +39,8 @@
       "announce": true
     },
     "feed": {
-      "daysBefore": 7,
-      "time": "14:30",
+      "daysBefore": 4,
+      "time": "17:00",
       "enabled": true
     },
     "story": {
@@ -54,7 +54,7 @@
     "feed": "",
     "story": ""
   },
-  "revision": 1,
+  "revision": 2,
   "cancelled": false,
   "status": {
     "feed": "skipped",
