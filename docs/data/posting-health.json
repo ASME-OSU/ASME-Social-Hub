@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-19T20:49:00.283Z",
+  "generatedAt": "2026-10-19T20:58:16.067Z",
   "activeYear": "2026-27",
   "config": {
     "timezone": "America/New_York",
@@ -23,7 +23,7 @@
     "status": "unknown",
     "warning": false,
     "configured": true,
-    "checkedAt": "2026-10-19T20:49:00.046Z",
+    "checkedAt": "2026-10-19T20:58:15.850Z",
     "expiresAt": null,
     "daysRemaining": null
   },
@@ -1144,7 +1144,7 @@
         "uid": "51ktvdb5pj9l342194d7ance14@google.com::2026-10-23T22:30:00.000Z",
         "calendarUid": "51ktvdb5pj9l342194d7ance14@google.com"
       },
-      "revision": 2,
+      "revision": 3,
       "channels": {
         "feed": {
           "enabled": true,
