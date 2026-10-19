@@ -1,0 +1,1366 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-19T05:50:29.695Z",
+  "activeYear": "2026-27",
+  "config": {
+    "timezone": "America/New_York",
+    "defaultCadence": {
+      "feed": {
+        "daysBefore": 7,
+        "time": "12:00"
+      },
+      "story": {
+        "daysBefore": 3,
+        "time": "12:00"
+      }
+    },
+    "groupme": {
+      "enabled": true,
+      "mode": "bot"
+    }
+  },
+  "tokenWarning": {
+    "status": "unknown",
+    "warning": false,
+    "configured": true,
+    "checkedAt": "2026-10-19T05:13:16.444Z",
+    "expiresAt": null,
+    "daysRemaining": null
+  },
+  "calendar": {
+    "feedUrl": "https://calendar.google.com/calendar/ical/c93730cdacb567b0f010d1367080e3028ec5c7657d9713b675ac9e5c437b9fba%40group.calendar.google.com/public/basic.ics",
+    "generatedAt": "2026-10-18T11:41:28.023Z",
+    "candidates": [
+      {
+        "id": "5n4j886meo63ojjrbue0b56i19@google.com::2026-10-19T00:00:00.000Z",
+        "title": "Second-session classes begin",
+        "start": "2026-10-19T00:00:00.000Z",
+        "end": "2026-10-20T00:00:00.000Z",
+        "allDay": true,
+        "uid": "5n4j886meo63ojjrbue0b56i19@google.com::2026-10-19T00:00:00.000Z",
+        "source": {
+          "uid": "5n4j886meo63ojjrbue0b56i19@google.com::2026-10-19T00:00:00.000Z",
+          "calendarUid": "5n4j886meo63ojjrbue0b56i19@google.com"
+        },
+        "dueAt": {
+          "feed": "2026-10-11T16:00:00.000Z",
+          "story": "2026-10-15T16:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-10-22T21:30:00.000Z",
+        "title": "ASME MATLAB Info Session",
+        "start": "2026-10-22T21:30:00.000Z",
+        "end": "2026-10-22T22:30:00.000Z",
+        "allDay": false,
+        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-10-22T21:30:00.000Z",
+        "source": {
+          "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-10-22T21:30:00.000Z",
+          "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        },
+        "dueAt": {
+          "feed": "2026-10-15T16:00:00.000Z",
+          "story": "2026-10-19T16:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "51ktvdb5pj9l342194d7ance14@google.com::2026-10-23T22:30:00.000Z",
+        "title": "Bar Social",
+        "start": "2026-10-23T22:30:00.000Z",
+        "end": "2026-10-24T00:30:00.000Z",
+        "allDay": false,
+        "uid": "51ktvdb5pj9l342194d7ance14@google.com::2026-10-23T22:30:00.000Z",
+        "source": {
+          "uid": "51ktvdb5pj9l342194d7ance14@google.com::2026-10-23T22:30:00.000Z",
+          "calendarUid": "51ktvdb5pj9l342194d7ance14@google.com"
+        },
+        "dueAt": {
+          "feed": "2026-10-16T16:00:00.000Z",
+          "story": "2026-10-20T16:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-10-29T21:30:00.000Z",
+        "title": "ASME Scheduling/BuckeyeLink Tour",
+        "start": "2026-10-29T21:30:00.000Z",
+        "end": "2026-10-29T22:30:00.000Z",
+        "allDay": false,
+        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-10-29T21:30:00.000Z",
+        "source": {
+          "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-10-29T21:30:00.000Z",
+          "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        },
+        "dueAt": {
+          "feed": "2026-10-22T16:00:00.000Z",
+          "story": "2026-10-26T16:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "4o94ugad0fu7c42nu4j2huli1j@google.com::2026-11-02T00:00:00.000Z",
+        "title": "Enrollment Census Date (second-session)",
+        "start": "2026-11-02T00:00:00.000Z",
+        "end": "2026-11-03T00:00:00.000Z",
+        "allDay": true,
+        "uid": "4o94ugad0fu7c42nu4j2huli1j@google.com::2026-11-02T00:00:00.000Z",
+        "source": {
+          "uid": "4o94ugad0fu7c42nu4j2huli1j@google.com::2026-11-02T00:00:00.000Z",
+          "calendarUid": "4o94ugad0fu7c42nu4j2huli1j@google.com"
+        },
+        "dueAt": {
+          "feed": "2026-10-25T16:00:00.000Z",
+          "story": "2026-10-29T16:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-11-05T22:30:00.000Z",
+        "title": "ASME Bridge Building Competition",
+        "start": "2026-11-05T22:30:00.000Z",
+        "end": "2026-11-05T23:30:00.000Z",
+        "allDay": false,
+        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-11-05T22:30:00.000Z",
+        "source": {
+          "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-11-05T22:30:00.000Z",
+          "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        },
+        "dueAt": {
+          "feed": "2026-10-29T16:00:00.000Z",
+          "story": "2026-11-02T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "6007o04v43b5pioguflhf7p4qk@google.com::2026-11-11T00:00:00.000Z",
+        "title": "Veterans Day observed - no classes, offices closed",
+        "start": "2026-11-11T00:00:00.000Z",
+        "end": "2026-11-12T00:00:00.000Z",
+        "allDay": true,
+        "uid": "6007o04v43b5pioguflhf7p4qk@google.com::2026-11-11T00:00:00.000Z",
+        "source": {
+          "uid": "6007o04v43b5pioguflhf7p4qk@google.com::2026-11-11T00:00:00.000Z",
+          "calendarUid": "6007o04v43b5pioguflhf7p4qk@google.com"
+        },
+        "dueAt": {
+          "feed": "2026-11-03T17:00:00.000Z",
+          "story": "2026-11-07T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-11-12T22:30:00.000Z",
+        "title": "ASME Pratt & Whitney Event",
+        "start": "2026-11-12T22:30:00.000Z",
+        "end": "2026-11-12T23:30:00.000Z",
+        "allDay": false,
+        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-11-12T22:30:00.000Z",
+        "source": {
+          "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-11-12T22:30:00.000Z",
+          "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        },
+        "dueAt": {
+          "feed": "2026-11-05T17:00:00.000Z",
+          "story": "2026-11-09T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-11-19T22:30:00.000Z",
+        "title": "ASME Friendsgiving",
+        "start": "2026-11-19T22:30:00.000Z",
+        "end": "2026-11-19T23:30:00.000Z",
+        "allDay": false,
+        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-11-19T22:30:00.000Z",
+        "source": {
+          "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-11-19T22:30:00.000Z",
+          "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        },
+        "dueAt": {
+          "feed": "2026-11-12T17:00:00.000Z",
+          "story": "2026-11-16T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "58pheu7tqvdrjtnuoj7e3punhq@google.com::2026-11-25T00:00:00.000Z",
+        "title": "Thanksgiving Break begins - no classes",
+        "start": "2026-11-25T00:00:00.000Z",
+        "end": "2026-11-27T00:00:00.000Z",
+        "allDay": true,
+        "uid": "58pheu7tqvdrjtnuoj7e3punhq@google.com::2026-11-25T00:00:00.000Z",
+        "source": {
+          "uid": "58pheu7tqvdrjtnuoj7e3punhq@google.com::2026-11-25T00:00:00.000Z",
+          "calendarUid": "58pheu7tqvdrjtnuoj7e3punhq@google.com"
+        },
+        "dueAt": {
+          "feed": "2026-11-17T17:00:00.000Z",
+          "story": "2026-11-21T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "4f5cqobo57scvsmjmglroaor7a@google.com::2026-11-27T00:00:00.000Z",
+        "title": "Indigenous People's Day/ Columbus Day observed no classes, offices closed",
+        "start": "2026-11-27T00:00:00.000Z",
+        "end": "2026-11-28T00:00:00.000Z",
+        "allDay": true,
+        "uid": "4f5cqobo57scvsmjmglroaor7a@google.com::2026-11-27T00:00:00.000Z",
+        "source": {
+          "uid": "4f5cqobo57scvsmjmglroaor7a@google.com::2026-11-27T00:00:00.000Z",
+          "calendarUid": "4f5cqobo57scvsmjmglroaor7a@google.com"
+        },
+        "dueAt": {
+          "feed": "2026-11-19T17:00:00.000Z",
+          "story": "2026-11-23T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-12-03T22:30:00.000Z",
+        "title": "ASME Sweets with SWE",
+        "start": "2026-12-03T22:30:00.000Z",
+        "end": "2026-12-03T23:30:00.000Z",
+        "allDay": false,
+        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-12-03T22:30:00.000Z",
+        "source": {
+          "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-12-03T22:30:00.000Z",
+          "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        },
+        "dueAt": {
+          "feed": "2026-11-26T17:00:00.000Z",
+          "story": "2026-11-30T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "34m9rksc9kq64c7v1fp02jsrnv@google.com::2026-12-09T00:00:00.000Z",
+        "title": "Last day of regularly scheduled semester and second-session classes",
+        "start": "2026-12-09T00:00:00.000Z",
+        "end": "2026-12-10T00:00:00.000Z",
+        "allDay": true,
+        "uid": "34m9rksc9kq64c7v1fp02jsrnv@google.com::2026-12-09T00:00:00.000Z",
+        "source": {
+          "uid": "34m9rksc9kq64c7v1fp02jsrnv@google.com::2026-12-09T00:00:00.000Z",
+          "calendarUid": "34m9rksc9kq64c7v1fp02jsrnv@google.com"
+        },
+        "dueAt": {
+          "feed": "2026-12-01T17:00:00.000Z",
+          "story": "2026-12-05T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-12-10T22:30:00.000Z",
+        "title": "ASME Study Tables",
+        "start": "2026-12-10T22:30:00.000Z",
+        "end": "2026-12-10T23:30:00.000Z",
+        "allDay": false,
+        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-12-10T22:30:00.000Z",
+        "source": {
+          "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-12-10T22:30:00.000Z",
+          "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        },
+        "dueAt": {
+          "feed": "2026-12-03T17:00:00.000Z",
+          "story": "2026-12-07T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "52hdmisc6qjpuclsurg5fkbd6c@google.com::2026-12-11T00:00:00.000Z",
+        "title": "Final exams for semester and second-session classes",
+        "start": "2026-12-11T00:00:00.000Z",
+        "end": "2026-12-12T00:00:00.000Z",
+        "allDay": true,
+        "uid": "52hdmisc6qjpuclsurg5fkbd6c@google.com::2026-12-11T00:00:00.000Z",
+        "source": {
+          "uid": "52hdmisc6qjpuclsurg5fkbd6c@google.com::2026-12-11T00:00:00.000Z",
+          "calendarUid": "52hdmisc6qjpuclsurg5fkbd6c@google.com"
+        },
+        "dueAt": {
+          "feed": "2026-12-03T17:00:00.000Z",
+          "story": "2026-12-07T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "15q2fhdjkltnmh94tu26h6i4te@google.com::2026-12-14T00:00:00.000Z",
+        "title": "Final exams for semester and second-session classes",
+        "start": "2026-12-14T00:00:00.000Z",
+        "end": "2026-12-18T00:00:00.000Z",
+        "allDay": true,
+        "uid": "15q2fhdjkltnmh94tu26h6i4te@google.com::2026-12-14T00:00:00.000Z",
+        "source": {
+          "uid": "15q2fhdjkltnmh94tu26h6i4te@google.com::2026-12-14T00:00:00.000Z",
+          "calendarUid": "15q2fhdjkltnmh94tu26h6i4te@google.com"
+        },
+        "dueAt": {
+          "feed": "2026-12-06T17:00:00.000Z",
+          "story": "2026-12-10T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "5v98qp1tmubev9pu2f4i6hcter@google.com::2026-12-20T00:00:00.000Z",
+        "title": "Autumn Commencement",
+        "start": "2026-12-20T00:00:00.000Z",
+        "end": "2026-12-21T00:00:00.000Z",
+        "allDay": true,
+        "uid": "5v98qp1tmubev9pu2f4i6hcter@google.com::2026-12-20T00:00:00.000Z",
+        "source": {
+          "uid": "5v98qp1tmubev9pu2f4i6hcter@google.com::2026-12-20T00:00:00.000Z",
+          "calendarUid": "5v98qp1tmubev9pu2f4i6hcter@google.com"
+        },
+        "dueAt": {
+          "feed": "2026-12-12T17:00:00.000Z",
+          "story": "2026-12-16T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "69n260ucpg7egi1r48mgcppb38@google.com::2026-12-24T00:00:00.000Z",
+        "title": "President's Day Observed - offices closed",
+        "start": "2026-12-24T00:00:00.000Z",
+        "end": "2026-12-25T00:00:00.000Z",
+        "allDay": true,
+        "uid": "69n260ucpg7egi1r48mgcppb38@google.com::2026-12-24T00:00:00.000Z",
+        "source": {
+          "uid": "69n260ucpg7egi1r48mgcppb38@google.com::2026-12-24T00:00:00.000Z",
+          "calendarUid": "69n260ucpg7egi1r48mgcppb38@google.com"
+        },
+        "dueAt": {
+          "feed": "2026-12-16T17:00:00.000Z",
+          "story": "2026-12-20T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "2ddh0v5kl4airldnge5gnipank@google.com::2026-12-25T00:00:00.000Z",
+        "title": "Christmas - offices closed",
+        "start": "2026-12-25T00:00:00.000Z",
+        "end": "2026-12-26T00:00:00.000Z",
+        "allDay": true,
+        "uid": "2ddh0v5kl4airldnge5gnipank@google.com::2026-12-25T00:00:00.000Z",
+        "source": {
+          "uid": "2ddh0v5kl4airldnge5gnipank@google.com::2026-12-25T00:00:00.000Z",
+          "calendarUid": "2ddh0v5kl4airldnge5gnipank@google.com"
+        },
+        "dueAt": {
+          "feed": "2026-12-17T17:00:00.000Z",
+          "story": "2026-12-21T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "4iv6j350dbd1fda87s5mii63d1@google.com::2026-12-28T00:00:00.000Z",
+        "title": "Academic Winter Recess",
+        "start": "2026-12-28T00:00:00.000Z",
+        "end": "2027-01-01T00:00:00.000Z",
+        "allDay": true,
+        "uid": "4iv6j350dbd1fda87s5mii63d1@google.com::2026-12-28T00:00:00.000Z",
+        "source": {
+          "uid": "4iv6j350dbd1fda87s5mii63d1@google.com::2026-12-28T00:00:00.000Z",
+          "calendarUid": "4iv6j350dbd1fda87s5mii63d1@google.com"
+        },
+        "dueAt": {
+          "feed": "2026-12-20T17:00:00.000Z",
+          "story": "2026-12-24T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "27ammh97n9us8eb8cfi07rs47u@google.com::2027-01-01T00:00:00.000Z",
+        "title": "New Year's Day",
+        "start": "2027-01-01T00:00:00.000Z",
+        "end": "2027-01-02T00:00:00.000Z",
+        "allDay": true,
+        "uid": "27ammh97n9us8eb8cfi07rs47u@google.com::2027-01-01T00:00:00.000Z",
+        "source": {
+          "uid": "27ammh97n9us8eb8cfi07rs47u@google.com::2027-01-01T00:00:00.000Z",
+          "calendarUid": "27ammh97n9us8eb8cfi07rs47u@google.com"
+        },
+        "dueAt": {
+          "feed": "2026-12-24T17:00:00.000Z",
+          "story": "2026-12-28T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "5mdepjeq9ajchmilcokqhb3bn2@google.com::2027-01-04T00:00:00.000Z",
+        "title": "Initial Fee Due Date",
+        "start": "2027-01-04T00:00:00.000Z",
+        "end": "2027-01-05T00:00:00.000Z",
+        "allDay": true,
+        "uid": "5mdepjeq9ajchmilcokqhb3bn2@google.com::2027-01-04T00:00:00.000Z",
+        "source": {
+          "uid": "5mdepjeq9ajchmilcokqhb3bn2@google.com::2027-01-04T00:00:00.000Z",
+          "calendarUid": "5mdepjeq9ajchmilcokqhb3bn2@google.com"
+        },
+        "dueAt": {
+          "feed": "2026-12-27T17:00:00.000Z",
+          "story": "2026-12-31T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-01-07T22:30:00.000Z",
+        "title": "ASME Ice Skating Event",
+        "start": "2027-01-07T22:30:00.000Z",
+        "end": "2027-01-07T23:30:00.000Z",
+        "allDay": false,
+        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-01-07T22:30:00.000Z",
+        "source": {
+          "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-01-07T22:30:00.000Z",
+          "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        },
+        "dueAt": {
+          "feed": "2026-12-31T17:00:00.000Z",
+          "story": "2027-01-04T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "52h2drdkkab14hmqinu4v3vm27@google.com::2027-01-11T00:00:00.000Z",
+        "title": "Semester and first-session classes begin",
+        "start": "2027-01-11T00:00:00.000Z",
+        "end": "2027-01-12T00:00:00.000Z",
+        "allDay": true,
+        "uid": "52h2drdkkab14hmqinu4v3vm27@google.com::2027-01-11T00:00:00.000Z",
+        "source": {
+          "uid": "52h2drdkkab14hmqinu4v3vm27@google.com::2027-01-11T00:00:00.000Z",
+          "calendarUid": "52h2drdkkab14hmqinu4v3vm27@google.com"
+        },
+        "dueAt": {
+          "feed": "2027-01-03T17:00:00.000Z",
+          "story": "2027-01-07T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-01-14T22:30:00.000Z",
+        "title": "ASME Weekly Chapter Meeting ",
+        "start": "2027-01-14T22:30:00.000Z",
+        "end": "2027-01-14T23:30:00.000Z",
+        "allDay": false,
+        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-01-14T22:30:00.000Z",
+        "source": {
+          "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-01-14T22:30:00.000Z",
+          "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        },
+        "dueAt": {
+          "feed": "2027-01-07T17:00:00.000Z",
+          "story": "2027-01-11T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "2237k0f4g28l9eg531iohnvv3p@google.com::2027-01-18T00:00:00.000Z",
+        "title": "Martin Luther King Jr. Day - no classes, offices closed ",
+        "start": "2027-01-18T00:00:00.000Z",
+        "end": "2027-01-19T00:00:00.000Z",
+        "allDay": true,
+        "uid": "2237k0f4g28l9eg531iohnvv3p@google.com::2027-01-18T00:00:00.000Z",
+        "source": {
+          "uid": "2237k0f4g28l9eg531iohnvv3p@google.com::2027-01-18T00:00:00.000Z",
+          "calendarUid": "2237k0f4g28l9eg531iohnvv3p@google.com"
+        },
+        "dueAt": {
+          "feed": "2027-01-10T17:00:00.000Z",
+          "story": "2027-01-14T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-01-21T22:30:00.000Z",
+        "title": "ASME Weekly Chapter Meeting ",
+        "start": "2027-01-21T22:30:00.000Z",
+        "end": "2027-01-21T23:30:00.000Z",
+        "allDay": false,
+        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-01-21T22:30:00.000Z",
+        "source": {
+          "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-01-21T22:30:00.000Z",
+          "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        },
+        "dueAt": {
+          "feed": "2027-01-14T17:00:00.000Z",
+          "story": "2027-01-18T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "2ibngirqgqnkqe10109demuih9@google.com::2027-01-25T00:00:00.000Z",
+        "title": "Enrollment Census Date (semester, first-session)",
+        "start": "2027-01-25T00:00:00.000Z",
+        "end": "2027-01-26T00:00:00.000Z",
+        "allDay": true,
+        "uid": "2ibngirqgqnkqe10109demuih9@google.com::2027-01-25T00:00:00.000Z",
+        "source": {
+          "uid": "2ibngirqgqnkqe10109demuih9@google.com::2027-01-25T00:00:00.000Z",
+          "calendarUid": "2ibngirqgqnkqe10109demuih9@google.com"
+        },
+        "dueAt": {
+          "feed": "2027-01-17T17:00:00.000Z",
+          "story": "2027-01-21T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-01-28T22:30:00.000Z",
+        "title": "ASME Weekly Chapter Meeting ",
+        "start": "2027-01-28T22:30:00.000Z",
+        "end": "2027-01-28T23:30:00.000Z",
+        "allDay": false,
+        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-01-28T22:30:00.000Z",
+        "source": {
+          "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-01-28T22:30:00.000Z",
+          "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        },
+        "dueAt": {
+          "feed": "2027-01-21T17:00:00.000Z",
+          "story": "2027-01-25T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-02-04T22:30:00.000Z",
+        "title": "ASME Weekly Chapter Meeting ",
+        "start": "2027-02-04T22:30:00.000Z",
+        "end": "2027-02-04T23:30:00.000Z",
+        "allDay": false,
+        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-02-04T22:30:00.000Z",
+        "source": {
+          "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-02-04T22:30:00.000Z",
+          "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        },
+        "dueAt": {
+          "feed": "2027-01-28T17:00:00.000Z",
+          "story": "2027-02-01T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-02-11T22:30:00.000Z",
+        "title": "ASME Weekly Chapter Meeting ",
+        "start": "2027-02-11T22:30:00.000Z",
+        "end": "2027-02-11T23:30:00.000Z",
+        "allDay": false,
+        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-02-11T22:30:00.000Z",
+        "source": {
+          "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-02-11T22:30:00.000Z",
+          "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        },
+        "dueAt": {
+          "feed": "2027-02-04T17:00:00.000Z",
+          "story": "2027-02-08T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-02-18T22:30:00.000Z",
+        "title": "ASME Weekly Chapter Meeting ",
+        "start": "2027-02-18T22:30:00.000Z",
+        "end": "2027-02-18T23:30:00.000Z",
+        "allDay": false,
+        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-02-18T22:30:00.000Z",
+        "source": {
+          "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-02-18T22:30:00.000Z",
+          "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        },
+        "dueAt": {
+          "feed": "2027-02-11T17:00:00.000Z",
+          "story": "2027-02-15T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-02-25T22:30:00.000Z",
+        "title": "ASME Weekly Chapter Meeting ",
+        "start": "2027-02-25T22:30:00.000Z",
+        "end": "2027-02-25T23:30:00.000Z",
+        "allDay": false,
+        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-02-25T22:30:00.000Z",
+        "source": {
+          "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-02-25T22:30:00.000Z",
+          "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        },
+        "dueAt": {
+          "feed": "2027-02-18T17:00:00.000Z",
+          "story": "2027-02-22T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "7sf557vmfcd89ev17vmqqopeu8@google.com::2027-02-26T00:00:00.000Z",
+        "title": "Last day of regularly scheduled first-session classes",
+        "start": "2027-02-26T00:00:00.000Z",
+        "end": "2027-02-27T00:00:00.000Z",
+        "allDay": true,
+        "uid": "7sf557vmfcd89ev17vmqqopeu8@google.com::2027-02-26T00:00:00.000Z",
+        "source": {
+          "uid": "7sf557vmfcd89ev17vmqqopeu8@google.com::2027-02-26T00:00:00.000Z",
+          "calendarUid": "7sf557vmfcd89ev17vmqqopeu8@google.com"
+        },
+        "dueAt": {
+          "feed": "2027-02-18T17:00:00.000Z",
+          "story": "2027-02-22T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "4oiq1uqkalio31r5ute40sh9en@google.com::2027-03-01T00:00:00.000Z",
+        "title": "Final exams for first-session classes",
+        "start": "2027-03-01T00:00:00.000Z",
+        "end": "2027-03-03T00:00:00.000Z",
+        "allDay": true,
+        "uid": "4oiq1uqkalio31r5ute40sh9en@google.com::2027-03-01T00:00:00.000Z",
+        "source": {
+          "uid": "4oiq1uqkalio31r5ute40sh9en@google.com::2027-03-01T00:00:00.000Z",
+          "calendarUid": "4oiq1uqkalio31r5ute40sh9en@google.com"
+        },
+        "dueAt": {
+          "feed": "2027-02-21T17:00:00.000Z",
+          "story": "2027-02-25T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "6tnq8ocldfa3assevoso9bloem@google.com::2027-03-03T00:00:00.000Z",
+        "title": "Second-session classes begin",
+        "start": "2027-03-03T00:00:00.000Z",
+        "end": "2027-03-04T00:00:00.000Z",
+        "allDay": true,
+        "uid": "6tnq8ocldfa3assevoso9bloem@google.com::2027-03-03T00:00:00.000Z",
+        "source": {
+          "uid": "6tnq8ocldfa3assevoso9bloem@google.com::2027-03-03T00:00:00.000Z",
+          "calendarUid": "6tnq8ocldfa3assevoso9bloem@google.com"
+        },
+        "dueAt": {
+          "feed": "2027-02-23T17:00:00.000Z",
+          "story": "2027-02-27T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-03-04T22:30:00.000Z",
+        "title": "ASME Weekly Chapter Meeting ",
+        "start": "2027-03-04T22:30:00.000Z",
+        "end": "2027-03-04T23:30:00.000Z",
+        "allDay": false,
+        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-03-04T22:30:00.000Z",
+        "source": {
+          "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-03-04T22:30:00.000Z",
+          "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        },
+        "dueAt": {
+          "feed": "2027-02-25T17:00:00.000Z",
+          "story": "2027-03-01T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-03-11T22:30:00.000Z",
+        "title": "ASME Weekly Chapter Meeting ",
+        "start": "2027-03-11T22:30:00.000Z",
+        "end": "2027-03-11T23:30:00.000Z",
+        "allDay": false,
+        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-03-11T22:30:00.000Z",
+        "source": {
+          "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-03-11T22:30:00.000Z",
+          "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        },
+        "dueAt": {
+          "feed": "2027-03-04T17:00:00.000Z",
+          "story": "2027-03-08T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "6k4oc41rhl7kb3e1u8g996rql4@google.com::2027-03-15T00:00:00.000Z",
+        "title": "Spring Break",
+        "start": "2027-03-15T00:00:00.000Z",
+        "end": "2027-03-20T00:00:00.000Z",
+        "allDay": true,
+        "uid": "6k4oc41rhl7kb3e1u8g996rql4@google.com::2027-03-15T00:00:00.000Z",
+        "source": {
+          "uid": "6k4oc41rhl7kb3e1u8g996rql4@google.com::2027-03-15T00:00:00.000Z",
+          "calendarUid": "6k4oc41rhl7kb3e1u8g996rql4@google.com"
+        },
+        "dueAt": {
+          "feed": "2027-03-07T17:00:00.000Z",
+          "story": "2027-03-11T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "7gsqms8a4i1e4l2vkio6ke0iu0@google.com::2027-03-17T00:00:00.000Z",
+        "title": "Enrollment Census Date (second-session)",
+        "start": "2027-03-17T00:00:00.000Z",
+        "end": "2027-03-18T00:00:00.000Z",
+        "allDay": true,
+        "uid": "7gsqms8a4i1e4l2vkio6ke0iu0@google.com::2027-03-17T00:00:00.000Z",
+        "source": {
+          "uid": "7gsqms8a4i1e4l2vkio6ke0iu0@google.com::2027-03-17T00:00:00.000Z",
+          "calendarUid": "7gsqms8a4i1e4l2vkio6ke0iu0@google.com"
+        },
+        "dueAt": {
+          "feed": "2027-03-09T17:00:00.000Z",
+          "story": "2027-03-13T17:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-03-18T21:30:00.000Z",
+        "title": "ASME Weekly Chapter Meeting ",
+        "start": "2027-03-18T21:30:00.000Z",
+        "end": "2027-03-18T22:30:00.000Z",
+        "allDay": false,
+        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-03-18T21:30:00.000Z",
+        "source": {
+          "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-03-18T21:30:00.000Z",
+          "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        },
+        "dueAt": {
+          "feed": "2027-03-11T17:00:00.000Z",
+          "story": "2027-03-15T16:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-03-25T21:30:00.000Z",
+        "title": "ASME Weekly Chapter Meeting ",
+        "start": "2027-03-25T21:30:00.000Z",
+        "end": "2027-03-25T22:30:00.000Z",
+        "allDay": false,
+        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-03-25T21:30:00.000Z",
+        "source": {
+          "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-03-25T21:30:00.000Z",
+          "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        },
+        "dueAt": {
+          "feed": "2027-03-18T16:00:00.000Z",
+          "story": "2027-03-22T16:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-04-01T21:30:00.000Z",
+        "title": "ASME Weekly Chapter Meeting ",
+        "start": "2027-04-01T21:30:00.000Z",
+        "end": "2027-04-01T22:30:00.000Z",
+        "allDay": false,
+        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-04-01T21:30:00.000Z",
+        "source": {
+          "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-04-01T21:30:00.000Z",
+          "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        },
+        "dueAt": {
+          "feed": "2027-03-25T16:00:00.000Z",
+          "story": "2027-03-29T16:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-04-08T21:30:00.000Z",
+        "title": "ASME Weekly Chapter Meeting ",
+        "start": "2027-04-08T21:30:00.000Z",
+        "end": "2027-04-08T22:30:00.000Z",
+        "allDay": false,
+        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-04-08T21:30:00.000Z",
+        "source": {
+          "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-04-08T21:30:00.000Z",
+          "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        },
+        "dueAt": {
+          "feed": "2027-04-01T16:00:00.000Z",
+          "story": "2027-04-05T16:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-04-15T21:30:00.000Z",
+        "title": "ASME Weekly Chapter Meeting ",
+        "start": "2027-04-15T21:30:00.000Z",
+        "end": "2027-04-15T22:30:00.000Z",
+        "allDay": false,
+        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-04-15T21:30:00.000Z",
+        "source": {
+          "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-04-15T21:30:00.000Z",
+          "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        },
+        "dueAt": {
+          "feed": "2027-04-08T16:00:00.000Z",
+          "story": "2027-04-12T16:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-04-22T21:30:00.000Z",
+        "title": "ASME Weekly Chapter Meeting ",
+        "start": "2027-04-22T21:30:00.000Z",
+        "end": "2027-04-22T22:30:00.000Z",
+        "allDay": false,
+        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-04-22T21:30:00.000Z",
+        "source": {
+          "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-04-22T21:30:00.000Z",
+          "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        },
+        "dueAt": {
+          "feed": "2027-04-15T16:00:00.000Z",
+          "story": "2027-04-19T16:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "6dc3t8dsoigno2t2eqp8fc2tj2@google.com::2027-04-26T00:00:00.000Z",
+        "title": "Last day of regularly scheduled semester and second-session classes",
+        "start": "2027-04-26T00:00:00.000Z",
+        "end": "2027-04-27T00:00:00.000Z",
+        "allDay": true,
+        "uid": "6dc3t8dsoigno2t2eqp8fc2tj2@google.com::2027-04-26T00:00:00.000Z",
+        "source": {
+          "uid": "6dc3t8dsoigno2t2eqp8fc2tj2@google.com::2027-04-26T00:00:00.000Z",
+          "calendarUid": "6dc3t8dsoigno2t2eqp8fc2tj2@google.com"
+        },
+        "dueAt": {
+          "feed": "2027-04-18T16:00:00.000Z",
+          "story": "2027-04-22T16:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "6gfnpld5mplfs469vkqitl36fj@google.com::2027-04-28T00:00:00.000Z",
+        "title": "Final exams for semester and second-session classes",
+        "start": "2027-04-28T00:00:00.000Z",
+        "end": "2027-05-01T00:00:00.000Z",
+        "allDay": true,
+        "uid": "6gfnpld5mplfs469vkqitl36fj@google.com::2027-04-28T00:00:00.000Z",
+        "source": {
+          "uid": "6gfnpld5mplfs469vkqitl36fj@google.com::2027-04-28T00:00:00.000Z",
+          "calendarUid": "6gfnpld5mplfs469vkqitl36fj@google.com"
+        },
+        "dueAt": {
+          "feed": "2027-04-20T16:00:00.000Z",
+          "story": "2027-04-24T16:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-04-29T21:30:00.000Z",
+        "title": "ASME Weekly Chapter Meeting ",
+        "start": "2027-04-29T21:30:00.000Z",
+        "end": "2027-04-29T22:30:00.000Z",
+        "allDay": false,
+        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-04-29T21:30:00.000Z",
+        "source": {
+          "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-04-29T21:30:00.000Z",
+          "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        },
+        "dueAt": {
+          "feed": "2027-04-22T16:00:00.000Z",
+          "story": "2027-04-26T16:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "199q9qp7dm8l2e5fiag05fn1uq@google.com::2027-05-03T00:00:00.000Z",
+        "title": "Final exams for semester and second-session classes",
+        "start": "2027-05-03T00:00:00.000Z",
+        "end": "2027-05-05T00:00:00.000Z",
+        "allDay": true,
+        "uid": "199q9qp7dm8l2e5fiag05fn1uq@google.com::2027-05-03T00:00:00.000Z",
+        "source": {
+          "uid": "199q9qp7dm8l2e5fiag05fn1uq@google.com::2027-05-03T00:00:00.000Z",
+          "calendarUid": "199q9qp7dm8l2e5fiag05fn1uq@google.com"
+        },
+        "dueAt": {
+          "feed": "2027-04-25T16:00:00.000Z",
+          "story": "2027-04-29T16:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      },
+      {
+        "id": "570rrqed9bijmmciul3tdp47al@google.com::2027-05-09T00:00:00.000Z",
+        "title": "Spring Commencement",
+        "start": "2027-05-09T00:00:00.000Z",
+        "end": "2027-05-10T00:00:00.000Z",
+        "allDay": true,
+        "uid": "570rrqed9bijmmciul3tdp47al@google.com::2027-05-09T00:00:00.000Z",
+        "source": {
+          "uid": "570rrqed9bijmmciul3tdp47al@google.com::2027-05-09T00:00:00.000Z",
+          "calendarUid": "570rrqed9bijmmciul3tdp47al@google.com"
+        },
+        "dueAt": {
+          "feed": "2027-05-01T16:00:00.000Z",
+          "story": "2027-05-05T16:00:00.000Z"
+        },
+        "scheduleInvalid": {
+          "feed": false,
+          "story": false
+        }
+      }
+    ]
+  },
+  "campaigns": [
+    {
+      "id": "2025-10-22-industry-night",
+      "year": "2025-26",
+      "title": "Industry night: behind the design",
+      "start": "2025-10-22T18:30:00-04:00",
+      "end": "2025-10-22T20:00:00-04:00",
+      "demo": true,
+      "cancelled": false,
+      "archived": false,
+      "source": {
+        "uid": "",
+        "calendarUid": null
+      },
+      "revision": 0,
+      "channels": {
+        "feed": {
+          "enabled": true,
+          "dueAt": "2025-10-15T16:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "daysBefore": 7,
+            "time": "12:00"
+          },
+          "status": "done",
+          "mediaId": null,
+          "postedAt": null,
+          "eventId": null,
+          "syncedRevision": null,
+          "botSentAt": null,
+          "deletedAt": null,
+          "publishAttemptedAt": null,
+          "createAttemptedAt": null,
+          "botAttemptedAt": null
+        },
+        "story": {
+          "enabled": true,
+          "dueAt": "2025-10-19T16:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "daysBefore": 3,
+            "time": "12:00"
+          },
+          "status": "done",
+          "mediaId": null,
+          "postedAt": null,
+          "eventId": null,
+          "syncedRevision": null,
+          "botSentAt": null,
+          "deletedAt": null,
+          "publishAttemptedAt": null,
+          "createAttemptedAt": null,
+          "botAttemptedAt": null
+        },
+        "groupme": {
+          "enabled": false,
+          "dueAt": "2025-10-15T16:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "createAt": "immediately",
+            "announce": false
+          },
+          "status": "done",
+          "mediaId": null,
+          "postedAt": null,
+          "eventId": null,
+          "syncedRevision": null,
+          "botSentAt": null,
+          "deletedAt": null,
+          "publishAttemptedAt": null,
+          "createAttemptedAt": null,
+          "botAttemptedAt": null
+        }
+      }
+    },
+    {
+      "id": "2026-10-28-industry-night",
+      "year": "2026-27",
+      "title": "Meet the engineers",
+      "start": "2026-10-28T18:30:00-04:00",
+      "end": "2026-10-28T20:00:00-04:00",
+      "demo": true,
+      "cancelled": false,
+      "archived": false,
+      "source": {
+        "uid": "",
+        "calendarUid": null
+      },
+      "revision": 0,
+      "channels": {
+        "feed": {
+          "enabled": true,
+          "dueAt": "2026-10-21T16:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "daysBefore": 7,
+            "time": "12:00"
+          },
+          "status": "pending",
+          "mediaId": null,
+          "postedAt": null,
+          "eventId": null,
+          "syncedRevision": null,
+          "botSentAt": null,
+          "deletedAt": null,
+          "publishAttemptedAt": null,
+          "createAttemptedAt": null,
+          "botAttemptedAt": null
+        },
+        "story": {
+          "enabled": true,
+          "dueAt": "2026-10-25T16:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "daysBefore": 3,
+            "time": "12:00"
+          },
+          "status": "pending",
+          "mediaId": null,
+          "postedAt": null,
+          "eventId": null,
+          "syncedRevision": null,
+          "botSentAt": null,
+          "deletedAt": null,
+          "publishAttemptedAt": null,
+          "createAttemptedAt": null,
+          "botAttemptedAt": null
+        },
+        "groupme": {
+          "enabled": false,
+          "dueAt": "2026-10-21T16:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "createAt": "immediately",
+            "announce": false
+          },
+          "status": "pending",
+          "mediaId": null,
+          "postedAt": null,
+          "eventId": null,
+          "syncedRevision": null,
+          "botSentAt": null,
+          "deletedAt": null,
+          "publishAttemptedAt": null,
+          "createAttemptedAt": null,
+          "botAttemptedAt": null
+        }
+      }
+    },
+    {
+      "id": "2026-11-04-cad-workshop",
+      "year": "2026-27",
+      "title": "From sketch to solid",
+      "start": "2026-11-04T18:00:00-05:00",
+      "end": "2026-11-04T19:30:00-05:00",
+      "demo": true,
+      "cancelled": false,
+      "archived": false,
+      "source": {
+        "uid": "",
+        "calendarUid": null
+      },
+      "revision": 0,
+      "channels": {
+        "feed": {
+          "enabled": true,
+          "dueAt": "2026-10-28T16:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "daysBefore": 7,
+            "time": "12:00"
+          },
+          "status": "pending",
+          "mediaId": null,
+          "postedAt": null,
+          "eventId": null,
+          "syncedRevision": null,
+          "botSentAt": null,
+          "deletedAt": null,
+          "publishAttemptedAt": null,
+          "createAttemptedAt": null,
+          "botAttemptedAt": null
+        },
+        "story": {
+          "enabled": true,
+          "dueAt": "2026-11-01T17:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "daysBefore": 3,
+            "time": "12:00"
+          },
+          "status": "pending",
+          "mediaId": null,
+          "postedAt": null,
+          "eventId": null,
+          "syncedRevision": null,
+          "botSentAt": null,
+          "deletedAt": null,
+          "publishAttemptedAt": null,
+          "createAttemptedAt": null,
+          "botAttemptedAt": null
+        },
+        "groupme": {
+          "enabled": false,
+          "dueAt": "2026-10-28T16:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "createAt": "immediately",
+            "announce": false
+          },
+          "status": "pending",
+          "mediaId": null,
+          "postedAt": null,
+          "eventId": null,
+          "syncedRevision": null,
+          "botSentAt": null,
+          "deletedAt": null,
+          "publishAttemptedAt": null,
+          "createAttemptedAt": null,
+          "botAttemptedAt": null
+        }
+      }
+    },
+    {
+      "id": "2026-11-12-fall-social",
+      "year": "2026-27",
+      "title": "A little less work. A little more together.",
+      "start": "2026-11-12T18:30:00-05:00",
+      "end": "2026-11-12T20:00:00-05:00",
+      "demo": true,
+      "cancelled": false,
+      "archived": false,
+      "source": {
+        "uid": "",
+        "calendarUid": null
+      },
+      "revision": 0,
+      "channels": {
+        "feed": {
+          "enabled": true,
+          "dueAt": "2026-11-05T17:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "daysBefore": 7,
+            "time": "12:00"
+          },
+          "status": "pending",
+          "mediaId": null,
+          "postedAt": null,
+          "eventId": null,
+          "syncedRevision": null,
+          "botSentAt": null,
+          "deletedAt": null,
+          "publishAttemptedAt": null,
+          "createAttemptedAt": null,
+          "botAttemptedAt": null
+        },
+        "story": {
+          "enabled": true,
+          "dueAt": "2026-11-09T17:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "daysBefore": 3,
+            "time": "12:00"
+          },
+          "status": "pending",
+          "mediaId": null,
+          "postedAt": null,
+          "eventId": null,
+          "syncedRevision": null,
+          "botSentAt": null,
+          "deletedAt": null,
+          "publishAttemptedAt": null,
+          "createAttemptedAt": null,
+          "botAttemptedAt": null
+        },
+        "groupme": {
+          "enabled": false,
+          "dueAt": "2026-11-05T17:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "createAt": "immediately",
+            "announce": false
+          },
+          "status": "pending",
+          "mediaId": null,
+          "postedAt": null,
+          "eventId": null,
+          "syncedRevision": null,
+          "botSentAt": null,
+          "deletedAt": null,
+          "publishAttemptedAt": null,
+          "createAttemptedAt": null,
+          "botAttemptedAt": null
+        }
+      }
+    }
+  ]
+}
