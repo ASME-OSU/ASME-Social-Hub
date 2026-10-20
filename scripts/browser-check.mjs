@@ -1,3 +1,5 @@
+import {checkGroupMePreview} from './check-groupme-preview.mjs';
+import {checkCampaignControls} from './check-campaign-controls.mjs';
 import {checkEditorLayout} from './check-editor-layout.mjs';
 import {checkStoryDesigns} from './check-story-designs.mjs';
 import {checkThemes} from './check-themes.mjs';
@@ -14,13 +16,24 @@ let browser;
 try {
  for(let i=0;i<50;i++){try{if((await fetch(base)).ok)break;}catch{}await new Promise(r=>setTimeout(r,100));}
  browser=await chromium.launch({headless:true});
+ await checkCampaignControls(browser,base);
+ await checkGroupMePreview(browser,base);
  await checkThemes(browser,base);
  await checkEditorLayout(browser,base);
  await checkStoryDesigns(browser,base);
  const page=await browser.newPage({viewport:{width:1440,height:1080},timezoneId:'America/Los_Angeles'});
  await page.clock.install({time:new Date('2026-10-15T16:00:00Z')});
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ // Exercise only labeled examples, even when deployed Pages data includes live campaigns.
+ await page.route('**/data/archive-index.json',async route=>{const response=await route.fetch(),archive=await response.json();await route.fulfill({json:{...archive,campaigns:(archive.campaigns||[]).filter(c=>c.demo===true)}});});
+ await page.route('**/data/candidates.json',route=>route.fulfill({json:{events:[{uid:'browser-calendar-fixture',title:'Browser calendar suggestion',start:'2026-11-25T23:00:00Z',end:'2026-11-26T00:00:00Z',location:{name:'Fixture room'}}],changes:[]}}));
+ let healthRecord={lastSuccessfulLiveRunAt:'2026-10-15T14:00:00Z'};
+ await page.route('**/data/dispatcher-health.json',route=>healthRecord?route.fulfill({json:healthRecord}):route.fulfill({status:404,json:{}}));
  await page.goto(base);await page.waitForSelector('#campaign-list .empty');
+ assert.match(await page.locator('#dispatcher-last-run').textContent(),/Oct 15/);
+ assert.match(await page.locator('#dispatcher-warning').textContent(),/more than 90 minutes/);
+ healthRecord={lastSuccessfulLiveRunAt:'2026-10-15T16:00:00Z'};await page.clock.fastForward(60000);await page.waitForFunction(()=>document.querySelector('#dispatcher-warning').hidden);
+ healthRecord=null;await page.clock.fastForward(60000);await page.waitForFunction(()=>!document.querySelector('#dispatcher-warning').hidden);assert.match(await page.locator('#dispatcher-warning').textContent(),/unknown/);
  assert.equal(await page.locator('.campaign-card').count(),0);
  assert.ok(await page.locator('#suggestions .suggestion').count()>0);
  await page.locator('#new-campaign').click();assert.equal(await page.locator('[name=groupmeAnnounce]').isDisabled(),false);assert.equal(await page.locator('[name=groupmeAnnounce]').isChecked(),false);
@@ -101,10 +114,11 @@ try {
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'Mobile page must not overflow');
  assert.deepEqual(errors,[]);
  // Mock GitHub at the network boundary: verify actual save payload without external writes.
- const writes=[];let remoteRecord=null,releaseVerification;
+ const writes=[],dispatcherRequests=[];let remoteRecord=null,releaseVerification;
  const verificationGate=new Promise(resolve=>{releaseVerification=resolve;});
  await page.route('https://api.github.com/**',async route=>{
   const request=route.request();
+  if(request.method()==='POST' && request.url().includes('/actions/workflows/dispatch.yml/dispatches')){dispatcherRequests.push(JSON.parse(request.postData()));return route.fulfill({status:204});}
   if(request.method()==='PUT'){writes.push(JSON.parse(request.postData()));return route.fulfill({json:{commit:{sha:'test-commit'}}});}
   if(remoteRecord && request.url().includes(`campaigns/${remoteRecord.year}/${remoteRecord.id}.json`))return route.fulfill({json:{sha:'latest-file-sha',content:Buffer.from(JSON.stringify(remoteRecord)).toString('base64')}});
   if(request.url().includes('config/chapter.json')){await verificationGate;return route.fulfill({json:{sha:'config-sha',content:Buffer.from('{}').toString('base64')}});}
@@ -116,7 +130,13 @@ try {
  assert.equal(await page.locator('#settings-form button.primary').isDisabled(),true);releaseVerification();
  await page.waitForFunction(()=>document.querySelector('#connection-label').textContent==='Connected');
  assert.equal(await page.locator('#header-connection-text').textContent(),'Connected');assert.equal(await page.locator('#settings-connection-state').textContent(),'Connected');
- await page.locator('[data-view=dashboard]').click();await page.locator('#new-campaign').click();
+ await page.locator('[data-view=dashboard]').click();
+ await page.locator('#dispatcher-preview').click();await page.waitForFunction(()=>document.querySelector('#dispatcher-control-status').textContent.includes('Preview dispatcher requested'));
+ assert.deepEqual(dispatcherRequests,[{ref:'main',inputs:{dry_run:true}}]);
+ page.once('dialog',dialog=>dialog.dismiss());await page.locator('#dispatcher-live').click();assert.equal(dispatcherRequests.length,1);
+ page.once('dialog',dialog=>dialog.accept());await page.locator('#dispatcher-live').click();await page.waitForFunction(()=>document.querySelector('#dispatcher-control-status').textContent.includes('Live dispatcher requested'));
+ assert.deepEqual(dispatcherRequests[1],{ref:'main',inputs:{dry_run:false}});
+ await page.locator('#new-campaign').click();
  for(const [name,value] of Object.entries({title:'API verification event',start:'2026-11-20T18:30',end:'2026-11-20T20:00',location:'Scott E100'}))await page.locator(`[name=${name}]`).fill(value);
  await page.locator('[name=template]').selectOption('editorial-poster');
  await page.locator('#advertising-details summary').click();
@@ -125,10 +145,10 @@ try {
  assert.equal(writes.length,1);const saved=JSON.parse(Buffer.from(writes[0].content,'base64').toString());
  assert.equal(saved.template,'editorial-poster');assert.equal(saved.title,'API verification event');assert.equal(saved.status.groupme,'skipped');assert.equal(saved.demo,undefined);assert.equal(writes[0].branch,'main');assert.equal(await page.evaluate(()=>localStorage.getItem('social-hub-connection')),null);
  // A scheduler update that arrives while an officer edits must survive that edit.
- remoteRecord=structuredClone(saved);remoteRecord.status.feed='done';remoteRecord.results.feed={mediaId:'mock-published-id',postedAt:'2026-11-13T17:00:00Z'};
+ remoteRecord=structuredClone(saved);remoteRecord.revision=5;remoteRecord.status.feed='done';remoteRecord.results.feed={mediaId:'mock-published-id',postedAt:'2026-11-13T17:00:00Z'};
  await page.locator(`#campaign-list [data-detail="${saved.id}"]`).click();assert.equal(await page.locator('#detail-content a[href="https://example.org/register"]').count(),1);await page.locator('[data-edit]').click();assert.equal(await page.locator('[name=template]').inputValue(),'editorial-poster');assert.equal(await page.locator('[name=rsvpDeadline]').inputValue(),extras.rsvpDeadline);await page.locator('[name=description]').fill('Updated officer description');await page.locator('#save-button').click();await page.waitForFunction(()=>!document.querySelector('#editor').open);
- assert.equal(writes.length,2);const edited=JSON.parse(Buffer.from(writes[1].content,'base64').toString());assert.equal(edited.status.feed,'done');assert.equal(edited.results.feed.mediaId,'mock-published-id');assert.equal(writes[1].sha,'latest-file-sha');assert.equal(edited.revision,2);
- remoteRecord={...edited,revision:3};await page.locator(`#campaign-list [data-detail="${saved.id}"]`).click();await page.locator('[data-edit]').click();await page.locator('#save-button').click();await page.waitForSelector('#form-error:not([hidden])');assert.match(await page.locator('#form-error').textContent(),/edited since/);assert.equal(writes.length,2);await page.locator('[data-close=editor]').first().click();
+ assert.equal(writes.length,2);const edited=JSON.parse(Buffer.from(writes[1].content,'base64').toString());assert.equal(edited.status.feed,'done');assert.equal(edited.results.feed.mediaId,'mock-published-id');assert.equal(writes[1].sha,'latest-file-sha');assert.equal(edited.revision,6);
+ remoteRecord={...edited,title:'Another officer changed the title'};await page.locator(`#campaign-list [data-detail="${saved.id}"]`).click();await page.locator('[data-edit]').click();await page.locator('#save-button').click();await page.waitForSelector('#form-error:not([hidden])');assert.match(await page.locator('#form-error').textContent(),/edited since/);assert.equal(writes.length,2);await page.locator('[data-close=editor]').first().click();
  // All channels may be off, and PNG uploads retain their format in the real save payload.
  await page.locator('#new-campaign').click();
  for(const [name,value] of Object.entries({title:'PNG upload fixture',start:'2026-11-21T18:30',end:'2026-11-21T20:00',location:'Scott E100'}))await page.locator(`[name=${name}]`).fill(value);
@@ -158,6 +178,8 @@ try {
  assert.equal(storyOnly.status.feed,'skipped');assert.equal(storyOnly.status.story,'pending');assert.equal(storyOnly.flyerUrl,pngSaved.flyerUrl);
  // Opt-in bot controls in an isolated browser: no credentials or live writes.
  const botPage=await browser.newPage({viewport:{width:1440,height:1080}});
+ await botPage.route('**/data/archive-index.json',route=>route.fulfill({json:{campaigns:[]}}));
+ await botPage.route('**/data/candidates.json',route=>route.fulfill({json:{events:[],changes:[]}}));
  await botPage.clock.install({time:new Date('2026-10-15T16:00:00Z')});
  await botPage.route('**/config/chapter.json',async route=>{
   const response=await route.fetch(),config=await response.json();

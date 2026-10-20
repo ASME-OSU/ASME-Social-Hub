@@ -1,0 +1,8 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {mergeCampaignEdit} from '../docs/campaign-save.mjs';
+const config={activeYear:'2026-27',timezone:'America/New_York'};
+const base={id:'fixture',year:'2026-27',title:'Original',revision:1,campaign:{feed:{enabled:true,daysBefore:7,time:'12:00'}},status:{feed:'pending'},results:{feed:{}},log:[],flyerUrl:'https://example.org/old.png'};
+test('background revision, publishing status, results, receipts and logs survive save',()=>{const current={...base,revision:8,status:{feed:'done'},results:{feed:{mediaId:'receipt',publishAttemptedAt:'recorded'},insights:[{reach:4}]},log:[{message:'Published'}],flyers:{feed:'rendered'}};const merged=mergeCampaignEdit(base,{...base,title:'Officer edit'},current,config);assert.equal(merged.title,'Officer edit');assert.equal(merged.revision,9);for(const k of ['status','results','log','flyers'])assert.deepEqual(merged[k],current[k]);assert.equal(current.title,'Original');});
+test('genuine content edits conflict even without a revision bump',()=>{for(const change of [{title:'Other officer'}, {campaign:{feed:{enabled:false}}},{cancelled:true},{notes:'Other notes'}])assert.throws(()=>mergeCampaignEdit(base,{...base,title:'My edit'},{...base,...change},config),/edited since/);});
+test('key ordering does not produce conflicts and removed artwork stays removed',()=>{const draft={...base};delete draft.flyerUrl;const current=Object.fromEntries(Object.entries(base).reverse());const merged=mergeCampaignEdit(base,draft,current,config);assert.equal(Object.hasOwn(merged,'flyerUrl'),false);});

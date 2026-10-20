@@ -66,7 +66,7 @@ export async function renderFlyers({root = process.cwd(), force = false} = {}) {
   try {
     for (const campaign of await readCampaigns(root)) {
       validateCampaign(campaign);
-      if (campaign.demo || campaign.cancelled) continue;
+      if (campaign.demo || campaign.cancelled || campaign.deletedAt) continue;
       const templateName=selectFlyerTemplate(campaign,config);
       const template=await readFile(resolve(root,`templates/${templateName}.html`),'utf8');
       const sources=flyerSources(campaign);

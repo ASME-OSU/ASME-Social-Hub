@@ -1,3 +1,5 @@
+import {createInstagramPost} from './instagram-preview.mjs';
+import {captionFor} from './caption.mjs';
 import {feedImageIssue,measureImage} from './image-policy.mjs';
 import {flyerHtml,fitFlyerDocument} from './flyer-render.mjs';
 import {fromLocal} from './time.mjs';
@@ -9,21 +11,28 @@ const imageURL=value=>{try{const url=new URL(value);return url.protocol==='https
 export function createFlyerPreview({form,getConfig,getExisting,getUpload,getStoryDesign,getFeedUpload=getUpload,getFeedInfo=()=>({count:1,index:0})}) {
   const details=document.querySelector('#artwork-preview'),frame=document.querySelector('#artwork-preview-frame'),inlineStage=frame.parentElement,status=document.querySelector('#artwork-preview-status'),caption=document.querySelector('#artwork-preview-caption');
   const expanded=document.querySelector('#preview-dialog'),canvas=document.querySelector('#preview-dialog-canvas'),expandedStage=document.querySelector('.expanded-preview-stage'),zoom=document.querySelector('#preview-zoom');
+  const inlineCanvas=document.querySelector('.inline-preview-canvas');
+  const selectImage=delta=>{const info=getFeedInfo();document.querySelectorAll('#flyer-image-list .flyer-image-pick')[info.index+delta]?.click();};
+  const inlinePost=createInstagramPost({media:inlineStage,onPrevious:()=>selectImage(-1),onNext:()=>selectImage(1)}),expandedPost=createInstagramPost({media:expandedStage,onPrevious:()=>selectImage(-1),onNext:()=>selectImage(1)});
+  inlineCanvas.replaceChildren(inlinePost.root);canvas.replaceChildren(expandedPost.root);
   let stage=inlineStage,opener=null;
   const logoCache=new Map();
   const templates=new Map();let format='feed',previewHeight=1350,timer,revision=0;
   function resize(){
-    const height=previewHeight;frame.style.height=`${height}px`;
-    if(expanded.open){const scale=zoom.value==='1'?1:Math.max(.05,Math.min(1,(canvas.clientWidth-16)/1080,(canvas.clientHeight-16)/height));stage.style.width=`${1080*scale}px`;stage.style.height=`${height*scale}px`;frame.style.transform=`scale(${scale})`;}
-    else{
-      const slot=document.querySelector('.inline-preview-canvas');
-      const scale=Math.max(.05,Math.min(1,slot.clientWidth/1080,slot.clientHeight/height));
-      stage.style.width=`${1080*scale}px`;stage.style.height=`${height*scale}px`;stage.style.maxWidth='';stage.style.aspectRatio=`1080 / ${height}`;frame.style.transform=`scale(${scale})`;
-    }
+    const height=previewHeight,story=format==='story',post=expanded.open?expandedPost:inlinePost,slot=expanded.open?canvas:inlineCanvas;
+    inlinePost.setStory(story);expandedPost.setStory(story);frame.style.height=`${height}px`;
+    const sideBySide=expanded.open&&!story&&matchMedia('(min-width:700px)').matches;
+    const side=sideBySide?302:0,padding=expanded.open?16:0;
+    post.root.style.width=`${Math.max(80,Math.min(slot.clientWidth-padding,expanded.open?Infinity:430))}px`;
+    const chrome=sideBySide||story?0:post.chromeHeight()+2;
+    const availableWidth=Math.min(slot.clientWidth-padding-side-(story?0:2),expanded.open?Infinity:428);
+    const scale=expanded.open&&zoom.value==='1'?1:Math.max(.05,Math.min(1,availableWidth/1080,(slot.clientHeight-padding-chrome)/height));
+    stage.style.width=`${1080*scale}px`;stage.style.height=`${height*scale}px`;stage.style.maxWidth='';stage.style.aspectRatio=`1080 / ${height}`;frame.style.transform=`scale(${scale})`;
+    post.root.style.width=`${1080*scale+side+(story?0:2)}px`;post.root.style.height=sideBySide?`${height*scale+2}px`:'auto';
   }
   new ResizeObserver(resize).observe(document.querySelector('.inline-preview-canvas'));new ResizeObserver(resize).observe(canvas);new ResizeObserver(resize).observe(document.querySelector('.editor-preview-pane'));
   function openPreview(trigger=document.activeElement){
-    opener=trigger;details.open=true;
+    clearTimeout(timer);opener=trigger;details.open=true;
     if(!expanded.open){expanded.showModal();stage=expandedStage;stage.hidden=false;stage.append(frame);}
     document.querySelector('#preview-dialog-title').textContent=format==='story'?'Story preview':'Feed preview';resize();update();
   }
@@ -37,15 +46,19 @@ export function createFlyerPreview({form,getConfig,getExisting,getUpload,getStor
   async function update(){
     const current=++revision,config=getConfig();if(!config||!document.querySelector('#editor').open||!details.open)return;
     const f=form.elements,channel=format,label=channel==='feed'?'Feed':'Story',height=channel==='story'?1920:1350;
-    previewHeight=height;resize();stage.hidden=false;frame.style.visibility='hidden';if(!status.textContent)status.textContent='Preparing preview…';
+    previewHeight=height;resize();stage.hidden=false;frame.style.visibility='hidden';status.textContent='Preparing preview…';
     try{
       const name=f.template.value;if(!styles.has(name))throw Error('Choose a flyer style to preview.');
       let source=await template(name);if(current!==revision)return;
       const missingDate=!f.start.value,start=missingDate?'2026-01-01T17:00:00Z':fromLocal(f.start.value,config.timezone);
       if(missingDate)source=source.replace(/{{(date|day|month|shortDate|time)}}/g,(_,key)=>({date:'Choose a date',day:'—',month:'DATE',shortDate:'Choose a date',time:'Choose a time'}[key]));
-      const advertising={};for(const key of ['foodDetails','benefit','speaker','audience','cost','rsvpUrl'])if(f[key].value.trim())advertising[key]=f[key].value.trim();
+      const advertising={};for(const key of ['foodDetails','benefit','speaker','audience','cost','rsvpUrl','preparation','accessibilityContact'])if(f[key].value.trim())advertising[key]=f[key].value.trim();
       if(f.rsvpDeadline.value)advertising.rsvpDeadline=fromLocal(f.rsvpDeadline.value,config.timezone);
       const campaign={title:f.title.value.trim()||'Your event title',description:f.description.value.trim(),start,type:f.type.value,location:f.location.value.trim()||'Building and room',food:f.food.checked,advertising,storyDesign:getStoryDesign(),flyerUrl:imageURL(getExisting()?.flyerUrl)};
+      let postCaption='',captionError='';
+      try{postCaption=missingDate?'Choose the event date to preview the publishing caption.':captionFor(campaign,config);}catch(error){captionError=error.message;}
+      const feedInfo=getFeedInfo(),count=channel==='feed'&&!f.feedImage.value.trim()?Math.max(1,feedInfo.count):1,index=count>1?feedInfo.index:0;
+      inlinePost.update({config,caption:postCaption,captionError,count,index});expandedPost.update({config,caption:postCaption,captionError,count,index});resize();
       const upload=channel==='feed'?getFeedUpload():getUpload();
       const direct=imageURL(f[channel+'Image'].value),logo=config.brand?.logoFlyer||config.brand?.logoMark||config.brand?.logoReverse||config.brand?.logo;
       if(f[channel+'Image'].value.trim()&&!direct)throw Error('Use an HTTPS image URL without embedded credentials to preview a custom image.');
@@ -82,7 +95,7 @@ export function createFlyerPreview({form,getConfig,getExisting,getUpload,getStor
     }catch(error){if(current===revision){stage.hidden=true;status.textContent=error.message;}}
   }
   function schedule(){clearTimeout(timer);timer=setTimeout(update,180);}
-  const artworkFields=new Set(['title','description','start','type','location','food','foodDetails','benefit','speaker','audience','cost','rsvpUrl','rsvpDeadline','template','flyer','feedImage','storyImage','feedEnabled','storyEnabled','storyBackground','storyFlyerColors']);
+  const artworkFields=new Set(['title','description','start','type','location','food','foodDetails','benefit','speaker','audience','cost','preparation','accessibilityContact','rsvpUrl','rsvpDeadline','template','flyer','feedImage','storyImage','feedEnabled','storyEnabled','storyBackground','storyFlyerColors']);
   const artworkChange=event=>{if(artworkFields.has(event.target.name))schedule();};
   form.addEventListener('input',artworkChange);form.addEventListener('change',artworkChange);
   details.addEventListener('toggle',()=>{if(!details.open&&matchMedia('(min-width:960px)').matches){details.open=true;return;}if(details.open)update();});
