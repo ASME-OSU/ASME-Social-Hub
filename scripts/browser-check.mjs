@@ -1,3 +1,4 @@
+import {checkDashboardDesign} from './check-dashboard-design.mjs';
 import {checkPreviewPane} from './check-preview-pane.mjs';
 import {checkGroupMePreview} from './check-groupme-preview.mjs';
 import {checkCampaignControls} from './check-campaign-controls.mjs';
@@ -17,6 +18,7 @@ let browser;
 try {
  for(let i=0;i<50;i++){try{if((await fetch(base)).ok)break;}catch{}await new Promise(r=>setTimeout(r,100));}
  browser=await chromium.launch({headless:true});
+ await checkDashboardDesign(browser,base);
  await checkPreviewPane(browser,base);
  await checkCampaignControls(browser,base);
  await checkGroupMePreview(browser,base);
@@ -133,6 +135,7 @@ try {
  await page.waitForFunction(()=>document.querySelector('#connection-label').textContent==='Connected');
  assert.equal(await page.locator('#header-connection-text').textContent(),'Connected');assert.equal(await page.locator('#settings-connection-state').textContent(),'Connected');
  await page.locator('[data-view=dashboard]').click();
+ await page.locator('#dispatcher-controls > summary').click();
  await page.locator('#dispatcher-preview').click();await page.waitForFunction(()=>document.querySelector('#dispatcher-control-status').textContent.includes('Preview dispatcher requested'));
  assert.deepEqual(dispatcherRequests,[{ref:'main',inputs:{dry_run:true}}]);
  page.once('dialog',dialog=>dialog.dismiss());await page.locator('#dispatcher-live').click();assert.equal(dispatcherRequests.length,1);
