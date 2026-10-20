@@ -77,6 +77,7 @@ export async function checkDashboardDesign(browser,base){
     await page.keyboard.press('Enter');assert.equal(await rows.count(),5);assert.equal(await more.getAttribute('aria-expanded'),'false');
     await filter.focus();assert.equal(await filter.evaluate(element=>document.activeElement===element),true,'Calendar filter is keyboard focusable');await page.keyboard.press('Tab');assert.equal(await filter.evaluate(element=>document.activeElement===element),false,'Keyboard can leave the calendar filter');await filter.selectOption('all-day');
     assert.equal(await filter.inputValue(),'all-day','Calendar filter changes the visible category');assert.equal(await rows.count(),1);
+    assert.equal(await page.locator('#suggestions p[role=status]').textContent(),'Showing 1 of 1 all-day date.');
     assert.equal(await rows.locator('time').getAttribute('datetime'),'2026-11-11');assert.equal(await rows.locator('time').textContent(),'Nov 11, 2026 · All day');
     assert.match(await rows.locator('.date-box').textContent(),/^11/);assert.doesNotMatch(await rows.locator('time').textContent(),/AM|PM|Nov 10/);
     if(width<700){await filter.scrollIntoViewIfNeeded();await page.screenshot({path:`${output}/${tag}-calendar-all-day.png`});}

@@ -85,7 +85,7 @@ export function mountCalendarSuggestions({container,candidates=[],campaigns=[],f
     const state=calendarSuggestionState(candidates,campaigns,{now:typeof now==='function'?now():now,timezone,filter,expanded});
     select.value=state.filter;
     for(const option of select.options)option.textContent=({timed:'Timed events',all:'All events','all-day':'All-day dates'})[option.value]+` (${state.counts[option.value]})`;
-    const kind=filter==='timed'?'timed events':filter==='all-day'?'all-day dates':'events';
+    const noun=filter==='timed'?'timed event':filter==='all-day'?'all-day date':'event';const kind=noun+(state.total===1?'':'s');
     count.textContent=`Showing ${state.visible.length} of ${state.total} ${kind}.`+(filter==='timed'&&state.counts['all-day']?` ${state.counts['all-day']} all-day ${state.counts['all-day']===1?'date is':'dates are'} available in the filter.`:'');
     list.innerHTML=state.visible.length?calendarSuggestionRows(state.visible,{timezone,format,esc}):'<div class="empty" role="listitem">'+(state.counts.all?'No calendar suggestions match this filter. Choose another filter to see available dates.':'No new calendar suggestions. Calendar events will appear here after the calendar sync runs.')+'</div>';
     footer.hidden=!state.hasMore;more.textContent=expanded?'Show fewer':`Show all ${state.total} ${kind}`;more.setAttribute('aria-expanded',String(expanded));
