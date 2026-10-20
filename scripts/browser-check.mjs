@@ -24,6 +24,9 @@ try {
  const page=await browser.newPage({viewport:{width:1440,height:1080},timezoneId:'America/Los_Angeles'});
  await page.clock.install({time:new Date('2026-10-15T16:00:00Z')});
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ // Exercise only labeled examples, even when deployed Pages data includes live campaigns.
+ await page.route('**/data/archive-index.json',async route=>{const response=await route.fetch(),archive=await response.json();await route.fulfill({json:{...archive,campaigns:(archive.campaigns||[]).filter(c=>c.demo===true)}});});
+ await page.route('**/data/candidates.json',route=>route.fulfill({json:{events:[{uid:'browser-calendar-fixture',title:'Browser calendar suggestion',start:'2026-11-25T23:00:00Z',end:'2026-11-26T00:00:00Z',location:{name:'Fixture room'}}],changes:[]}}));
  let healthRecord={lastSuccessfulLiveRunAt:'2026-10-15T14:00:00Z'};
  await page.route('**/data/dispatcher-health.json',route=>healthRecord?route.fulfill({json:healthRecord}):route.fulfill({status:404,json:{}}));
  await page.goto(base);await page.waitForSelector('#campaign-list .empty');
@@ -175,6 +178,8 @@ try {
  assert.equal(storyOnly.status.feed,'skipped');assert.equal(storyOnly.status.story,'pending');assert.equal(storyOnly.flyerUrl,pngSaved.flyerUrl);
  // Opt-in bot controls in an isolated browser: no credentials or live writes.
  const botPage=await browser.newPage({viewport:{width:1440,height:1080}});
+ await botPage.route('**/data/archive-index.json',route=>route.fulfill({json:{campaigns:[]}}));
+ await botPage.route('**/data/candidates.json',route=>route.fulfill({json:{events:[],changes:[]}}));
  await botPage.clock.install({time:new Date('2026-10-15T16:00:00Z')});
  await botPage.route('**/config/chapter.json',async route=>{
   const response=await route.fetch(),config=await response.json();

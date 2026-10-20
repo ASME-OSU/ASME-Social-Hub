@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-15T22:31:39.041Z",
+  "generatedAt": "2026-10-19T22:46:43.114Z",
   "campaigns": [
     {
       "id": "2026-11-12-fall-social",
@@ -156,6 +156,115 @@
       },
       "log": [],
       "notes": "Illustrative example. Duplicate to start a real campaign."
+    },
+    {
+      "id": "2026-10-23-asme-bar-social",
+      "year": "2026-27",
+      "type": "social",
+      "title": "ASME Bar Social",
+      "start": "2026-10-23T22:30:00.000Z",
+      "end": "2026-10-24T00:30:00.000Z",
+      "location": {
+        "name": "The Horseshoe Country Bar & More, 2159 N High St, Columbus, OH 43201, USA"
+      },
+      "description": "Join ASME this Friday, October 23, for our Bar Social at Horseshoe Bar! Come hang out, catch up with friends, and kick off the weekend with us!\n\n📍 Horseshoe Bar, Columbus\n🗓️ Friday, October 23\n🕡 6:30–8:30 PM\n\nDrinks are on ASME while the tab lasts!\n\n18+ to enter | 21+ to drink\n\nSee you there!\n\n#ASME #OhioState #ASMEOSU #BuckeyeEngineers",
+      "food": true,
+      "template": "refined-blueprint",
+      "storyDesign": {
+        "background": "folded-paper",
+        "paletteSource": "flyer",
+        "palette": [
+          "#2d0603",
+          "#8f0b0b",
+          "#e2dcdc"
+        ]
+      },
+      "advertising": {
+        "foodDetails": "Drinks on ASME while the tab lasts"
+      },
+      "source": {
+        "kind": "ical",
+        "uid": "51ktvdb5pj9l342194d7ance14@google.com::2026-10-23T22:30:00.000Z",
+        "calendarUid": "51ktvdb5pj9l342194d7ance14@google.com"
+      },
+      "campaign": {
+        "groupme": {
+          "createAt": "immediately",
+          "reminders": [
+            604800,
+            86400
+          ],
+          "enabled": true,
+          "announce": true
+        },
+        "feed": {
+          "daysBefore": 4,
+          "time": "18:45",
+          "enabled": true
+        },
+        "story": {
+          "daysBefore": 1,
+          "time": "12:00",
+          "enabled": true
+        }
+      },
+      "notes": "",
+      "images": {
+        "feed": "",
+        "story": ""
+      },
+      "revision": 6,
+      "cancelled": false,
+      "status": {
+        "feed": "done",
+        "story": "pending",
+        "groupme": "done"
+      },
+      "results": {
+        "feed": {
+          "preparedRevision": 6,
+          "image": "https://asme-osu.github.io/ASME-Social-Hub/media/2026-27/2026-10-23-asme-bar-social-feed.jpg",
+          "images": [
+            "https://asme-osu.github.io/ASME-Social-Hub/media/2026-27/2026-10-23-asme-bar-social-feed.jpg"
+          ],
+          "caption": "ASME Bar Social\n\nJoin ASME this Friday, October 23, for our Bar Social at Horseshoe Bar! Come hang out, catch up with friends, and kick off the weekend with us!\n\n📍 Horseshoe Bar, Columbus\n🗓️ Friday, October 23\n🕡 6:30–8:30 PM\n\nDrinks are on ASME while the tab lasts!\n\n18+ to enter | 21+ to drink\n\nSee you there!\n\n#ASME #OhioState #ASMEOSU #BuckeyeEngineers\n\nFriday, October 23, 2026 at 6:30 PM\nThe Horseshoe Country Bar & More, 2159 N High St, Columbus, OH 43201, USA\nFood provided! Drinks on ASME while the tab lasts\n\n#ASME #Engineering #OhioState",
+          "containerId": "18431118145198294",
+          "publishAttemptedAt": "2026-10-19T22:46:29.582Z",
+          "mediaId": "18017796695950407",
+          "postedAt": "2026-10-19T22:46:29.582Z",
+          "permalink": "https://www.instagram.com/p/DesXRwvFBee/"
+        },
+        "story": {},
+        "groupme": {
+          "botText": "ASME Bar Social\nFriday, October 23, 2026 at 6:30 PM (America/New_York)\nThe Horseshoe Country Bar & More, 2159 N High St, Columbus, OH 43201, USA\nJoin ASME this Friday, October 23, for our Bar Social at Horseshoe Bar! Come hang out, catch up with friends, and kick off the weekend with us!\n\n📍 Horseshoe Bar, Columbus\n🗓️ Friday, October 23\n🕡 6:30–8:30 PM\n\nDrinks are on ASME while the tab lasts!\n\n18+ to enter | 21+ to drink\n\nSee you there!\n\n#ASME #OhioState #ASMEOSU #BuckeyeEngineers\nFood provided! Drinks on ASME while the tab lasts\nCalendar: https://asme-osu.github.io/ASME-Social-Hub/calendar/2026-27/2026-10-23-asme-bar-social.ics\nFlyer: https://raw.githubusercontent.com/ASME-OSU/ASME-Social-Hub/main/assets/uploads/2026-10-23-asme-bar-social-1792429992154-1.png",
+          "botAttemptedAt": "2026-10-19T22:46:29.582Z",
+          "botSentAt": "2026-10-19T22:46:29.582Z"
+        },
+        "insights": []
+      },
+      "log": [
+        {
+          "at": "2026-10-19T19:54:28.008Z",
+          "channel": "feed",
+          "message": "Publishing window missed"
+        },
+        {
+          "at": "2026-10-19T19:54:28.008Z",
+          "channel": "groupme",
+          "message": "Bot announcement skipped"
+        },
+        {
+          "at": "2026-10-19T22:46:29.582Z",
+          "channel": "feed",
+          "message": "Published"
+        },
+        {
+          "at": "2026-10-19T22:46:29.582Z",
+          "channel": "groupme",
+          "message": "Bot announcement sent"
+        }
+      ],
+      "flyerUrl": "https://raw.githubusercontent.com/ASME-OSU/ASME-Social-Hub/main/assets/uploads/2026-10-23-asme-bar-social-1792429992154-1.png"
     },
     {
       "id": "2025-10-22-industry-night",
