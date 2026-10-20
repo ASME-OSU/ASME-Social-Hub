@@ -32,7 +32,7 @@ export function createFlyerPreview({form,getConfig,getExisting,getUpload,getStor
     syncPreviewSurface();if(format==='groupme')return;
     const height=previewHeight,story=format==='story',post=expanded.open?expandedPost:inlinePost,slot=expanded.open?canvas:inlineCanvas;
     inlinePost.setStory(story);expandedPost.setStory(story);frame.style.height=`${height}px`;
-    const sideBySide=expanded.open&&!story&&matchMedia('(min-width:700px)').matches;
+    const sideBySide=expanded.open&&!story&&(matchMedia('(min-width:700px)').matches||matchMedia('(min-width:600px) and (max-height:500px)').matches);
     const side=sideBySide?302:0,padding=expanded.open?16:0;
     post.root.style.width=`${Math.max(80,Math.min(slot.clientWidth-padding,expanded.open?Infinity:430))}px`;
     const chrome=sideBySide||story?0:post.chromeHeight()+2;

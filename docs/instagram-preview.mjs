@@ -58,10 +58,14 @@ export function createInstagramPost({media,config={},caption='',captionError='',
   for(const type of ['pointercancel','lostpointercapture'])mediaSlot.addEventListener(type,event=>{if(gesture?.pointerId===event.pointerId)gesture=null;});
   function update({config:nextConfig=config,caption:nextCaption=caption,captionError:nextError='',count:nextCount=1,index:nextIndex=0}={}){
     config=nextConfig;caption=nextCaption;currentCount=nextCount;currentIndex=nextIndex;syncNavigation();
-    const handle=instagramHandle(config);root.querySelector('.ig-account strong').textContent=handle;root.querySelector('.ig-account small').textContent=config.chapterName||'Instagram feed';root.querySelector('.ig-caption-handle').textContent=handle+' ';root.querySelector('.ig-caption-text').textContent=caption;
+    const handle=instagramHandle(config);root.querySelector('.ig-account strong').textContent=handle;root.querySelector('.ig-account small').textContent=config.chapterName||'Instagram feed';root.querySelector('.ig-caption-handle').textContent=handle+' ';
+    const captionText=root.querySelector('.ig-caption-text');
+    if(captionText.textContent!==caption){captionText.textContent=caption;root.querySelector('.ig-caption').scrollTop=0;}
     const avatar=root.querySelector('.ig-avatar'),logo=config.brand?.logoMark||config.brand?.logoPrimary||config.brand?.logo;
-    avatar.replaceChildren();const safe=logo&&safePreviewImage(logo);if(safe){const image=document.createElement('img');image.alt='';image.src=safe;image.addEventListener('error',()=>{avatar.textContent=handle.slice(0,1).toUpperCase();},{once:true});avatar.append(image);}else avatar.textContent=handle.slice(0,1).toUpperCase();
+    const safe=logo&&safePreviewImage(logo),avatarKey=safe||handle;
+    if(avatar.dataset.identity!==avatarKey){avatar.dataset.identity=avatarKey;avatar.replaceChildren();if(safe){const image=document.createElement('img');image.alt='';image.src=safe;image.addEventListener('error',()=>{avatar.textContent=handle.slice(0,1).toUpperCase();},{once:true});avatar.append(image);}else avatar.textContent=handle.slice(0,1).toUpperCase();}
     root.querySelector('.ig-carousel').hidden=nextCount<2;root.querySelector('.ig-position').textContent=`${nextIndex+1} / ${nextCount}`;root.querySelector('.ig-previous').disabled=nextIndex<=0;root.querySelector('.ig-next').disabled=nextIndex>=nextCount-1;
+    root.querySelector('.ig-preview-note').textContent=nextCount>1?'Swipe images or use the arrows · Instagram preview':'Instagram preview · appearance may vary';
     const error=root.querySelector('.ig-caption-error');error.textContent=nextError;error.hidden=!nextError;
   }
   update({config,caption,captionError,count,index});
@@ -79,8 +83,10 @@ export function mountCampaignInstagramPreview(container,campaign,config,options=
   const media=document.createElement('div');media.className='ig-detail-image';const image=document.createElement('img');image.alt=campaign.title+' · Instagram feed';media.append(image);
   const unavailable=document.createElement('p');unavailable.className='ig-image-unavailable';unavailable.textContent='Image preview unavailable. Check again after rendering finishes.';unavailable.hidden=true;media.append(unavailable);
   let index=0;
-  const show=()=>{unavailable.hidden=true;image.hidden=false;image.src=sources[index]||'';post.update({config,caption,captionError,count:Math.max(1,sources.length),index});};
-  image.addEventListener('error',()=>{image.hidden=true;unavailable.hidden=false;});
+  const finish=()=>media.removeAttribute('aria-busy');
+  const show=()=>{unavailable.hidden=true;image.hidden=false;if(sources[index]){media.setAttribute('aria-busy','true');image.src=sources[index];}else{image.hidden=true;image.removeAttribute('src');unavailable.hidden=false;finish();}post.update({config,caption,captionError,count:Math.max(1,sources.length),index});};
+  image.addEventListener('load',finish);
+  image.addEventListener('error',()=>{image.hidden=true;unavailable.hidden=false;finish();});
   const post=createInstagramPost({media,config,caption,captionError,count:Math.max(1,sources.length),onPrevious(){if(index>0){index--;show();}},onNext(){if(index<sources.length-1){index++;show();}}});
   post.root.classList.add('ig-detail-post');container.replaceChildren(post.root);show();return post;
 }

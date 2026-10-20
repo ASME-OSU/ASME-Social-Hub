@@ -339,3 +339,43 @@ input::placeholder,textarea::placeholder{color:var(--muted);opacity:1}
 #preview-dialog-canvas.is-groupme-preview #groupme-preview-panel{max-width:760px}
 @media(max-width:699px){.preview-formats [data-preview-format]{gap:5px}.preview-formats [data-preview-format] svg{width:17px;height:17px}.preview-dialog-heading .preview-formats{gap:4px}.preview-dialog-heading .preview-formats button{padding:8px 6px;font-size:11px}#preview-dialog-canvas.is-groupme-preview{padding:10px}}
 .ig-media.ig-swipeable{touch-action:pan-y pinch-zoom;cursor:grab;user-select:none}.ig-media.ig-swipeable:active{cursor:grabbing}.ig-media.ig-swipeable:focus-visible{outline:3px solid #1769aa;outline-offset:-3px}.ig-media img{ -webkit-user-drag:none }
+
+/* Keep preview controls grouped and reachable on phones and short screens. */
+.preview-dialog-heading{flex-wrap:nowrap}
+.ig-preview-note{font-size:11px;line-height:1.4}
+.ig-media>.ig-carousel button{width:44px;height:44px;min-height:44px;display:grid;place-items:center;border:0;background:transparent;box-shadow:none;isolation:isolate}
+.ig-media>.ig-carousel button::before{content:'';position:absolute;inset:6px;border:1px solid #ddd;border-radius:50%;background:#fffffff0;box-shadow:0 1px 5px #0003;z-index:-1}
+.ig-media>.ig-carousel .ig-previous{left:4px}.ig-media>.ig-carousel .ig-next{right:4px}
+@media(max-width:699px){
+ .preview-dialog-heading{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto;align-items:center;gap:8px;padding:8px}
+ .preview-dialog-heading .preview-formats{grid-column:1;grid-row:1;display:flex;flex-direction:row;flex-wrap:nowrap;min-width:0;gap:4px}
+ .preview-dialog-heading .preview-formats button{flex:1 1 auto;min-width:44px;width:auto;padding:8px 4px;font-size:11px;gap:4px}
+ .preview-dialog-heading .preview-formats button span{white-space:nowrap}
+ .preview-dialog-heading .preview-formats svg{width:16px;height:16px}
+ .preview-zoom-label{grid-column:1/-1;grid-row:2;display:flex;flex-direction:row;align-items:center;gap:8px;margin:0;font-size:11px}
+ .preview-zoom-label span{position:static;width:auto;height:auto;overflow:visible;clip-path:none;white-space:normal}
+ .preview-zoom-label select{width:80px;min-height:44px;margin:0}
+ #close-preview{grid-column:2;grid-row:1;margin:0;min-height:44px;padding:8px 10px;font-size:12px}
+}
+@media(min-width:600px) and (max-height:500px){
+ #preview-dialog[open]{display:flex;flex-direction:column}
+ .preview-dialog-heading{display:flex;flex-direction:row;align-items:center;flex-wrap:nowrap;gap:8px;padding:8px;border-right:0;border-bottom:1px solid var(--line);flex-shrink:0;overflow:visible}
+ .preview-dialog-heading h2{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+ .preview-dialog-heading .preview-formats{display:flex;flex-direction:row;flex-wrap:nowrap;min-width:0;gap:6px}
+ .preview-dialog-heading .preview-formats button{width:auto;min-width:44px;min-height:44px;padding:8px;font-size:12px}
+ .preview-zoom-label{display:flex;flex-direction:row;align-items:center;gap:8px;margin:0;font-size:11px}
+ .preview-zoom-label span{position:static;width:auto;height:auto;overflow:visible;clip-path:none;white-space:normal}
+ .preview-zoom-label select{width:80px;min-height:44px;margin:0}
+ #close-preview{margin:0 0 0 auto;min-height:44px;padding:8px 10px;font-size:12px}
+ #preview-dialog-canvas{flex:1;order:1;min-height:0}
+ #preview-dialog-status{order:2;padding:6px 10px;flex-shrink:0}
+}
+@media(min-width:600px) and (max-height:500px){
+ #preview-dialog-canvas>.ig-post:not(.ig-story-only){display:grid;grid-template-columns:auto 300px;grid-template-rows:62px minmax(0,1fr)}
+ #preview-dialog-canvas>.ig-post:not(.ig-story-only)>.ig-media{grid-column:1;grid-row:1/3}
+ #preview-dialog-canvas>.ig-post:not(.ig-story-only)>.ig-header{grid-column:2;grid-row:1;border-left:1px solid #eee}
+ #preview-dialog-canvas>.ig-post:not(.ig-story-only)>.ig-body{grid-column:2;grid-row:2;display:flex;flex-direction:column;min-height:0;border-left:1px solid #eee}
+ #preview-dialog-canvas>.ig-post:not(.ig-story-only) .ig-caption{max-height:none;flex:1;min-height:0;order:0;padding-top:16px}
+ #preview-dialog-canvas>.ig-post:not(.ig-story-only) .ig-actions{order:1;flex-shrink:0;border-top:1px solid #eee;margin-top:8px}
+ #preview-dialog-canvas>.ig-post:not(.ig-story-only) .ig-preview-note{order:2;margin-top:0;flex-shrink:0}
+}
