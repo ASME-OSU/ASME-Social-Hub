@@ -141,3 +141,28 @@ test('bot-only ambiguous failures never retry, and checkpoint failure prevents s
 test('bot-only late and cancelled campaigns skip without sending',async t=>{
  for(const cancelled of [false,true]) {const {root,file}=await botFixture(t);if(cancelled){const c=JSON.parse(await readFile(file));c.cancelled=true;await writeJson(file,c);}await dispatch({root,now:cancelled?'2026-10-14T17:00:00Z':'2026-10-15T16:00:01Z',services:new Proxy({},{get(){throw Error('network');}})});assert.equal(JSON.parse(await readFile(file)).status.groupme,'skipped');}
 });
+test('carousel dispatch keeps ordered public URLs and reuses its persisted parent on retry',async t=>{
+ const {root,file}=await fixture(t),c=JSON.parse(await readFile(file));delete c.flyers;c.flyerUrl='https://example.org/b.png';c.flyerUrls=[c.flyerUrl,'https://example.org/a.png'];await writeJson(file,c);
+ const configFile=path.join(root,'config/chapter.json'),config=JSON.parse(await readFile(configFile));config.siteUrl='https://example.org/hub';await writeJson(configFile,config);
+ let creates=0,waits=0,publishes=0;const services={ig:{createContainer:async({imageUrls})=>{creates++;assert.deepEqual(imageUrls,['https://example.org/hub/media/2026-27/meeting-feed.jpg','https://example.org/hub/media/2026-27/meeting-feed-2.jpg']);return 'carousel-parent';},waitForContainer:async id=>{assert.equal(id,'carousel-parent');if(!waits++)throw Error('processing');},publishContainer:async id=>{assert.equal(id,'carousel-parent');publishes++;return 'carousel-post';}},groupme:{createEvent:async()=>({eventId:'event'})}};
+ await dispatch({root,now:'2026-10-14T17:00:00Z',services});await dispatch({root,now:'2026-10-14T18:00:00Z',services});await dispatch({root,now:'2026-10-14T19:00:00Z',services});assert.equal(creates,1);assert.equal(publishes,1);assert.equal(JSON.parse(await readFile(file)).results.feed.images.length,2);
+});
+
+test('missed feed and bot can be rescheduled, publish once, and keep receipts on later edits',async t=>{
+ const {reopenMissedChannels}=await import('../docs/schedule-status.mjs');
+ const {mergeCampaignEdit}=await import('../docs/campaign-save.mjs');
+ const {root,file}=await botFixture(t),config=JSON.parse(await readFile(path.join(root,'config/chapter.json')));
+ const initial=JSON.parse(await readFile(file));initial.campaign.feed.enabled=true;await writeJson(file,initial);
+ let posts=0,bots=0;
+ const services={ig:{createContainer:async()=> 'fixture-container',waitForContainer:async()=>{},publishContainer:async()=>{posts++;return 'fixture-media';},getMedia:async()=>({})},postBotMessage:async()=>{bots++;}};
+ await dispatch({root,now:'2026-10-15T16:00:01Z',services});
+ const missed=JSON.parse(await readFile(file));assert.equal(missed.status.feed,'skipped');assert.equal(missed.status.groupme,'skipped');
+ const edited=structuredClone(missed);edited.campaign.feed.daysBefore=5;
+ const reopened=reopenMissedChannels(edited,missed,config,new Date('2026-10-15T17:00:00Z'));
+ assert.equal(reopened.status.feed,'pending');assert.equal(reopened.status.groupme,'pending');await writeJson(file,reopened);
+ await dispatch({root,now:'2026-10-16T16:00:00Z',services});
+ const delivered=JSON.parse(await readFile(file));
+ const saved=mergeCampaignEdit(reopened,{...reopened,title:'Updated fixture'},delivered,config,new Date('2026-10-16T17:00:00Z'));
+ assert.equal(saved.results.feed.mediaId,'fixture-media');assert.ok(saved.results.groupme.botSentAt);await writeJson(file,saved);
+ await dispatch({root,now:'2026-10-16T18:00:00Z',services});assert.equal(posts,1);assert.equal(bots,1);
+});

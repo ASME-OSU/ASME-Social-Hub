@@ -1,18 +1,8 @@
+export {botAnnouncementText} from '../docs/groupme-message.mjs';
 import {safeJson} from './ig.mjs';
 import {advertisingLines} from './core.mjs';
 const retrySafe = message => Object.assign(new Error(message), {retrySafe:true});
 const REMINDERS = new Set([0,300,900,1800,3600,7200,86400,172800,604800]);
-const httpsLink=value=>{try{const url=new URL(value);return url.protocol==='https:'&&!url.username&&!url.password?url.href:'';}catch{return '';}};
-export function botAnnouncementText(campaign,config) {
-  const when=new Intl.DateTimeFormat('en-US',{timeZone:config.timezone,dateStyle:'full',timeStyle:'short'}).format(new Date(campaign.start));
-  const location=typeof campaign.location==='string'?campaign.location:campaign.location?.name;
-  const site=httpsLink(config.siteUrl);
-  const calendar=site?httpsLink(`${site.replace(/\/$/,'')}/calendar/${encodeURIComponent(campaign.year)}/${encodeURIComponent(campaign.id)}.ics`):'';
-  const flyer=httpsLink(campaign.images?.feed||campaign.flyers?.feed||campaign.flyerUrl||(site?`${site.replace(/\/$/,'')}/media/${encodeURIComponent(campaign.year)}/${encodeURIComponent(campaign.id)}-feed.jpg`:''));
-  const text=[campaign.title,`${when} (${config.timezone})`,location,campaign.description || '',...advertisingLines(campaign,config),calendar?`Calendar: ${calendar}`:'',flyer?`Flyer: ${flyer}`:''].filter(Boolean).join('\n');
-  if(text.length>1000) throw new Error('GroupMe announcement exceeds 1000 characters; shorten event copy or advertising details; RSVP links are never silently omitted');
-  return text;
-}
 export function eventPayload(campaign, config) {
   const reminders = campaign.campaign?.groupme?.reminders ?? [604800,86400];
   if (reminders.length > 2 || reminders.some(x => !REMINDERS.has(x))) throw new Error('Invalid GroupMe reminders');

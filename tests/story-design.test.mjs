@@ -21,7 +21,7 @@ test('palette uses saved colors or normalized safe chapter fallback',()=>{
 test('treatments retain uncropped flyer, escaped values, and fitter structure',()=>{
   for(const background of ['color-wash','blueprint-rings','folded-paper']){
     const html=renderStoryDesign({campaign:{title:'UNTRUSTED',storyDesign:{background}},config:{},values:{title:'Safe &amp; title',flyerSource:'https://example.org/a.png?a=1&amp;b=2',foodClass:'nofood'}});
-    assert.match(html,/object-fit:contain/);assert.match(html,/<section class="hero">/);assert.match(html,/class="artwork flyer-card"/);assert.match(html,/Safe &amp; title/);assert.doesNotMatch(html,/UNTRUSTED/);assert.match(html,/padding:230px 70px 280px/);
+    assert.match(html,/object-fit:contain/);assert.match(html,/<section class="hero">/);assert.match(html,/class="artwork flyer-card"/);assert.match(html,/Safe &amp; title/);assert.doesNotMatch(html,/UNTRUSTED/);assert.match(html,/padding:270px 82px 320px/);
   }
 });
 

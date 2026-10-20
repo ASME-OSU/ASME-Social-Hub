@@ -35,7 +35,7 @@ export async function checkEditorLayout(browser,base){
     await fields.evaluate(e=>e.scrollTop=e.scrollHeight);
     assert.equal((await page.locator('#artwork-preview').boundingBox()).y,previewTop,'Preview stays visible when fields scroll');
     const footer=await page.locator('#editor .dialog-footer').boundingBox();assert.ok(footer.y+footer.height<=height+1,'Save controls stay in viewport');
-    const stage=await page.locator('.artwork-preview-stage').boundingBox();if(height>=800)assert.ok(stage.y+stage.height<=footer.y+1,`Story fits above save controls at ${width}: ${JSON.stringify({stage,footer})}`);
+    const slot=await page.locator('.inline-preview-canvas').boundingBox();assert.ok(slot.width>200,'Side controls leave a useful artwork canvas');const stage=await page.locator('.artwork-preview-stage').boundingBox();if(height>=800)assert.ok(stage.width>200,'Story is large enough for composition review');if(height>=800)assert.ok(stage.y+stage.height<=footer.y+1,`Story fits above save controls at ${width}: ${JSON.stringify({stage,footer})}`);
     await fields.evaluate(e=>e.scrollTop=0);
    }else{assert.ok(b.y>=a.y+a.height-1,'Small screens stack fields above preview');await page.locator('#artwork-preview').scrollIntoViewIfNeeded();}
    await page.screenshot({path:`test-results/editor-review/${theme}-${width}-${height}-story.png`,animations:'disabled'});
@@ -48,7 +48,7 @@ export async function checkEditorLayout(browser,base){
    if(width===1440&&height===1000){
     const tall=Buffer.from(await page.evaluate(()=>{const c=document.createElement('canvas');c.width=640;c.height=1200;c.getContext('2d').fillRect(0,0,640,1200);return c.toDataURL('image/png').split(',')[1];}),'base64');
     await page.locator('[name=flyer]').setInputFiles({name:'tall.png',mimeType:'image/png',buffer:tall});await page.waitForSelector('#feed-image-note:not([hidden])');await page.locator('#save-button').click();await page.waitForSelector('#form-error:not([hidden])');assert.match(await page.locator('#form-error').textContent(),/Story only/);
-    await page.locator('[name=feedEnabled]').uncheck();await page.waitForFunction(()=>document.querySelector('#feed-image-note').hidden);await page.locator('#save-button').click();assert.doesNotMatch(await page.locator('#form-error').textContent(),/publishing range/);await page.locator('[name=feedEnabled]').check();await page.locator('[name=flyer]').setInputFiles({name:'review-example.png',mimeType:'image/png',buffer:image});
+    await page.locator('[name=feedEnabled]').uncheck();await page.waitForFunction(()=>document.querySelector('#feed-image-note').hidden);await page.locator('#save-button').click();assert.doesNotMatch(await page.locator('#form-error').textContent(),/publishing range/);await page.locator('[name=feedEnabled]').check();await page.locator('#clear-flyer').click();await page.locator('[name=flyer]').setInputFiles({name:'review-example.png',mimeType:'image/png',buffer:image});
    }
    await page.locator('#advertising-details').evaluate(e=>e.open=true);await page.locator('[name=rsvpUrl]').fill('not a url');await page.locator('#advertising-details').evaluate(e=>e.open=false);await page.locator('#save-button').click();
    assert.equal(await page.locator('#advertising-details').evaluate(e=>e.open),true,'Invalid collapsed fields are revealed');assert.match(await page.locator('#form-error').textContent(),/RSVP/);await page.locator('[name=rsvpUrl]').fill('');await page.locator('#advertising-details').evaluate(e=>e.open=false);

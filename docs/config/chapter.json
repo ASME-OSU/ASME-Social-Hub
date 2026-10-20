@@ -70,7 +70,9 @@
   "integrations": {
     "groupme": {
       "enabled": true,
-      "mode": "bot"
+      "mode": "bot",
+      "botName": "Gearley",
+      "botAvatar": "assets/logos/groupme-bot.png"
     }
   },
   "socialLinks": {

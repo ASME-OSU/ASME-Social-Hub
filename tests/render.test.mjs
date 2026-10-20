@@ -83,3 +83,8 @@ test('a failed preview logo resolution uses chapter text instead of retrying the
  const html=flyerHtml(template,campaign,{...config,brand:{logoFlyer:'https://example.org/missing.png'}},'story',{logo:'',logoResolved:true});
  assert.doesNotMatch(html,/missing.png/);assert.match(html,/A chapter/);
 });
+
+test('Chapter template Stories never use the uploaded flyer as a backdrop',()=>{
+ const html=flyerHtml(blueprint,{...campaign,flyerUrl:'https://example.org/flyer.png'},config,'story');
+ assert.doesNotMatch(html,/<img class="flyer"/);assert.doesNotMatch(html,/src="https:\/\/example.org\/flyer.png"/);assert.match(html,/6:00 PM EST/);
+});

@@ -52,9 +52,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .local/render
-          key: flyer-markers-${{ runner.os }}-v2-${{ hashFiles('scripts/render-flyers.mjs', 'docs/flyer-render.mjs', 'docs/story-design.mjs', 'docs/image-policy.mjs', 'config/**', 'templates/**', 'docs/assets/fonts/**', 'docs/assets/logos/**') }}-${{ hashFiles('data/campaigns/**') }}
+          key: flyer-markers-${{ runner.os }}-v2-${{ hashFiles('scripts/render-flyers.mjs', 'docs/flyer-render.mjs', 'docs/story-design.mjs', 'docs/image-policy.mjs', 'docs/carousel.mjs', 'config/**', 'templates/**', 'docs/assets/fonts/**', 'docs/assets/logos/**') }}-${{ hashFiles('data/campaigns/**') }}
           restore-keys: |
-            flyer-markers-${{ runner.os }}-v2-${{ hashFiles('scripts/render-flyers.mjs', 'docs/flyer-render.mjs', 'docs/story-design.mjs', 'docs/image-policy.mjs', 'config/**', 'templates/**', 'docs/assets/fonts/**', 'docs/assets/logos/**') }}-
+            flyer-markers-${{ runner.os }}-v2-${{ hashFiles('scripts/render-flyers.mjs', 'docs/flyer-render.mjs', 'docs/story-design.mjs', 'docs/image-policy.mjs', 'docs/carousel.mjs', 'config/**', 'templates/**', 'docs/assets/fonts/**', 'docs/assets/logos/**') }}-
       - name: Render pending campaign flyers
         if: inputs.task == 'render'
         run: |

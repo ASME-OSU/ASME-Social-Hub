@@ -1,3 +1,4 @@
+import {feedImageUrls} from '../docs/carousel.mjs';
 import { readFile, mkdir, rmdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -26,6 +27,7 @@ export async function dispatch({root=process.cwd(),now=new Date(),dryRun=false,s
     for(const c of await readCampaigns(root)) {
       if(c.demo || c.archived || c.year!==config.activeYear) continue;
       validateCampaign(c);
+      if(c.deletedAt) c.cancelled=true;
       const file=path.join(root,'data/campaigns',c.year,`${c.id}.json`);
       const save=async()=> { try { await writeJson(file,c); if(checkpoint) await checkpoint({root,file,campaign:c}); } catch(cause) { const error=new Error('Durable campaign checkpoint failed', {cause}); error.persistenceFailure=true; throw error; } };
       const log=(channel,message)=> { c.log.push({at:now.toISOString(),channel,message}); };
@@ -42,6 +44,7 @@ export async function dispatch({root=process.cwd(),now=new Date(),dryRun=false,s
             if(!dryRun && c.status.groupme!=='failed') { c.status.groupme='failed';c.results.groupme=result;result.error={code:'BOT_RECONCILIATION_REQUIRED',stage:'bot',at:now.toISOString()};log(channel,'Inspect GroupMe before clearing botAttemptedAt; announcement outcome is unresolved');await save(); }
             continue;
           }
+          if(['done','skipped'].includes(c.status?.groupme)) continue;
           if(c.cancelled || now>=new Date(c.start) || (+now>=+due && +now-+due>86400000)) {
             if(c.status?.groupme!=='skipped') { actions.push({id:c.id,channel,action:'skip',reason:c.cancelled?'cancelled':'announcement-window-missed'}); if(!dryRun) { c.status.groupme='skipped'; c.results.groupme=result; result.skipReason=c.cancelled?'cancelled':'announcement-window-missed'; log(channel,'Bot announcement skipped'); await save(); } }
             continue;
@@ -72,21 +75,22 @@ export async function dispatch({root=process.cwd(),now=new Date(),dryRun=false,s
           if(result.mediaId || c.status?.[channel]==='done' || c.status?.[channel]==='skipped' || c.cancelled || c.campaign?.[channel]?.enabled===false) continue;
           const due=fireAt(c,channel,config);
           if(now<due) continue;
-          if(now>=new Date(c.start) || +now-+due>86400000) { actions.push({id:c.id,channel,action:'skip',fireAt:due.toISOString()}); if(!dryRun) { c.status[channel]='skipped'; log(channel,'Publishing window missed'); await save(); } continue; }
+          if(now>=new Date(c.start) || +now-+due>86400000) { actions.push({id:c.id,channel,action:'skip',fireAt:due.toISOString()}); if(!dryRun) { c.status[channel]='skipped'; c.results[channel]=result; result.skipReason='publishing-window-missed'; log(channel,'Publishing window missed'); await save(); } continue; }
           actions.push({id:c.id,channel,action:'publish',fireAt:due.toISOString()});
           if(dryRun) continue;
           c.results[channel]=result;
           try {
             if(result.publishAttemptedAt) throw new Error('Publication outcome requires reconciliation');
             if(result.preparedRevision !== undefined && result.preparedRevision !== (c.revision??0)) {
-              delete result.containerId; delete result.image; delete result.caption;
+              delete result.containerId; delete result.image; delete result.images; delete result.caption;
             }
             result.preparedRevision=c.revision??0;
-            const imageUrl=result.image || c.flyers?.[channel] || c.images?.[channel] || (config.siteUrl ? `${config.siteUrl.replace(/\/$/,'')}/media/${c.year}/${c.id}-${channel}.jpg` : null);
+            const imageUrls=channel==='feed'?(result.images||feedImageUrls(c,config)):[];
+            const imageUrl=result.image || imageUrls[0] || c.flyers?.[channel] || c.images?.[channel] || (config.siteUrl ? `${config.siteUrl.replace(/\/$/,'')}/media/${c.year}/${c.id}-${channel}.jpg` : null);
             if(!imageUrl || !/^https:\/\//.test(imageUrl)) throw new Error('Public HTTPS flyer URL is required');
             await services.ig.checkPublishingLimit?.();
-            result.image=imageUrl; result.caption=captionFor(c,config);
-            if(!result.containerId) { result.containerId=await services.ig.createContainer({campaign:c,channel,imageUrl,caption:result.caption,config}); await save(); }
+            result.image=imageUrl;if(channel==='feed')result.images=imageUrls.length?imageUrls:[imageUrl]; result.caption=captionFor(c,config);
+            if(!result.containerId) { result.containerId=await services.ig.createContainer({campaign:c,channel,imageUrl,imageUrls:channel==='feed'?result.images:undefined,caption:result.caption,config}); await save(); }
             await services.ig.waitForContainer(result.containerId);
             result.publishAttemptedAt=now.toISOString(); await save();
             try { const published=await services.ig.publishContainer(result.containerId); result.mediaId=typeof published==='string'?published:published.mediaId || published.id; if(!result.mediaId) throw new Error('Missing publication identifier'); } catch(e) { if(e.retrySafe) delete result.publishAttemptedAt; throw e; }
@@ -128,7 +132,13 @@ export async function dispatch({root=process.cwd(),now=new Date(),dryRun=false,s
         }
       }
     }
-    if(!dryRun) await buildArchive(root);
+    if(!dryRun) {
+      await buildArchive(root);
+      const file=path.join(root,'data/dispatcher-health.json');
+      const previous=await readFile(file,'utf8').then(JSON.parse).catch(error=>{if(error.code==='ENOENT')return {};throw error;});
+      const completedAt=new Date().toISOString(),success=!actions.some(a=>a.outcome==='failed');
+      await writeJson(file,{...previous,lastLiveRunAt:completedAt,lastLiveRunStatus:success?'success':'failed',...(success?{lastSuccessfulLiveRunAt:completedAt}:{}),runId:process.env.GITHUB_RUN_ID||null,event:process.env.GITHUB_EVENT_NAME||'local'});
+    }
     return actions;
   } finally { if(!dryRun) await rmdir(lock); }
 }
