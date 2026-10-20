@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-20T11:59:55.439Z",
+  "generatedAt": "2026-10-20T12:07:49.119Z",
   "activeYear": "2026-27",
   "config": {
     "timezone": "America/New_York",
@@ -23,34 +23,14 @@
     "status": "unknown",
     "warning": false,
     "configured": true,
-    "checkedAt": "2026-10-20T11:59:55.257Z",
+    "checkedAt": "2026-10-20T12:07:48.881Z",
     "expiresAt": null,
     "daysRemaining": null
   },
   "calendar": {
     "feedUrl": "https://calendar.google.com/calendar/ical/c93730cdacb567b0f010d1367080e3028ec5c7657d9713b675ac9e5c437b9fba%40group.calendar.google.com/public/basic.ics",
-    "generatedAt": "2026-10-19T13:55:51.837Z",
+    "generatedAt": "2026-10-20T12:07:48.312Z",
     "candidates": [
-      {
-        "id": "5n4j886meo63ojjrbue0b56i19@google.com::2026-10-19T00:00:00.000Z",
-        "title": "Second-session classes begin",
-        "start": "2026-10-19T00:00:00.000Z",
-        "end": "2026-10-20T00:00:00.000Z",
-        "allDay": true,
-        "uid": "5n4j886meo63ojjrbue0b56i19@google.com::2026-10-19T00:00:00.000Z",
-        "source": {
-          "uid": "5n4j886meo63ojjrbue0b56i19@google.com::2026-10-19T00:00:00.000Z",
-          "calendarUid": "5n4j886meo63ojjrbue0b56i19@google.com"
-        },
-        "dueAt": {
-          "feed": "2026-10-11T16:00:00.000Z",
-          "story": "2026-10-15T16:00:00.000Z"
-        },
-        "scheduleInvalid": {
-          "feed": false,
-          "story": false
-        }
-      },
       {
         "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-10-22T21:30:00.000Z",
         "title": "ASME Scheduling/BuckeyeLink Tour",
@@ -65,26 +45,6 @@
         "dueAt": {
           "feed": "2026-10-15T16:00:00.000Z",
           "story": "2026-10-19T16:00:00.000Z"
-        },
-        "scheduleInvalid": {
-          "feed": false,
-          "story": false
-        }
-      },
-      {
-        "id": "51ktvdb5pj9l342194d7ance14@google.com::2026-10-23T22:30:00.000Z",
-        "title": "ASME Bar Social",
-        "start": "2026-10-23T22:30:00.000Z",
-        "end": "2026-10-24T00:30:00.000Z",
-        "allDay": false,
-        "uid": "51ktvdb5pj9l342194d7ance14@google.com::2026-10-23T22:30:00.000Z",
-        "source": {
-          "uid": "51ktvdb5pj9l342194d7ance14@google.com::2026-10-23T22:30:00.000Z",
-          "calendarUid": "51ktvdb5pj9l342194d7ance14@google.com"
-        },
-        "dueAt": {
-          "feed": "2026-10-16T16:00:00.000Z",
-          "story": "2026-10-20T16:00:00.000Z"
         },
         "scheduleInvalid": {
           "feed": false,

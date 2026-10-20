@@ -1,22 +1,6 @@
 {
-  "generatedAt": "2026-10-19T13:55:51.837Z",
+  "generatedAt": "2026-10-20T12:07:48.312Z",
   "events": [
-    {
-      "id": "5n4j886meo63ojjrbue0b56i19@google.com::2026-10-19T00:00:00.000Z",
-      "title": "Second-session classes begin",
-      "start": "2026-10-19T00:00:00.000Z",
-      "end": "2026-10-20T00:00:00.000Z",
-      "allDay": true,
-      "location": "",
-      "description": "",
-      "url": "https://calendar.google.com/calendar/ical/c93730cdacb567b0f010d1367080e3028ec5c7657d9713b675ac9e5c437b9fba%40group.calendar.google.com/public/basic.ics",
-      "updated": "2026-07-09T22:51:54.000Z",
-      "source": {
-        "kind": "ical",
-        "uid": "5n4j886meo63ojjrbue0b56i19@google.com::2026-10-19T00:00:00.000Z",
-        "calendarUid": "5n4j886meo63ojjrbue0b56i19@google.com"
-      }
-    },
     {
       "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-10-22T21:30:00.000Z",
       "title": "ASME Scheduling/BuckeyeLink Tour",
@@ -31,22 +15,6 @@
         "kind": "ical",
         "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-10-22T21:30:00.000Z",
         "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
-      }
-    },
-    {
-      "id": "51ktvdb5pj9l342194d7ance14@google.com::2026-10-23T22:30:00.000Z",
-      "title": "ASME Bar Social",
-      "start": "2026-10-23T22:30:00.000Z",
-      "end": "2026-10-24T00:30:00.000Z",
-      "allDay": false,
-      "location": "The Horseshoe Country Bar & More, 2159 N High St, Columbus, OH 43201, USA",
-      "description": "",
-      "url": "https://calendar.google.com/calendar/ical/c93730cdacb567b0f010d1367080e3028ec5c7657d9713b675ac9e5c437b9fba%40group.calendar.google.com/public/basic.ics",
-      "updated": "2026-10-18T22:24:48.000Z",
-      "source": {
-        "kind": "ical",
-        "uid": "51ktvdb5pj9l342194d7ance14@google.com::2026-10-23T22:30:00.000Z",
-        "calendarUid": "51ktvdb5pj9l342194d7ance14@google.com"
       }
     },
     {
@@ -818,5 +786,15 @@
       }
     }
   ],
-  "changes": []
+  "changes": [
+    {
+      "source": {
+        "kind": "ical",
+        "uid": "51ktvdb5pj9l342194d7ance14@google.com::2026-10-23T22:30:00.000Z",
+        "calendarUid": "51ktvdb5pj9l342194d7ance14@google.com"
+      },
+      "title": "ASME Bar Social",
+      "updated": "2026-10-18T22:24:48.000Z"
+    }
+  ]
 }
