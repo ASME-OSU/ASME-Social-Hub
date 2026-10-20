@@ -1,3 +1,4 @@
+import {checkPreviewPane} from './check-preview-pane.mjs';
 import {checkGroupMePreview} from './check-groupme-preview.mjs';
 import {checkCampaignControls} from './check-campaign-controls.mjs';
 import {checkEditorLayout} from './check-editor-layout.mjs';
@@ -16,6 +17,7 @@ let browser;
 try {
  for(let i=0;i<50;i++){try{if((await fetch(base)).ok)break;}catch{}await new Promise(r=>setTimeout(r,100));}
  browser=await chromium.launch({headless:true});
+ await checkPreviewPane(browser,base);
  await checkCampaignControls(browser,base);
  await checkGroupMePreview(browser,base);
  await checkThemes(browser,base);

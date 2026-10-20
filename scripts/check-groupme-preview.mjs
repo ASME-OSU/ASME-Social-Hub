@@ -46,7 +46,7 @@ export async function checkGroupMePreview(browser,base) {
 
   await page.locator('[data-view=settings]').click();await page.locator('[name=token]').fill('mock-groupme-preview-token');await page.locator('#settings-form button.primary').click();
   await page.waitForFunction(()=>document.querySelector('#connection-label').textContent==='Connected');
-  await page.locator('[data-view=dashboard]').click();await page.locator('#new-campaign').click();
+  await page.locator('[data-view=dashboard]').click();await page.locator('#new-campaign').click();await page.locator('#artwork-preview [data-preview-format=groupme]').click();
   for(const [name,value]of Object.entries({title:'GroupMe preview fixture',start:'2026-11-20T18:30',end:'2026-11-20T20:00',location:'Fixture room',description:'Meet other engineers.\nBring an idea to build together.'}))await page.locator(`[name=${name}]`).fill(value);
   await page.locator('[name=feedEnabled]').uncheck();await page.locator('[name=storyEnabled]').uncheck();await page.locator('[name=groupmeAnnounce]').check();await page.locator('[name=food]').check();
   await page.locator('#advertising-details summary').click();
@@ -65,6 +65,7 @@ export async function checkGroupMePreview(browser,base) {
   await page.locator('[name=groupmeAnnounce]').uncheck();assert.match(await preview.locator('.gm-status').textContent(),/off.*will not send/i);
   assert.equal(writes.length,0);assert.deepEqual(external,[],'Preview must not send GroupMe requests');
   await page.locator('[name=groupmeAnnounce]').check();
+  await page.setViewportSize({width:1280,height:720});
   draft.description=Array.from({length:8},(_,i)=>`Line ${i+1}: meet other engineers and share your next project.`).join('\n');
   await page.locator('[name=description]').fill(draft.description);
   assert.equal(await preview.locator('.gm-message-text').textContent(),botAnnouncementText(draft,config));
