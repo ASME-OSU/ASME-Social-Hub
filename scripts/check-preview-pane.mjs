@@ -26,7 +26,7 @@ export async function checkPreviewPane(browser,base){
   await page.route('https://api.github.com/**',route=>{requests++;return route.abort();});
   const pngs=await page.evaluate(()=>['#ac2038','#1264a3','#267a44'].map((color,index)=>{const c=document.createElement('canvas');c.width=640;c.height=800;const x=c.getContext('2d');x.fillStyle=color;x.fillRect(0,0,640,800);x.fillStyle='white';x.font='bold 60px sans-serif';x.fillText('IMAGE '+(index+1),80,350);return c.toDataURL('image/png').split(',')[1];}));
   const images=pngs.map(x=>Buffer.from(x,'base64'));
-  const campaign={id:'preview-swipe-fixture',year:'2026-27',type:'gbm',title:'Swipe preview fixture',start:'2026-11-20T23:30:00Z',end:'2026-11-21T01:00:00Z',location:{name:'Fixture room'},description:'Review the carousel and message.',food:false,revision:1,campaign:{feed:{enabled:true,daysBefore:7,time:'12:00'},story:{enabled:true,daysBefore:3,time:'12:00'},groupme:{enabled:true,announce:true}},status:{feed:'pending',story:'pending',groupme:'pending'},results:{feed:{images:[1,2,3].map(i=>`https://swipe.example/${i}.png`)}},log:[]};
+  const campaign={id:'preview-swipe-fixture',year:'2026-27',type:'gbm',title:'Swipe preview fixture',start:'2026-11-20T23:30:00Z',end:'2026-11-21T01:00:00Z',location:{name:'Fixture room'},description:'Review the carousel and message.',food:false,revision:1,campaign:{feed:{enabled:true,daysBefore:7,time:'12:00'},story:{enabled:true,daysBefore:3,time:'12:00'},groupme:{enabled:true,announce:true}},status:{feed:'pending',story:'pending',groupme:'pending'},results:{feed:{caption:Array.from({length:25},(_,i)=>`Recorded caption line ${i+1}: meet and build together.`).join('\n'),images:[1,2,3].map(i=>`https://swipe.example/${i}.png`)}},log:[]};
   await page.route('https://swipe.example/**',route=>route.fulfill({contentType:'image/png',body:images[Number(new URL(route.request().url()).pathname.slice(1,2))-1]}));
   await page.route('**/config/chapter.json',async route=>{const r=await route.fetch(),c=await r.json();c.integrations.groupme={...c.integrations.groupme,enabled:true,mode:'bot'};return route.fulfill({json:c});});
   await page.route('**/data/archive-index.json',route=>route.fulfill({json:{campaigns:[campaign]}}));
@@ -35,7 +35,12 @@ export async function checkPreviewPane(browser,base){
   const detail=page.locator('#detail-instagram-preview .ig-post'),detailMedia=detail.locator('.ig-media');
   await detail.locator('.ig-detail-image > img').evaluate(img=>img.decode());
   assert.equal(await position(detail).textContent(),'1 / 3');
+  await detail.locator('.ig-caption').evaluate(el=>{el.scrollTop=70;window.previewCaptionScroll=el.scrollTop;window.previewCaptionText=el.querySelector('.ig-caption-text').firstChild;});
+  await detail.locator('.ig-avatar').evaluate(el=>window.previewAvatar=el.firstChild);
   await swipe(page,detailMedia,-130);await page.waitForFunction(()=>document.querySelector('#detail-instagram-preview .ig-position').textContent==='2 / 3');assert.equal(await detail.locator('.ig-detail-image > img').getAttribute('src'),'https://swipe.example/2.png');
+  assert.equal(await detail.locator('.ig-caption').evaluate(el=>el.scrollTop===window.previewCaptionScroll&&el.querySelector('.ig-caption-text').firstChild===window.previewCaptionText),true,'Changing images preserves caption reading position');
+  assert.equal(await detail.locator('.ig-avatar').evaluate(el=>el.firstChild===window.previewAvatar),true,'Changing images does not reload the account avatar');
+  for(const selector of ['.ig-previous','.ig-next']){const box=await detail.locator(selector).boundingBox();assert.ok(box.width>=44&&box.height>=44,'Carousel controls have44px touch targets');}
   await swipe(page,detailMedia,-130);await page.waitForFunction(()=>document.querySelector('#detail-instagram-preview .ig-position').textContent==='3 / 3');
   await swipe(page,detailMedia,-130);assert.equal(await position(detail).textContent(),'3 / 3','last image does not overflow');
   await swipe(page,detailMedia,130);await page.waitForFunction(()=>document.querySelector('#detail-instagram-preview .ig-position').textContent==='2 / 3');
@@ -70,6 +75,23 @@ export async function checkPreviewPane(browser,base){
   await page.locator('#preview-dialog [data-preview-format=groupme]').click();assert.equal(await page.locator('#preview-dialog #groupme-preview-panel').isVisible(),true);
   assert.equal(await page.locator('#preview-dialog').evaluate(el=>el.scrollWidth<=el.clientWidth),true,'mobile preview has no horizontal overflow');
   await page.screenshot({path:'test-results/preview-pane/groupme-mobile.png'});
+  // Inspect every preview type at narrow-phone, tablet, and short-landscape sizes.
+  for(const [width,height]of [[320,640],[390,844],[768,1024],[844,390],[667,320]]){
+   await page.setViewportSize({width,height});
+   for(const format of ['feed','story','groupme']){
+    await page.locator(`#preview-dialog [data-preview-format=${format}]`).click();
+    await page.waitForFunction(format=>document.querySelector('#preview-dialog').dataset.format===format,format);
+    if(format!=='groupme'){await page.waitForFunction(()=>document.querySelector('#artwork-preview-frame').style.visibility==='visible');const mediaBox=await page.locator('.expanded-preview-stage').boundingBox();assert.ok(mediaBox.width>=(format==='feed'?150:90)&&mediaBox.height>=120,`${width}x${height} ${format}: artwork stays large enough to inspect`);}
+    const layout=await page.locator('#preview-dialog').evaluate(dialog=>{
+     const controls=[...dialog.querySelectorAll('.preview-dialog-heading button,.preview-dialog-heading select')].filter(el=>el.getClientRects().length);
+     return {fits:dialog.scrollWidth<=dialog.clientWidth,controls:controls.map(el=>{const r=el.getBoundingClientRect();const hit=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2);return {label:el.textContent.trim()||el.getAttribute('aria-label'),x:r.x,y:r.y,width:r.width,height:r.height,right:r.right,bottom:r.bottom,reachable:hit===el||el.contains(hit)};})};
+    });
+    assert.equal(layout.fits,true,`${width}x${height} ${format}: no horizontal overflow`);
+    for(const control of layout.controls){assert.ok(control.x>=0&&control.y>=0&&control.right<=width+1&&control.bottom<=height+1,`${width}x${height} ${format}: ${control.label} stays on screen`);assert.equal(control.reachable,true,`${width}x${height} ${format}: ${control.label} is not covered by the preview`);assert.ok(control.height>=44,`${width}x${height} ${format}: ${control.label} has44px height`);}
+    for(let i=0;i<layout.controls.length;i++)for(let j=i+1;j<layout.controls.length;j++){const a=layout.controls[i],b=layout.controls[j],overlap=Math.min(a.right,b.right)-Math.max(a.x,b.x)>1&&Math.min(a.bottom,b.bottom)-Math.max(a.y,b.y)>1;assert.equal(overlap,false,'Preview controls do not overlap');}
+   }
+   await page.screenshot({path:`test-results/preview-pane/polish-${width}-${height}.png`});
+  }
   assert.equal(requests,0);assert.deepEqual(errors,[]);
   console.log('Preview pane checks passed: GroupMe in shared right-hand/enlarged pane, icon labels, uploaded three-image swipe, detail swipe, bounds, keyboard navigation, vertical scroll, and mobile touch gestures.');
  }finally{await context.close();}

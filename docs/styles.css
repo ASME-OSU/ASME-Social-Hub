@@ -339,3 +339,128 @@ input::placeholder,textarea::placeholder{color:var(--muted);opacity:1}
 #preview-dialog-canvas.is-groupme-preview #groupme-preview-panel{max-width:760px}
 @media(max-width:699px){.preview-formats [data-preview-format]{gap:5px}.preview-formats [data-preview-format] svg{width:17px;height:17px}.preview-dialog-heading .preview-formats{gap:4px}.preview-dialog-heading .preview-formats button{padding:8px 6px;font-size:11px}#preview-dialog-canvas.is-groupme-preview{padding:10px}}
 .ig-media.ig-swipeable{touch-action:pan-y pinch-zoom;cursor:grab;user-select:none}.ig-media.ig-swipeable:active{cursor:grabbing}.ig-media.ig-swipeable:focus-visible{outline:3px solid #1769aa;outline-offset:-3px}.ig-media img{ -webkit-user-drag:none }
+
+/* Keep preview controls grouped and reachable on phones and short screens. */
+.preview-dialog-heading{flex-wrap:nowrap}
+.ig-preview-note{font-size:11px;line-height:1.4}
+.ig-media>.ig-carousel button{width:44px;height:44px;min-height:44px;display:grid;place-items:center;border:0;background:transparent;box-shadow:none;isolation:isolate}
+.ig-media>.ig-carousel button::before{content:'';position:absolute;inset:6px;border:1px solid #ddd;border-radius:50%;background:#fffffff0;box-shadow:0 1px 5px #0003;z-index:-1}
+.ig-media>.ig-carousel .ig-previous{left:4px}.ig-media>.ig-carousel .ig-next{right:4px}
+@media(max-width:699px){
+ .preview-dialog-heading{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto;align-items:center;gap:8px;padding:8px}
+ .preview-dialog-heading .preview-formats{grid-column:1;grid-row:1;display:flex;flex-direction:row;flex-wrap:nowrap;min-width:0;gap:4px}
+ .preview-dialog-heading .preview-formats button{flex:1 1 auto;min-width:44px;width:auto;padding:8px 4px;font-size:11px;gap:4px}
+ .preview-dialog-heading .preview-formats button span{white-space:nowrap}
+ .preview-dialog-heading .preview-formats svg{width:16px;height:16px}
+ .preview-zoom-label{grid-column:1/-1;grid-row:2;display:flex;flex-direction:row;align-items:center;gap:8px;margin:0;font-size:11px}
+ .preview-zoom-label span{position:static;width:auto;height:auto;overflow:visible;clip-path:none;white-space:normal}
+ .preview-zoom-label select{width:80px;min-height:44px;margin:0}
+ #close-preview{grid-column:2;grid-row:1;margin:0;min-height:44px;padding:8px 10px;font-size:12px}
+}
+@media(min-width:600px) and (max-height:500px){
+ #preview-dialog[open]{display:flex;flex-direction:column}
+ .preview-dialog-heading{display:flex;flex-direction:row;align-items:center;flex-wrap:nowrap;gap:8px;padding:8px;border-right:0;border-bottom:1px solid var(--line);flex-shrink:0;overflow:visible}
+ .preview-dialog-heading h2{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+ .preview-dialog-heading .preview-formats{display:flex;flex-direction:row;flex-wrap:nowrap;min-width:0;gap:6px}
+ .preview-dialog-heading .preview-formats button{width:auto;min-width:44px;min-height:44px;padding:8px;font-size:12px}
+ .preview-zoom-label{display:flex;flex-direction:row;align-items:center;gap:8px;margin:0;font-size:11px}
+ .preview-zoom-label span{position:static;width:auto;height:auto;overflow:visible;clip-path:none;white-space:normal}
+ .preview-zoom-label select{width:80px;min-height:44px;margin:0}
+ #close-preview{margin:0 0 0 auto;min-height:44px;padding:8px 10px;font-size:12px}
+ #preview-dialog-canvas{flex:1;order:1;min-height:0}
+ #preview-dialog-status{order:2;padding:6px 10px;flex-shrink:0}
+}
+@media(min-width:600px) and (max-height:500px){
+ #preview-dialog-canvas>.ig-post:not(.ig-story-only){display:grid;grid-template-columns:auto 300px;grid-template-rows:62px minmax(0,1fr)}
+ #preview-dialog-canvas>.ig-post:not(.ig-story-only)>.ig-media{grid-column:1;grid-row:1/3}
+ #preview-dialog-canvas>.ig-post:not(.ig-story-only)>.ig-header{grid-column:2;grid-row:1;border-left:1px solid #eee}
+ #preview-dialog-canvas>.ig-post:not(.ig-story-only)>.ig-body{grid-column:2;grid-row:2;display:flex;flex-direction:column;min-height:0;border-left:1px solid #eee}
+ #preview-dialog-canvas>.ig-post:not(.ig-story-only) .ig-caption{max-height:none;flex:1;min-height:0;order:0;padding-top:16px}
+ #preview-dialog-canvas>.ig-post:not(.ig-story-only) .ig-actions{order:1;flex-shrink:0;border-top:1px solid #eee;margin-top:8px}
+ #preview-dialog-canvas>.ig-post:not(.ig-story-only) .ig-preview-note{order:2;margin-top:0;flex-shrink:0}
+}
+
+/* Dashboard hierarchy: keep publishing health visible and campaigns within reach. */
+#view-dashboard .page-heading{margin-bottom:24px;gap:24px}
+#view-dashboard .page-heading h1{font-size:clamp(36px,3.5vw,48px);line-height:1.15}
+#view-dashboard .page-heading p{margin-bottom:0;max-width:680px}
+#view-dashboard .eyebrow{margin-bottom:12px}
+#view-dashboard .section-heading{margin:28px 0 18px}
+#view-dashboard .stats{margin:18px 0 24px}
+#view-dashboard .stat{padding:14px 18px;min-height:0;display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center}
+#view-dashboard .stat strong{font-size:28px;line-height:1.2;margin:0;grid-column:2;grid-row:1/3}
+#view-dashboard .stat-label{font-size:12px;letter-spacing:.03em}
+#view-dashboard .stat small{font-size:12px;line-height:1.5}
+.dispatcher-health{background:var(--paper);padding:16px 20px;border-radius:4px;border-left:4px solid var(--steel);margin:0}
+.dispatcher-health[data-state="stale"],.dispatcher-health[data-state="unknown"]{border-left-color:var(--signal)}
+.dispatcher-summary{display:flex;justify-content:space-between;align-items:start;gap:16px}
+.dispatcher-summary h2{font:600 15px/1.5 var(--font-body);margin:0 0 2px}
+.dispatcher-summary #dispatcher-last-run{font-size:12px;color:var(--muted);margin:0}
+.dispatcher-summary a{font-size:13px;min-height:44px;display:inline-flex;align-items:center;white-space:nowrap}
+.dispatcher-health #dispatcher-warning{margin:8px 0 0;font-size:13px;font-weight:500}
+.dispatcher-controls{margin-top:8px;border-top:1px solid var(--line)}
+.dispatcher-controls summary{font-size:13px;font-weight:600;cursor:pointer;min-height:44px;padding:12px 0;width:fit-content}
+.dispatcher-controls p{font-size:13px;color:var(--muted);max-width:720px;margin:0 0 12px}
+.dispatcher-buttons{display:flex;gap:10px;flex-wrap:wrap}
+.dispatcher-buttons #dispatcher-preview{background:var(--ice);font-weight:650}
+#dispatcher-control-status{margin:8px 0 0;padding:10px 12px;background:var(--ice);font-size:13px}
+#dispatcher-control-status.control-error{border-left:3px solid var(--scarlet);background:var(--scarlet-tint);font-weight:600}
+.header-connection-pill.limited{border-color:var(--signal);background:var(--ice);color:var(--ink)}
+.header-connection-pill.limited .header-dot{background:var(--signal)}
+.header-sidebar-toggle,.theme-toggle,.header-connection-pill,.mobile-social-menu>summary{min-height:44px}
+.header-sidebar-toggle,.theme-toggle{min-width:44px}
+.sidebar-disconnected-badge .connect-shortcut-link{display:inline-flex;align-items:center;min-height:44px}
+@media(min-width:1000px){
+ .campaign-grid.few-campaigns{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .campaign-grid.few-campaigns:has(> :only-child){grid-template-columns:minmax(0,820px)}
+ .campaign-grid.few-campaigns>.campaign-card:only-child{display:grid;grid-template-columns:200px minmax(0,1fr)}
+ .campaign-grid.few-campaigns>.campaign-card:only-child .card-art{height:100%;min-height:280px;grid-row:1/3}
+ .campaign-grid.few-campaigns>.campaign-card:only-child .card-body{padding:22px 24px}
+ .campaign-grid.few-campaigns>.campaign-card:only-child .card-footer{grid-column:2;padding:12px 24px}
+}
+@media(max-width:699px){
+ #view-dashboard .page-heading{margin-bottom:20px}
+ #view-dashboard .stats{grid-template-columns:1fr 1fr;margin:16px 0 24px}
+ #view-dashboard .stat{padding:12px;display:flex;flex-direction:column;align-items:start;gap:4px}
+ #view-dashboard .stat strong{font-size:28px;order:-1}
+ #view-dashboard .stat small{display:none}
+ .dispatcher-health{padding:12px 14px}
+ .dispatcher-summary{gap:8px;flex-wrap:wrap}
+ .dispatcher-summary>div{flex:1;min-width:160px}
+ .dispatcher-summary h2{font-size:14px}
+ .dispatcher-summary a{min-height:44px}
+ .dispatcher-buttons{display:grid;grid-template-columns:1fr;width:100%}
+ .header-connection-pill{max-width:140px}
+ .theme-toggle{padding:8px 10px}
+}
+.mobile-social-menu>summary{min-width:44px}
+/* Calendar rows keep the event text together, with actions on their own row on phones. */
+.calendar-suggestion-controls{background:var(--paper)}
+.calendar-suggestion-controls label{flex-wrap:wrap}
+.calendar-suggestion-list .suggestion{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:18px;padding:16px 20px;align-items:center}
+.calendar-suggestion-list .suggestion>div:nth-child(2){min-width:0}
+.calendar-suggestion-list .suggestion strong{font-size:15px;overflow-wrap:anywhere}
+.calendar-suggestion-list .suggestion p{font-size:13px;margin:4px 0 0}
+.calendar-suggestion-list .suggestion button{margin:0;border-color:transparent;background:transparent;padding:10px 12px;font-size:13px}
+.calendar-suggestion-list .suggestion button:hover{background:var(--ice);text-decoration:underline}
+.calendar-suggestion-list .date-box{min-width:0;font-size:30px}
+.calendar-date-note{background:var(--ice);border-left:3px solid var(--signal);padding:12px 16px;line-height:1.6}
+@media(max-width:699px){
+ .calendar-suggestion-list .suggestion{grid-template-columns:42px minmax(0,1fr);gap:8px 12px;padding:16px 12px}
+ .calendar-suggestion-list .suggestion button{grid-column:2;justify-self:start;padding:10px 0;min-width:44px}
+ .calendar-suggestion-list .suggestion strong{font-size:14px}
+ .calendar-suggestion-controls>label{width:100%}
+ .calendar-suggestion-controls select{width:100%!important}
+}
+@media(max-width:699px){
+ /* A floating create button covered calendar details and row actions. */
+ #view-dashboard #new-campaign{position:static;display:inline-flex;align-items:center;margin-top:16px;box-shadow:none;min-height:48px}
+}
+.sidebar-foot .dot.limited{background:var(--signal)}
+@media(max-width:699px){
+ #view-dashboard .preview-banner{padding:8px 14px;margin-bottom:20px}
+ #view-dashboard .preview-banner>div,#view-dashboard .preview-banner>.preview-icon{display:none}
+ #view-dashboard .preview-banner button{margin:0;min-height:44px;padding:8px 0}
+ #view-dashboard .section-heading{flex-wrap:wrap}
+ #view-dashboard .section-heading #timezone-label{max-width:none;text-align:left;font-size:12px}
+}
