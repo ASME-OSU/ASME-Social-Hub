@@ -8,7 +8,7 @@ const styles=new Set(['blueprint','editorial','refined-blueprint','editorial-pos
 const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const imageURL=value=>{try{const url=new URL(value);return url.protocol==='https:'&&!url.username&&!url.password?url.href:'';}catch{return '';}};
 
-export function createFlyerPreview({form,getConfig,getExisting,getUpload,getStoryDesign,getFeedUpload=getUpload,getFeedInfo=()=>({count:1,index:0})}) {
+export function createFlyerPreview({form,getConfig,getExisting,getUpload,getStoryDesign,getFeedUpload=getUpload,getFeedInfo=()=>({count:1,index:0}),refreshGroupMe=()=>null}) {
   const details=document.querySelector('#artwork-preview'),frame=document.querySelector('#artwork-preview-frame'),inlineStage=frame.parentElement,status=document.querySelector('#artwork-preview-status'),caption=document.querySelector('#artwork-preview-caption');
   const expanded=document.querySelector('#preview-dialog'),canvas=document.querySelector('#preview-dialog-canvas'),expandedStage=document.querySelector('.expanded-preview-stage'),zoom=document.querySelector('#preview-zoom');
   const inlineCanvas=document.querySelector('.inline-preview-canvas');
@@ -18,7 +18,18 @@ export function createFlyerPreview({form,getConfig,getExisting,getUpload,getStor
   let stage=inlineStage,opener=null;
   const logoCache=new Map();
   const templates=new Map();let format='feed',previewHeight=1350,timer,revision=0;
+  function groupMePanel(){return document.querySelector('#groupme-preview-panel');}
+  function syncPreviewSurface(){
+    details.dataset.format=format;expanded.dataset.format=format;
+    const groupme=format==='groupme';
+    inlinePost.root.hidden=groupme;expandedPost.root.hidden=groupme;
+    inlineCanvas.classList.toggle('is-groupme-preview',groupme);canvas.classList.toggle('is-groupme-preview',groupme);
+    document.querySelector('.preview-zoom-label').hidden=groupme;
+    canvas.setAttribute('aria-label',groupme?'GroupMe announcement preview; scroll to read':'Enlarged artwork; scroll to inspect at 100 percent');
+    const panel=groupMePanel();if(panel){const destination=expanded.open?canvas:inlineCanvas;if(panel.parentElement!==destination)destination.append(panel);panel.hidden=!groupme;}
+  }
   function resize(){
+    syncPreviewSurface();if(format==='groupme')return;
     const height=previewHeight,story=format==='story',post=expanded.open?expandedPost:inlinePost,slot=expanded.open?canvas:inlineCanvas;
     inlinePost.setStory(story);expandedPost.setStory(story);frame.style.height=`${height}px`;
     const sideBySide=expanded.open&&!story&&matchMedia('(min-width:700px)').matches;
@@ -34,10 +45,10 @@ export function createFlyerPreview({form,getConfig,getExisting,getUpload,getStor
   function openPreview(trigger=document.activeElement){
     clearTimeout(timer);opener=trigger;details.open=true;
     if(!expanded.open){expanded.showModal();stage=expandedStage;stage.hidden=false;stage.append(frame);}
-    document.querySelector('#preview-dialog-title').textContent=format==='story'?'Story preview':'Feed preview';resize();update();
+    document.querySelector('#preview-dialog-title').textContent=format==='groupme'?'GroupMe preview':format==='story'?'Story preview':'Feed preview';resize();update();
   }
   function closePreview(){if(expanded.open)expanded.close();}
-  expanded.addEventListener('close',()=>{inlineStage.append(frame);stage=inlineStage;resize();if(document.querySelector('#editor').open){opener?.focus();update();}});
+  expanded.addEventListener('close',()=>{inlineStage.append(frame);stage=inlineStage;const panel=groupMePanel();if(panel)inlineCanvas.append(panel);resize();if(document.querySelector('#editor').open){opener?.focus();update();}});
   document.querySelector('#enlarge-preview').addEventListener('click',event=>openPreview(event.currentTarget));
   document.querySelector('#mobile-preview').addEventListener('click',event=>openPreview(event.currentTarget));
   document.querySelector('#close-preview').addEventListener('click',closePreview);
@@ -45,6 +56,16 @@ export function createFlyerPreview({form,getConfig,getExisting,getUpload,getStor
   async function template(name){if(!templates.has(name))templates.set(name,fetch(`./templates/${name}.html`).then(response=>{if(!response.ok)throw Error('Preview could not load. Try again when your connection is available.');return response.text();}).catch(error=>{templates.delete(name);throw error;}));return templates.get(name);}
   async function update(){
     const current=++revision,config=getConfig();if(!config||!document.querySelector('#editor').open||!details.open)return;
+    if(format==='groupme'){
+      refreshGroupMe();syncPreviewSurface();
+      status.textContent='Review the exact bot message. Previewing does not send an announcement.';
+      caption.textContent='GroupMe announcement preview';
+      const summary=groupMePanel()?.querySelector('.gm-message-text')?.textContent||'Choose the event details to preview the GroupMe announcement.';
+      document.querySelector('#artwork-preview-summary').textContent=summary;document.querySelector('#preview-dialog-summary').textContent=summary;
+      document.querySelector('#preview-dialog-status').textContent=status.textContent;document.querySelector('#preview-dialog-title').textContent='GroupMe preview';
+      resize();return;
+    }
+    syncPreviewSurface();
     const f=form.elements,channel=format,label=channel==='feed'?'Feed':'Story',height=channel==='story'?1920:1350;
     previewHeight=height;resize();stage.hidden=false;frame.style.visibility='hidden';status.textContent='Preparing preview…';
     try{
@@ -100,8 +121,8 @@ export function createFlyerPreview({form,getConfig,getExisting,getUpload,getStor
   form.addEventListener('input',artworkChange);form.addEventListener('change',artworkChange);
   details.addEventListener('toggle',()=>{if(!details.open&&matchMedia('(min-width:960px)').matches){details.open=true;return;}if(details.open)update();});
   matchMedia('(min-width:960px)').addEventListener('change',event=>{if(event.matches)details.open=true;});
-  function setFormat(value){clearTimeout(timer);format=value;document.querySelectorAll('[data-preview-format]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.previewFormat===format)));update();}
+  function setFormat(value){if(!['feed','story','groupme'].includes(value))return;clearTimeout(timer);format=value;document.querySelectorAll('[data-preview-format]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.previewFormat===format)));update();}
   document.querySelectorAll('[data-preview-format]').forEach(button=>button.addEventListener('click',()=>setFormat(button.dataset.previewFormat)));
   document.querySelector('#editor').addEventListener('close',()=>{++revision;clearTimeout(timer);closePreview();frame.onload=null;frame.removeAttribute('srcdoc');status.textContent='';});
-  return {update,schedule,showFeed:()=>setFormat('feed'),showStory:()=>{setFormat('story');if(matchMedia('(max-width:959px)').matches&&document.querySelector('#editor').open)openPreview();}};
+  return {update,schedule,getFormat:()=>format,showGroupMe:()=>setFormat('groupme'),showFeed:()=>setFormat('feed'),showStory:()=>{setFormat('story');if(matchMedia('(max-width:959px)').matches&&document.querySelector('#editor').open)openPreview();}};
 }

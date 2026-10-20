@@ -323,3 +323,19 @@ input::placeholder,textarea::placeholder{color:var(--muted);opacity:1}
 
 /* Keep late-warning styling compatible with the live dashboard markup. */
 .schedule-warning.late,.schedule-warning[data-state=late]{color:var(--muted)}.schedule-warning:before{content:'⚠ '}
+
+/* Feed, Story, and GroupMe share the same preview pane and enlarged viewer. */
+.preview-formats [data-preview-format]{display:inline-flex;align-items:center;justify-content:center;gap:7px}
+.preview-formats [data-preview-format] svg{width:20px;height:20px;flex:none}
+.inline-preview-canvas.is-groupme-preview{display:flex;align-items:stretch;justify-content:center;overflow:auto;overscroll-behavior:contain}
+#groupme-preview-panel{min-width:0;width:100%;max-width:600px;align-self:stretch;padding:0}
+#groupme-message-preview{height:100%;min-height:0}
+#groupme-preview-panel .gm-preview{margin:0;height:100%;display:flex;flex-direction:column;min-height:0}
+#groupme-preview-panel .gm-conversation{flex:1;min-height:0;overflow:auto;align-items:stretch}
+#groupme-preview-panel .gm-message-column{min-height:0;display:flex;flex-direction:column}
+#groupme-preview-panel .gm-message{max-height:100%;flex:0 1 auto;min-height:80px}
+#groupme-preview-panel .gm-preview-heading,#groupme-preview-panel .gm-preview-footer,#groupme-preview-panel .gm-error{flex-shrink:0}
+#preview-dialog-canvas.is-groupme-preview{display:flex;justify-content:center;align-items:stretch;padding:16px}
+#preview-dialog-canvas.is-groupme-preview #groupme-preview-panel{max-width:760px}
+@media(max-width:699px){.preview-formats [data-preview-format]{gap:5px}.preview-formats [data-preview-format] svg{width:17px;height:17px}.preview-dialog-heading .preview-formats{gap:4px}.preview-dialog-heading .preview-formats button{padding:8px 6px;font-size:11px}#preview-dialog-canvas.is-groupme-preview{padding:10px}}
+.ig-media.ig-swipeable{touch-action:pan-y pinch-zoom;cursor:grab;user-select:none}.ig-media.ig-swipeable:active{cursor:grabbing}.ig-media.ig-swipeable:focus-visible{outline:3px solid #1769aa;outline-offset:-3px}.ig-media img{ -webkit-user-drag:none }

@@ -17,7 +17,7 @@ const $=s=>document.querySelector(s), esc=s=>String(s??'').replace(/[&<>"']/g,c=
 let artworkCampaign=null;
 let config, campaigns=[], candidates=[], calendarChanges=[], editing=null, source=null, token='', repo={}, saving=false, connecting=false, deleting=false;
 const form=$('#campaign-form'), settings=$('#settings-form'), preferences=$('#channel-defaults-form');
-const artworkPreview=createFlyerPreview({form,getConfig:()=>config,getExisting:()=>({...artworkCampaign,flyerUrl:flyerUploads.first}),getUpload:()=>flyerUploads.first,getStoryDesign:()=>storyControls.getDesign(),getFeedUpload:()=>flyerUploads.feed,getFeedInfo:()=>({count:flyerUploads.count,index:flyerUploads.selected})});
+const artworkPreview=createFlyerPreview({form,getConfig:()=>config,getExisting:()=>({...artworkCampaign,flyerUrl:flyerUploads.first}),getUpload:()=>flyerUploads.first,getStoryDesign:()=>storyControls.getDesign(),getFeedUpload:()=>flyerUploads.feed,getFeedInfo:()=>({count:flyerUploads.count,index:flyerUploads.selected}),refreshGroupMe:refreshGroupMePreview});
 const storyControls=createStoryControls({form,getConfig:()=>config,getExisting:()=>({...artworkCampaign,flyerUrl:flyerUploads.first}),getUpload:()=>flyerUploads.first,onChange:story=>story?artworkPreview.showStory():artworkPreview.schedule()});
 const feedImageGuard=createFeedImageGuard({form,getSources:()=>flyerUploads.sources});
 const flyerUploads=createFlyerUploads({form,onChange:event=>{refreshGroupMePreview();storyControls.refresh();feedImageGuard.refresh();if(event.selected)artworkPreview.showFeed();else artworkPreview.schedule();}});
@@ -67,14 +67,17 @@ function formCampaignId(){const f=form.elements;return editing?.id||`${f.start.v
 function refreshGroupMePreview(){
  if(!config||!$('#editor').open)return;
  let panel=$('#groupme-preview-panel');
- if(!panel){panel=document.createElement('section');panel.id='groupme-preview-panel';panel.className='groupme-preview-panel';panel.innerHTML='<div id="groupme-message-preview"></div>';$('#schedule-preview').after(panel);}
- panel.hidden=!groupmeEnabled()||!groupmeBotMode();if(panel.hidden)return;
+ if(!panel){panel=document.createElement('section');panel.id='groupme-preview-panel';panel.className='groupme-preview-panel';panel.innerHTML='<div id="groupme-message-preview"></div>';$('.inline-preview-canvas').append(panel);}
+ const available=groupmeEnabled()&&groupmeBotMode();
+ document.querySelectorAll('[data-preview-format=groupme]').forEach(button=>button.hidden=!available);
+ panel.hidden=!available||artworkPreview.getFormat()!=='groupme';if(!available)return panel;
  const f=form.elements;
  try{
   const draft={...(editing||{}),id:formCampaignId(),year:f.year.value,title:f.title.value.trim()||'Your event title',type:f.type.value,description:f.description.value.trim(),start:f.start.value?fromLocal(f.start.value,config.timezone):'',location:{name:f.location.value.trim()},food:f.food.checked,advertising:readAdvertising(),images:{feed:f.feedImage.value.trim()},campaign:{...editing?.campaign,groupme:{enabled:f.groupmeAnnounce.checked,announce:f.groupmeAnnounce.checked}}};
   const first=flyerUploads.first;if(first&&/^https:\/\//.test(first))draft.flyerUrl=first;else{delete draft.flyerUrl;delete draft.flyerUrls;}
   if(!groupMePreview)groupMePreview=mountGroupMePreview($('#groupme-message-preview'),draft,config,{useRecorded:false,pendingFlyerUpload:flyerUploads.hasNew});else groupMePreview.update(draft,config,{useRecorded:false,pendingFlyerUpload:flyerUploads.hasNew});
  }catch(error){$('#groupme-message-preview').textContent=error.message;groupMePreview=null;}
+ return panel;
 }
 form.addEventListener('input',()=>{if($('#editor').open)refreshGroupMePreview();});
 form.addEventListener('change',()=>{if($('#editor').open)refreshGroupMePreview();});
