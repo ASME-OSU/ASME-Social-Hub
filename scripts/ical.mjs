@@ -3,6 +3,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import {pathToFileURL} from 'node:url';
 import ical from 'node-ical';
+import {calendarChange} from '../docs/calendar-changes.mjs';
 const text = value => value == null ? '' : typeof value === 'object' && 'val' in value ? String(value.val || '') : String(value);
 const iso = value => value && !Number.isNaN(new Date(value).getTime()) ? new Date(value).toISOString() : '';
 function eventDateIso(value, allDay) {
@@ -34,7 +35,7 @@ export async function refreshCandidates({root=process.cwd(),fetchImpl=fetch,now=
   for (const year of await fs.readdir(campaignRoot).catch(()=>[])) for(const name of await fs.readdir(path.join(campaignRoot,year)).catch(()=>[])) if(name.endsWith('.json')) {
     const c=JSON.parse(await fs.readFile(path.join(campaignRoot,year,name),'utf8')); if(c.source?.kind==='ical') used.set(c.source.uid,c);
   }
-  const result={generatedAt:now.toISOString(),events:events.filter(e=>!used.has(e.source.uid)),changes:events.filter(e=>used.has(e.source.uid)&&['title','start','end','description'].some(k=>e[k]!==used.get(e.source.uid)[k])).map(e=>({source:e.source,title:e.title,updated:e.updated}))};
+  const result={generatedAt:now.toISOString(),events:events.filter(e=>!used.has(e.source.uid)),changes:events.filter(e=>used.has(e.source.uid)).map(e=>calendarChange(e,used.get(e.source.uid))).filter(Boolean)};
   await fs.mkdir(path.join(root,'data'),{recursive:true}); await fs.writeFile(path.join(root,'data/candidates.json'),JSON.stringify(result,null,2)+'\n'); return result;
 }
 if(process.argv[1] && import.meta.url===pathToFileURL(process.argv[1]).href) refreshCandidates().then(r=>console.log(`Refreshed ${r.events.length} calendar suggestions.`)).catch(()=>{console.error('Calendar refresh failed; check feed URL and configuration.');process.exitCode=1;});
