@@ -1,0 +1,18 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Chapter Campaign Scheduler//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:2026-10-22-asme-scheduling-buckeyelink-tour@chapter-campaigns
+DTSTAMP:20261022T213000Z
+DTSTART:20261022T213000Z
+DTEND:20261022T223000Z
+SUMMARY:ASME Scheduling/BuckeyeLink Tour
+DESCRIPTION:Want to learn more about scheduling and degree planning? Come 
+ to our info session! See flyer for details. ⚙️🎓
+LOCATION:Scott Laboratory E141
+STATUS:CONFIRMED
+SEQUENCE:1
+END:VEVENT
+END:VCALENDAR
