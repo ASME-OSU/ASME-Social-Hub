@@ -38,5 +38,5 @@ export function createFlyerUploads({form,onChange}){
   for(const item of items)if(item.file&&!item.url){const bytes=new Uint8Array(await item.file.arrayBuffer()),png=[137,80,78,71,13,10,26,10].every((v,i)=>bytes[i]===v),jpeg=bytes[0]===255&&bytes[1]===216&&bytes[2]===255;if((item.file.type==='image/png'&&!png)||(item.file.type==='image/jpeg'&&!jpeg))throw Error('An image does not match its JPEG or PNG format. Remove it and choose a valid image.');}
   const urls=[];for(const [index,item]of items.entries()){if(!item.url)item.url=await upload(item.file,index);urls.push(item.url);}return urls;
  }
- return {reset,save,validate:async()=>{await pending;if(selectionError)throw Error(selectionError);},get first(){return source(items[0]);},get feed(){return source(items[selected]||items[0]);},get count(){return items.length;},get selected(){return selected;},get sources(){return items.map(source);},get hasNew(){return items.some(x=>x.file&&!x.url);}};
+ return {reset,save,validate:async()=>{await pending;if(selectionError)throw Error(selectionError);},get firstFile(){return items[0]?.file||null;},get first(){return source(items[0]);},get feed(){return source(items[selected]||items[0]);},get count(){return items.length;},get selected(){return selected;},get sources(){return items.map(source);},get hasNew(){return items.some(x=>x.file&&!x.url);}};
 }

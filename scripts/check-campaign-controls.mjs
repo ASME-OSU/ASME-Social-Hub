@@ -88,6 +88,7 @@ export async function checkCampaignControls(browser,base) {
   for(const [name,value]of Object.entries({title:'Schedule warning fixture',start:'2026-10-25T18:00',end:'2026-10-25T19:00',location:'Fixture room'}))await page.locator(`[name=${name}]`).fill(value);
   await page.locator('[name=description]').fill(campaign.description);
   await page.waitForFunction(()=>document.querySelector('.inline-preview-canvas>.ig-post .ig-caption-text')?.textContent.includes('Caption line 26')&&document.querySelector('#artwork-preview-frame').style.visibility==='visible');
+  await page.locator('#toggle-preview-caption').click();
   const inlinePost=page.locator('.inline-preview-canvas>.ig-post');
   assert.equal(await inlinePost.locator('.ig-account strong').textContent(),config.instagramHandle.replace(/^@/,''));
   assert.ok(await inlinePost.locator('.ig-caption').evaluate(element=>element.scrollHeight>element.clientHeight));

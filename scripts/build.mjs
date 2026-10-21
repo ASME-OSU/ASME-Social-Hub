@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {readCampaigns} from './core.mjs';
 import {writeCalendarFiles} from './ics.mjs';
+import {writeEventPages} from './event-pages.mjs';
 import {writePostingHealth} from './posting-health.mjs';
 
 export async function build(root = process.cwd()) {
@@ -20,6 +21,7 @@ export async function build(root = process.cwd()) {
   await writeFile(resolve(output, '.nojekyll'), '');
   const chapter = JSON.parse(await readFile(resolve(root, 'config/chapter.json'), 'utf8'));
   if (!chapter.chapterName) throw new Error('chapterName is required');
+  await writeEventPages(root,campaigns,chapter);
   await writePostingHealth(root,{campaigns,config:chapter});
   console.log('Pages site prepared in docs/');
 }

@@ -25,7 +25,7 @@ export function flyerAdvertising(campaign, config, format='feed') {
 export function flyerHtml(template, campaign, config, format, assets = {}) {
   const date = new Date(campaign.start), tz = config.timezone;
   validateStoryDesign(campaign.storyDesign);
-  const image = assets.flyer?.startsWith('blob:')?escape(assets.flyer):safeUrl(assets.flyer||campaign.flyerUrl);
+  const image = (assets.flyer?.startsWith('blob:')||(config.previewOnly===true&&/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(assets.flyer||'')))?escape(assets.flyer):safeUrl(assets.flyer||campaign.flyerUrl);
   if(format==='feed'&&image)return `<!doctype html><html><head><style>*{box-sizing:border-box;margin:0}html,body{width:1080px;background:#fff}img.uploaded-feed{display:block;width:1080px;height:auto}</style></head><body><img class="flyer uploaded-feed" src="${image}" alt="Uploaded flyer"></body></html>`;
   const logo = (assets.logoResolved?assets.logo:assets.logo || safeUrl(config.brand?.logoFlyer || config.brand?.logoMark || config.brand?.logoReverse || config.brand?.logo));
   const advertising=flyerAdvertising(campaign,config,format);
