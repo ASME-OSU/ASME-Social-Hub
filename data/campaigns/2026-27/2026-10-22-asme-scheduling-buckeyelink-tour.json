@@ -55,7 +55,7 @@
   "revision": 1,
   "cancelled": false,
   "status": {
-    "feed": "pending",
+    "feed": "done",
     "story": "pending",
     "groupme": "pending"
   },
@@ -68,12 +68,20 @@
       ],
       "caption": "ASME Scheduling/BuckeyeLink Tour\n\nWant to learn more about scheduling and degree planning? Come to our info session! See flyer for details. ⚙️🎓\n\nThursday, October 22, 2026 at 5:30 PM\nScott Laboratory E141\n\n#ASME #Engineering #OhioState",
       "containerId": "18431418505198294",
-      "publishAttemptedAt": "2026-10-21T14:59:17.343Z"
+      "publishAttemptedAt": "2026-10-21T14:59:17.343Z",
+      "mediaId": "17907468615666355",
+      "postedAt": "2026-10-21T14:59:17.343Z"
     },
     "story": {},
     "groupme": {},
     "insights": []
   },
-  "log": [],
+  "log": [
+    {
+      "at": "2026-10-21T14:59:17.343Z",
+      "channel": "feed",
+      "message": "Published"
+    }
+  ],
   "flyerUrl": "https://raw.githubusercontent.com/ASME-OSU/ASME-Social-Hub/main/assets/uploads/2026-10-22-asme-scheduling-buckeyelink-tour-1792546874319-1.png"
 }
