@@ -28,7 +28,7 @@ export function groupMePreviewContent(campaign,config,{useRecorded=true,pendingF
 
 export function mountGroupMePreview(container,campaign,config,options={}) {
   const root=document.createElement('section');root.className='gm-preview';root.setAttribute('aria-label','GroupMe announcement preview');
-  root.innerHTML='<div class="gm-preview-heading"><strong>GroupMe message preview</strong><span class="gm-status"></span></div><div class="gm-conversation"><span class="gm-avatar" aria-hidden="true"></span><div class="gm-message-column"><div class="gm-bot-heading"><strong class="gm-bot-name"></strong><span class="gm-bot-badge">BOT</span></div><div class="gm-message" role="region" tabindex="0" aria-label="GroupMe announcement; scroll to read"><span class="gm-message-text"></span></div></div></div><div class="gm-preview-footer"><p class="gm-note"></p><span class="gm-count"></span></div><p class="gm-error" role="status" hidden></p>';
+  root.innerHTML='<div class="gm-preview-heading"><strong>GroupMe message preview</strong><span class="gm-status"></span></div><div class="gm-conversation"><div class="gm-message-column"><div class="gm-bot-heading"><strong class="gm-bot-name"></strong><span class="gm-bot-badge">BOT</span></div><div class="gm-message" role="region" tabindex="0" aria-label="GroupMe announcement; scroll to read"><span class="gm-message-text"></span></div></div></div><div class="gm-preview-footer"><p class="gm-note"></p><span class="gm-count"></span></div><p class="gm-error" role="status" hidden></p>';
   let currentOptions=options;
   function update(nextCampaign=campaign,nextConfig=config,nextOptions=currentOptions) {
     campaign=nextCampaign;config=nextConfig;currentOptions=nextOptions;
@@ -37,8 +37,6 @@ export function mountGroupMePreview(container,campaign,config,options={}) {
     root.querySelector('.gm-message').hidden=!content.text;
     root.querySelector('.gm-count').textContent=content.text?`${content.count} / 1000 characters`:'';
     const error=root.querySelector('.gm-error');error.textContent=content.error;error.hidden=!content.error;
-    const avatar=root.querySelector('.gm-avatar');
-    if(avatar.dataset.source!==content.avatar){avatar.dataset.source=content.avatar;avatar.replaceChildren();if(content.avatar){const image=document.createElement('img');image.alt='';image.src=content.avatar;image.addEventListener('error',()=>{avatar.textContent=content.name.slice(0,1).toUpperCase();},{once:true});avatar.append(image);}else avatar.textContent=content.name.slice(0,1).toUpperCase();}
     return content;
   }
   container.replaceChildren(root);update(campaign,config,options);return {root,update};
