@@ -96,6 +96,12 @@ export async function checkPreviewPane(browser,base){
      const controls=[...dialog.querySelectorAll('.preview-dialog-heading button,.preview-dialog-heading select')].filter(el=>el.getClientRects().length&&getComputedStyle(el).visibility!=='hidden');
      return {fits:dialog.scrollWidth<=dialog.clientWidth,controls:controls.map(el=>{const r=el.getBoundingClientRect();const hit=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2);return {label:el.textContent.trim()||el.getAttribute('aria-label'),x:r.x,y:r.y,width:r.width,height:r.height,right:r.right,bottom:r.bottom,reachable:hit===el||el.contains(hit)};})};
     });
+    const centered=await page.locator('#preview-dialog').evaluate(dialog=>{const d=dialog.getBoundingClientRect(),tabs=dialog.querySelector('.preview-formats').getBoundingClientRect();return Math.abs((tabs.left+tabs.right)-(d.left+d.right))/2;});
+    assert.ok(centered<=1,`${width}x${height} ${format}: format tabs are centered on the preview`);
+    assert.equal(await page.locator('#expanded-toggle-preview-caption').isVisible(),true,'Caption control remains visible');
+    assert.equal(await page.locator('#preview-zoom').isVisible(),true,'Zoom control remains visible');
+    assert.equal(await page.locator('#expanded-toggle-preview-caption').isDisabled(),format!=='feed');
+    assert.equal(await page.locator('#preview-zoom').isDisabled(),format==='groupme');
     const toolbar=await page.locator('.preview-dialog-heading').evaluate(heading=>({height:heading.getBoundingClientRect().height,positions:[...heading.querySelectorAll('[data-preview-format],#close-preview,.preview-zoom-label,#expanded-toggle-preview-caption')].map(el=>{const r=el.getBoundingClientRect();return [r.x,r.y,r.width,r.height];})}));
     if(!toolbarBaseline)toolbarBaseline=toolbar;
     else assert.deepEqual(toolbar,toolbarBaseline,`${width}x${height}: toolbar slots stay fixed when selecting ${format}`);

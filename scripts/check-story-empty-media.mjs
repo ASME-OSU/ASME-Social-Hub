@@ -21,6 +21,7 @@ export async function checkStoryEmptyMedia(browser,base){
   for(const background of ['template','color-wash','blueprint-rings','folded-paper']){
    const campaign={title:'Meet the engineers',description:'Career stories, practical advice, and good conversations.',start:'2026-10-22T22:00:00Z',type:'industry-night',location:{name:'Scott Laboratory · E100'},food:true,storyDesign:{background}};
    await render.setContent(flyerHtml(template,campaign,config,'story',assets));await fitFlyer(render);
+   assert.equal(await render.locator('.cell').nth(1).locator('b').innerText(),'Scott Laboratory\nE100','Room starts on its own line without a stranded separator');
    assert.equal(await render.locator('svg,img').count(),0,'Text-only Story avoids arbitrary symbols and missing media');
    assert.equal(await render.locator('.hero').evaluate(hero=>getComputedStyle(hero).backgroundColor),'rgba(0, 0, 0, 0)','Text is the artwork, without an empty image-card background');
    assert.ok(await render.locator('.cell small').first().evaluate(label=>parseFloat(getComputedStyle(label).fontSize)>=26),'Date/location labels stay readable');

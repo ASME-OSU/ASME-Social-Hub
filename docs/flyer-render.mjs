@@ -46,6 +46,7 @@ export function flyerHtml(template, campaign, config, format, assets = {}) {
     flyer:image && format!=='story' ? `<img class="flyer" src="${image}" alt=""><div class="photo-overlay"></div>` : '',
     logo:logo ? `<img class="logo" src="${logo}" alt="">` : ''
   };
+  if(format==='story')values.location=values.location.replace(/\s*·\s*/g,'<br>');
   if(assets.previewMissingDate)Object.assign(values,{date:'Choose a date',day:'—',month:'DATE',shortDate:'Choose a date',time:'Choose a time'});
   if(format==='story'&&(!image||(campaign.storyDesign?.background&&campaign.storyDesign.background!=='template')))return renderStoryDesign({campaign,config,assets,values});
   return template.replace(/{{(\w+)}}/g,(_,key)=>values[key] ?? '');

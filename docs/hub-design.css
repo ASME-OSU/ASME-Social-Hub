@@ -66,32 +66,30 @@ button.primary{border-radius:2px;box-shadow:0 3px 0 #00000012}
 #editor .food{align-items:center;border-radius:4px;background:var(--canvas)}
 #editor .event-extras{border-radius:4px}
 @media(max-width:699px){#editor .editor-fields>section{padding-bottom:20px;margin-bottom:20px}#editor #form-timezone{margin-bottom:16px}#editor .editor-section-nav button{font-size:11px}}
+/* Center format tabs on the canvas and keep every toolbar action in place. */
+.preview-dialog-heading{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);grid-template-rows:auto auto;gap:6px 12px}
+.preview-dialog-heading h2{grid-column:1;grid-row:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.preview-dialog-heading .preview-formats{grid-column:2;grid-row:1;display:flex;flex-direction:row;flex-wrap:nowrap;justify-self:center;gap:5px}
+.preview-dialog-heading .preview-formats button{flex:1 0 auto;white-space:nowrap}
+.preview-formats button[aria-pressed=true]::before{content:none}
+.preview-options{grid-column:1/-1;grid-row:2;display:flex;align-items:center;justify-content:center;gap:12px}
+#expanded-toggle-preview-caption{width:124px;white-space:nowrap}
+.preview-dialog-heading .preview-zoom-label{display:flex;align-items:center;gap:6px;margin:0}
+.preview-options button:disabled,.preview-options select:disabled{opacity:.45;cursor:default}
+#close-preview{grid-column:3;grid-row:1;justify-self:end;margin:0}
 @media(max-width:699px){
- .preview-dialog-heading{display:grid;grid-template-columns:minmax(0,1fr) auto 44px;grid-template-rows:auto auto;gap:5px}
- .preview-dialog-heading .preview-formats{grid-column:1/3;grid-row:1;min-width:0}
- .preview-dialog-heading .preview-formats button{flex:1;min-width:0}
- .preview-dialog-heading .preview-zoom-label{grid-column:1;grid-row:2;display:flex;justify-self:start;gap:8px}
- .preview-dialog-heading .preview-zoom-label span{position:static;width:auto;height:auto;overflow:visible;clip-path:none;font-size:11px}
+ .preview-dialog-heading{grid-template-columns:minmax(0,1fr) auto 44px;gap:5px;padding:6px}
+ .preview-dialog-heading h2{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+ .preview-dialog-heading .preview-formats{grid-column:1/-1;grid-row:1;width:min(100%,330px)}
+ .preview-dialog-heading .preview-formats button{flex:1;min-width:0;padding:8px 6px}
+ .preview-options{grid-column:1/3;grid-row:2;gap:8px}
+ .preview-dialog-heading .preview-zoom-label span{position:static;width:auto;height:auto;clip-path:none;font-size:11px}
  .preview-zoom-label select{width:84px;max-width:84px}
- #expanded-toggle-preview-caption{grid-column:2/4;grid-row:2}
- #close-preview{grid-column:3;grid-row:1;width:44px;height:44px;padding:0;font-size:0}
+ #expanded-toggle-preview-caption{width:112px;font-size:11px}
+ #close-preview{grid-column:3;grid-row:2;width:44px;height:44px;padding:0;font-size:0}
  #close-preview::before{content:'×';font-size:24px}
 }
-/* Short landscape screens need a single control row to leave room for artwork. */
-@media(min-width:600px) and (max-width:699px) and (max-height:450px){
- .preview-dialog-heading{grid-template-columns:minmax(0,1fr) auto auto 44px;grid-template-rows:auto}
- .preview-dialog-heading h2{display:none}
- .preview-dialog-heading .preview-formats{grid-column:1;grid-row:1}
- .preview-dialog-heading .preview-zoom-label{grid-column:2;grid-row:1}
- #expanded-toggle-preview-caption{grid-column:3;grid-row:1}
- #close-preview{grid-column:4;grid-row:1}
+@media(min-width:600px) and (max-height:450px){
+ .preview-dialog-heading{padding:6px;gap:4px}
  #preview-dialog-status{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%)}
 }
-
-/* Keep the enlarged toolbar geometry independent of its selected format. */
-.preview-dialog-heading h2{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.preview-dialog-heading .preview-formats{flex:none}
-.preview-formats button[aria-pressed=true]::before{content:none}
-#expanded-toggle-preview-caption{width:124px;flex:none;white-space:nowrap}
-.preview-dialog-heading .preview-zoom-label{flex:none}
-@media(max-width:699px){#expanded-toggle-preview-caption{width:auto;justify-self:stretch}}

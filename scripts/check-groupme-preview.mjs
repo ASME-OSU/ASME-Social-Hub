@@ -35,8 +35,8 @@ export async function checkGroupMePreview(browser,base) {
   assert.doesNotMatch(await detail.locator('.gm-message-text').textContent(),/Current edited event title/);
   await detail.locator('.gm-avatar img').evaluate(image=>image.decode());
   assert.match(await detail.locator('.gm-avatar img').getAttribute('src'),/groupme-bot\.png$/);
-  assert.equal(await detail.locator('.gm-avatar img').evaluate(img=>getComputedStyle(img).filter),'grayscale(1)');
-  assert.equal(await page.locator('[data-preview-format=groupme] svg').count(),0,'GroupMe preview buttons use text only');
+  assert.equal(await detail.locator('.gm-avatar img').evaluate(img=>getComputedStyle(img).filter),'none');
+  assert.equal(await page.locator('[data-preview-format=groupme] svg.groupme-mark').count(),2,'Both preview tabs use the monochrome GroupMe brand mark');
   for(const button of await page.locator('[data-preview-format=groupme]').all())assert.equal((await button.textContent()).trim(),'GroupMe');
   assert.ok(await detail.locator('.gm-message').evaluate(element=>element.scrollHeight>element.clientHeight));
   await detail.locator('.gm-message').focus();await page.keyboard.press('End');await page.waitForFunction(()=>document.querySelector('#detail-groupme-preview .gm-message').scrollTop>0);
@@ -85,7 +85,7 @@ export async function checkGroupMePreview(browser,base) {
   await page.locator('#save-button').click();await page.waitForSelector('#form-error:not([hidden])');assert.match(await page.locator('#form-error').textContent(),/1000 characters/);
   assert.equal(writes.length,0,'An invalid GroupMe announcement cannot write a campaign');
   assert.deepEqual(external,[]);assert.deepEqual(errors,[]);
-  console.log('GroupMe preview checks passed: exact shared publishing text, bot avatar and text-only GroupMe buttons, live form changes, food/advertising, opt-out, recorded sent text, keyboard scrolling, mobile layout, and overlimit save protection without writes or messages.');
+  console.log('GroupMe preview checks passed: exact shared publishing text, bot avatar and monochrome GroupMe tab logos, live form changes, food/advertising, opt-out, recorded sent text, keyboard scrolling, mobile layout, and overlimit save protection without writes or messages.');
  }finally{await context.close();}
 }
 

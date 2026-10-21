@@ -96,3 +96,11 @@ test('Chapter Stories without a flyer use clean text artwork for both complete e
  assert.match(preview,/text-story/);assert.match(preview,/Choose a date/);assert.match(preview,/Choose a time/);assert.doesNotMatch(preview,/<svg|abstract-card/);
  assert.match(ordinary,/text-story/);
 });
+
+
+test('Story room separators become deliberate line breaks while feed locations stay intact',()=>{
+ const located={...campaign,location:{name:'Scott <Laboratory> · E100'}};
+ const story=flyerHtml(blueprint,located,config,'story');
+ assert.match(story,/Scott &lt;Laboratory&gt;<br>E100/);
+ assert.match(flyerHtml(blueprint,located,config,'feed'),/Scott &lt;Laboratory&gt; · E100/);
+});
