@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-21T07:08:49.606Z",
+  "generatedAt": "2026-10-21T20:15:08.989Z",
   "activeYear": "2026-27",
   "config": {
     "timezone": "America/New_York",
@@ -23,13 +23,13 @@
     "status": "unknown",
     "warning": false,
     "configured": true,
-    "checkedAt": "2026-10-21T07:08:49.337Z",
+    "checkedAt": "2026-10-21T20:15:08.791Z",
     "expiresAt": null,
     "daysRemaining": null
   },
   "calendar": {
     "feedUrl": "https://calendar.google.com/calendar/ical/c93730cdacb567b0f010d1367080e3028ec5c7657d9713b675ac9e5c437b9fba%40group.calendar.google.com/public/basic.ics",
-    "generatedAt": "2026-10-21T03:32:29.897Z",
+    "generatedAt": "2026-10-21T12:21:52.660Z",
     "candidates": [
       {
         "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-10-29T21:30:00.000Z",
@@ -1084,7 +1084,7 @@
         "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-10-22T21:30:00.000Z",
         "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
       },
-      "revision": 1,
+      "revision": 2,
       "channels": {
         "feed": {
           "enabled": true,
@@ -1095,25 +1095,25 @@
             "daysBefore": 1,
             "time": "10:00"
           },
-          "status": "pending",
-          "mediaId": null,
-          "postedAt": null,
+          "status": "done",
+          "mediaId": "17907468615666355",
+          "postedAt": "2026-10-21T14:59:17.343Z",
           "eventId": null,
           "syncedRevision": null,
           "botSentAt": null,
           "deletedAt": null,
-          "publishAttemptedAt": null,
+          "publishAttemptedAt": "2026-10-21T14:59:17.343Z",
           "createAttemptedAt": null,
           "botAttemptedAt": null
         },
         "story": {
           "enabled": true,
-          "dueAt": "2026-10-22T16:00:00.000Z",
+          "dueAt": "2026-10-23T03:30:00.000Z",
           "scheduleInvalid": false,
           "immediate": false,
           "schedule": {
             "daysBefore": 0,
-            "time": "12:00"
+            "time": "23:30"
           },
           "status": "pending",
           "mediaId": null,
@@ -1135,16 +1135,16 @@
             "createAt": "immediately",
             "announce": true
           },
-          "status": "pending",
+          "status": "done",
           "mediaId": null,
           "postedAt": null,
           "eventId": null,
           "syncedRevision": null,
-          "botSentAt": null,
+          "botSentAt": "2026-10-21T14:59:17.343Z",
           "deletedAt": null,
           "publishAttemptedAt": null,
           "createAttemptedAt": null,
-          "botAttemptedAt": null
+          "botAttemptedAt": "2026-10-21T14:59:17.343Z"
         }
       }
     },
