@@ -33,7 +33,10 @@ export async function checkGroupMePreview(browser,base) {
   assert.equal(await detail.locator('.gm-message-text').textContent(),recordedText,'Detail preserves exact delivered copy');
   assert.match(await detail.locator('.gm-status').textContent(),/recorded sent/i);
   assert.doesNotMatch(await detail.locator('.gm-message-text').textContent(),/Current edited event title/);
-  assert.equal(await detail.locator('.gm-avatar,img').count(),0,'Message preview uses a plain bot name without a decorative avatar');
+  await detail.locator('.gm-avatar img').evaluate(image=>image.decode());
+  assert.match(await detail.locator('.gm-avatar img').getAttribute('src'),/groupme-bot\.png$/);
+  assert.equal(await page.locator('[data-preview-format=groupme] svg').count(),0,'GroupMe preview buttons use text only');
+  for(const button of await page.locator('[data-preview-format=groupme]').all())assert.equal((await button.textContent()).trim(),'GroupMe');
   assert.ok(await detail.locator('.gm-message').evaluate(element=>element.scrollHeight>element.clientHeight));
   await detail.locator('.gm-message').focus();await page.keyboard.press('End');await page.waitForFunction(()=>document.querySelector('#detail-groupme-preview .gm-message').scrollTop>0);
   await mkdir('test-results/groupme-preview',{recursive:true});
@@ -55,7 +58,7 @@ export async function checkGroupMePreview(browser,base) {
   await page.waitForFunction(expected=>document.querySelector('#groupme-message-preview .gm-message-text')?.textContent===expected,botAnnouncementText(draft,config));
   assert.match(await preview.locator('.gm-status').textContent(),/preview only.*not sent/i);
   assert.equal(await preview.locator('.gm-count').textContent(),`${botAnnouncementText(draft,config).length} / 1000 characters`);
-  assert.equal(await preview.locator('.gm-avatar,img').count(),0);
+  await preview.locator('.gm-avatar img').evaluate(image=>image.decode());
   assert.equal(await preview.locator('.gm-bot-name').textContent(),'Gearley');
   await page.locator('[name=location]').fill('Updated fixture room');draft.location.name='Updated fixture room';
   await page.locator('[name=food]').uncheck();draft.food=false;
@@ -81,7 +84,7 @@ export async function checkGroupMePreview(browser,base) {
   await page.locator('#save-button').click();await page.waitForSelector('#form-error:not([hidden])');assert.match(await page.locator('#form-error').textContent(),/1000 characters/);
   assert.equal(writes.length,0,'An invalid GroupMe announcement cannot write a campaign');
   assert.deepEqual(external,[]);assert.deepEqual(errors,[]);
-  console.log('GroupMe preview checks passed: exact shared publishing text, plain bot identity, live form changes, food/advertising, opt-out, recorded sent text, keyboard scrolling, mobile layout, and overlimit save protection without writes or messages.');
+  console.log('GroupMe preview checks passed: exact shared publishing text, bot avatar and text-only GroupMe buttons, live form changes, food/advertising, opt-out, recorded sent text, keyboard scrolling, mobile layout, and overlimit save protection without writes or messages.');
  }finally{await context.close();}
 }
 

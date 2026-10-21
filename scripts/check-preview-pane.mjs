@@ -71,7 +71,7 @@ export async function checkPreviewPane(browser,base){
   const groupme=page.locator('#groupme-preview-panel');
   assert.equal(await groupme.locator('..').evaluate(el=>Boolean(el.closest('.editor-preview-pane'))),true,'GroupMe shares the right preview pane');
   assert.equal(await groupme.isVisible(),true);assert.match(await groupme.locator('.gm-message-text').textContent(),/Swipe preview fixture/);
-  for(const name of ['feed','story','groupme'])assert.ok(await page.locator(`#artwork-preview [data-preview-format=${name}] svg`).count(),name+' has an icon');
+  for(const name of ['feed','story'])assert.ok(await page.locator(`#artwork-preview [data-preview-format=${name}] svg`).count(),name+' has an icon');
   await mkdir('test-results/preview-pane',{recursive:true});await page.screenshot({path:'test-results/preview-pane/groupme-desktop.png'});
   await page.locator('#artwork-preview [data-preview-format=story]').click();await page.waitForFunction(()=>document.querySelector('#artwork-preview-frame').style.visibility==='visible');
   assert.equal(await groupme.isVisible(),false);await page.locator('#artwork-preview [data-preview-format=feed]').click();
@@ -87,7 +87,7 @@ export async function checkPreviewPane(browser,base){
    for(const format of ['feed','story','groupme']){
     await page.locator(`#preview-dialog [data-preview-format=${format}]`).click();
     await page.waitForFunction(format=>document.querySelector('#preview-dialog').dataset.format===format,format);
-    if(format!=='groupme'){await page.waitForFunction(()=>document.querySelector('#artwork-preview-frame').style.visibility==='visible');const mediaBox=await page.locator('.expanded-preview-stage').boundingBox();assert.ok(mediaBox.width>=(format==='feed'?150:90)&&mediaBox.height>=120,`${width}x${height} ${format}: artwork stays large enough to inspect`);}
+    if(format!=='groupme'){await page.waitForFunction(()=>document.querySelector('#artwork-preview-frame').style.visibility==='visible');const mediaBox=await page.locator('.expanded-preview-stage').boundingBox();assert.ok(mediaBox.width>=(format==='feed'?150:90)&&mediaBox.height>=120,`${width}x${height} ${format}: artwork stays large enough to inspect (${mediaBox.width}×${mediaBox.height})`);}
     const layout=await page.locator('#preview-dialog').evaluate(dialog=>{
      const controls=[...dialog.querySelectorAll('.preview-dialog-heading button,.preview-dialog-heading select')].filter(el=>el.getClientRects().length);
      return {fits:dialog.scrollWidth<=dialog.clientWidth,controls:controls.map(el=>{const r=el.getBoundingClientRect();const hit=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2);return {label:el.textContent.trim()||el.getAttribute('aria-label'),x:r.x,y:r.y,width:r.width,height:r.height,right:r.right,bottom:r.bottom,reachable:hit===el||el.contains(hit)};})};

@@ -9,7 +9,7 @@ import {mountEditorSections} from './editor-sections.mjs';
 import {publicEventURL} from './event-page.mjs';
 import {mountCalendarSuggestions,calendarSuggestionPrefill,calendarSuggestionDate} from './calendar-suggestions.mjs';
 
-import {mountGroupMePreview} from './groupme-preview.mjs?v=20261021-event-focus';
+import {mountGroupMePreview} from './groupme-preview.mjs?v=20261021-groupme-button';
 import {botAnnouncementText} from './groupme-message.mjs';
 import {campaignIsDeleted,prepareCampaignDeletion} from './campaign-delete.mjs';
 import {mountCampaignInstagramPreview} from './instagram-preview.mjs';
