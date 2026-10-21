@@ -87,3 +87,11 @@ button.primary{border-radius:2px;box-shadow:0 3px 0 #00000012}
  #close-preview{grid-column:4;grid-row:1}
  #preview-dialog-status{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%)}
 }
+
+/* Keep the enlarged toolbar geometry independent of its selected format. */
+.preview-dialog-heading h2{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.preview-dialog-heading .preview-formats{flex:none}
+.preview-formats button[aria-pressed=true]::before{content:none}
+#expanded-toggle-preview-caption{width:124px;flex:none;white-space:nowrap}
+.preview-dialog-heading .preview-zoom-label{flex:none}
+@media(max-width:699px){#expanded-toggle-preview-caption{width:auto;justify-self:stretch}}

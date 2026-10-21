@@ -1,4 +1,4 @@
-import {renderStoryDesign,validateStoryDesign} from './story-design.mjs';
+import {renderStoryDesign,validateStoryDesign} from './story-design.mjs?v=20261021-preview-stable';
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const color = (value, fallback) => /^#[0-9a-f]{3,8}$/i.test(value || '') ? value : fallback;
 const safeUrl = value => { try { return new URL(value).protocol === 'https:' ? escape(value) : ''; } catch { return ''; } };
@@ -6,7 +6,7 @@ export function flyerAdvertising(campaign, config, format='feed') {
   const a=campaign.advertising || {};
   const concise=(value,max=100)=>value?.trim().replace(/\s+/g,' ').slice(0,max)+(value?.trim().replace(/\s+/g,' ').length>max?'…':'');
   const rows=[];
-  if(a.benefit?.trim()) rows.push(concise(a.benefit,120));
+  if(a.benefit?.trim()&&(format!=='story'||!campaign.description?.trim())) rows.push(concise(a.benefit,120));
   if(a.speaker?.trim()) rows.push(`Speaker: ${concise(a.speaker,90)}`);
   const meta=[a.audience?.trim()?`For: ${concise(a.audience,65)}`:'',a.cost?.trim()?`Cost: ${concise(a.cost,65)}`:''].filter(Boolean).join(' · ');
   if(meta) rows.push(meta);
@@ -47,7 +47,7 @@ export function flyerHtml(template, campaign, config, format, assets = {}) {
     logo:logo ? `<img class="logo" src="${logo}" alt="">` : ''
   };
   if(assets.previewMissingDate)Object.assign(values,{date:'Choose a date',day:'—',month:'DATE',shortDate:'Choose a date',time:'Choose a time'});
-  if(format==='story'&&((!image&&assets.previewMissingDate)||(campaign.storyDesign?.background&&campaign.storyDesign.background!=='template')))return renderStoryDesign({campaign,config,assets,values});
+  if(format==='story'&&(!image||(campaign.storyDesign?.background&&campaign.storyDesign.background!=='template')))return renderStoryDesign({campaign,config,assets,values});
   return template.replace(/{{(\w+)}}/g,(_,key)=>values[key] ?? '');
 }
 export async function fitFlyerDocument(doc = document) {
@@ -58,7 +58,7 @@ export async function fitFlyerDocument(doc = document) {
     if(page.classList.contains('text-story')){
       const hero=page.querySelector('.hero'),card=page.querySelector('.title-card'),title=page.querySelector('h1'),style=doc.defaultView.getComputedStyle(hero);
       const available=hero.clientHeight-parseFloat(style.paddingTop)-parseFloat(style.paddingBottom);
-      for(let size=parseFloat(doc.defaultView.getComputedStyle(title).fontSize);size>44&&card.getBoundingClientRect().height>available;size-=2)title.style.fontSize=`${Math.max(44,size-2)}px`;
+      for(let size=parseFloat(doc.defaultView.getComputedStyle(title).fontSize);size>72&&card.getBoundingClientRect().height>available;size-=2)title.style.fontSize=`${Math.max(72,size-2)}px`;
       if(card.getBoundingClientRect().height>available+1)throw Error('Story text exceeds the safe layout; shorten the title or event details');
       return;
     }

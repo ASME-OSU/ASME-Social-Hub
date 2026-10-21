@@ -9,7 +9,7 @@ test('flyer template escapes event content and rejects unsafe asset and CSS valu
  const html=flyerHtml(template,campaign,config,'feed');assert.ok(!html.includes('<script>'));assert.ok(html.includes('&lt;script&gt;'));assert.ok(!html.includes('file:///'));assert.ok(!html.includes('javascript:'));assert.ok(!html.includes('display:none'));assert.ok(!html.includes('Food provided'));
 });
 test('flyer displays chapter-local time and optional food line',()=>{
- const html=flyerHtml(template,{...campaign,food:true},config,'story');assert.match(html,/6:00 PM EST/);assert.match(html,/Food provided/);assert.ok(!html.includes('{{'));
+ const html=flyerHtml(template,{...campaign,food:true},config,'story');assert.match(html,/6:00 PM EST/);assert.match(html.replace(/<[^>]+>/g,' '),/Food\s+Provided/i);assert.ok(!html.includes('{{'));
 });
 const blueprint=await readFile(new URL('../templates/blueprint.html',import.meta.url),'utf8');
 test('feed uploads bypass every template and Story treatment without adding event artwork',()=>{
@@ -90,9 +90,9 @@ test('Chapter template Stories never use the uploaded flyer as a backdrop',()=>{
 });
 
 
-test('an empty-date Chapter Story preview uses clean text artwork without changing complete template exports',()=>{
+test('Chapter Stories without a flyer use clean text artwork for both complete events and empty previews',()=>{
  const ordinary=flyerHtml(blueprint,campaign,config,'story');
  const preview=flyerHtml(blueprint,campaign,config,'story',{previewMissingDate:true});
  assert.match(preview,/text-story/);assert.match(preview,/Choose a date/);assert.match(preview,/Choose a time/);assert.doesNotMatch(preview,/<svg|abstract-card/);
- assert.doesNotMatch(ordinary,/text-story/);
+ assert.match(ordinary,/text-story/);
 });

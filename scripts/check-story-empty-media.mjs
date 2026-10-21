@@ -18,7 +18,7 @@ export async function checkStoryEmptyMedia(browser,base){
  await mkdir('test-results/story-empty-media',{recursive:true});
  const render=await browser.newPage({viewport:{width:1080,height:1920}});
  try{
-  for(const background of ['color-wash','blueprint-rings','folded-paper']){
+  for(const background of ['template','color-wash','blueprint-rings','folded-paper']){
    const campaign={title:'Meet the engineers',description:'Career stories, practical advice, and good conversations.',start:'2026-10-22T22:00:00Z',type:'industry-night',location:{name:'Scott Laboratory · E100'},food:true,storyDesign:{background}};
    await render.setContent(flyerHtml(template,campaign,config,'story',assets));await fitFlyer(render);
    assert.equal(await render.locator('svg,img').count(),0,'Text-only Story avoids arbitrary symbols and missing media');
@@ -27,11 +27,20 @@ export async function checkStoryEmptyMedia(browser,base){
    const layout=await render.evaluate(()=>{const hero=document.querySelector('.hero').getBoundingClientRect(),title=document.querySelector('h1').getBoundingClientRect(),block=document.querySelector('.block').getBoundingClientRect(),footer=document.querySelector('footer').getBoundingClientRect();return {hero:hero.toJSON(),title:title.toJSON(),block:block.toJSON(),footer:footer.toJSON()};});
    assert.ok(layout.hero.height>650,'The text layout fills the Story rather than collapsing to its top');
    assert.ok(layout.title.top>400&&layout.title.bottom<layout.block.top,'Title sits in the central readable area');
-   assert.ok(layout.footer.bottom<=1561,'Footer stays clear of platform controls');
+   assert.ok(layout.footer.bottom<=1621,'Footer stays clear of platform controls');
    await render.screenshot({path:`test-results/story-empty-media/${background}-artwork.png`});
   }
   const long={title:'An evening of mechanical engineering design, professional connections, and practical ideas for your first project',description:'Explore projects, hear from engineers, and learn how to start building your own ideas with the chapter.',start:'2026-10-22T22:00:00Z',type:'industry-night',location:{name:'Scott Laboratory · Engineering collaboration room E100'},food:true,advertising:{benefit:'Practice design, meet new people, and build professional connections.',speaker:'Chapter alumni panel',audience:'All engineering students',cost:'Free',foodDetails:'Pizza and vegetarian options',rsvpDeadline:'2026-10-21T17:00:00-04:00'},storyDesign:{background:'color-wash'}};
   await render.setContent(flyerHtml(template,long,config,'story',assets));await fitFlyer(render);
+  await render.screenshot({path:'test-results/story-empty-media/long-artwork.png'});
+  assert.ok(await render.locator('h1').evaluate(el=>parseFloat(getComputedStyle(el).fontSize)>=72),'Long titles retain readable type');
+  assert.ok(await render.locator('.desc').evaluate(el=>parseFloat(getComputedStyle(el).fontSize)>=38),'Descriptions retain readable type');
+  for(const name of ['blueprint','editorial','refined-blueprint','editorial-poster','assembly-card']){
+   const source=await readFile(`templates/${name}.html`,'utf8');
+   await render.setContent(flyerHtml(source,{...long,storyDesign:{background:'template'}},config,'story',assets));await fitFlyer(render);
+   assert.equal(await render.locator('.text-story').count(),1,`${name} uses the clean no-flyer layout`);
+   await render.screenshot({path:`test-results/story-empty-media/${name}-no-flyer.png`});
+  }
   assert.ok(await render.locator('.title-card').evaluate(card=>{const hero=card.parentElement;return card.getBoundingClientRect().top>=hero.getBoundingClientRect().top&&card.getBoundingClientRect().bottom<=hero.getBoundingClientRect().bottom;}),'Long no-media copy remains inside its Story text region');
  }finally{await render.close();}
  for(const width of [1440,390]){

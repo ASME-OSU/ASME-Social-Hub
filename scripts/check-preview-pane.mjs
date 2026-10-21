@@ -85,16 +85,20 @@ export async function checkPreviewPane(browser,base){
   assert.equal(await page.locator('#preview-dialog').evaluate(el=>el.scrollWidth<=el.clientWidth),true,'mobile preview has no horizontal overflow');
   await page.screenshot({path:'test-results/preview-pane/groupme-mobile.png'});
   // Inspect every preview type at narrow-phone, tablet, and short-landscape sizes.
-  for(const [width,height]of [[320,640],[390,844],[768,1024],[844,390],[667,320]]){
+  for(const [width,height]of [[1440,1000],[320,640],[390,844],[768,1024],[844,390],[667,320]]){
    await page.setViewportSize({width,height});
+   let toolbarBaseline;
    for(const format of ['feed','story','groupme']){
     await page.locator(`#preview-dialog [data-preview-format=${format}]`).click();
     await page.waitForFunction(format=>document.querySelector('#preview-dialog').dataset.format===format,format);
     if(format!=='groupme'){await page.waitForFunction(()=>document.querySelector('#artwork-preview-frame').style.visibility==='visible');const mediaBox=await page.locator('.expanded-preview-stage').boundingBox();assert.ok(mediaBox.width>=(format==='feed'?150:90)&&mediaBox.height>=120,`${width}x${height} ${format}: artwork stays large enough to inspect (${mediaBox.width}×${mediaBox.height})`);}
     const layout=await page.locator('#preview-dialog').evaluate(dialog=>{
-     const controls=[...dialog.querySelectorAll('.preview-dialog-heading button,.preview-dialog-heading select')].filter(el=>el.getClientRects().length);
+     const controls=[...dialog.querySelectorAll('.preview-dialog-heading button,.preview-dialog-heading select')].filter(el=>el.getClientRects().length&&getComputedStyle(el).visibility!=='hidden');
      return {fits:dialog.scrollWidth<=dialog.clientWidth,controls:controls.map(el=>{const r=el.getBoundingClientRect();const hit=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2);return {label:el.textContent.trim()||el.getAttribute('aria-label'),x:r.x,y:r.y,width:r.width,height:r.height,right:r.right,bottom:r.bottom,reachable:hit===el||el.contains(hit)};})};
     });
+    const toolbar=await page.locator('.preview-dialog-heading').evaluate(heading=>({height:heading.getBoundingClientRect().height,positions:[...heading.querySelectorAll('[data-preview-format],#close-preview,.preview-zoom-label,#expanded-toggle-preview-caption')].map(el=>{const r=el.getBoundingClientRect();return [r.x,r.y,r.width,r.height];})}));
+    if(!toolbarBaseline)toolbarBaseline=toolbar;
+    else assert.deepEqual(toolbar,toolbarBaseline,`${width}x${height}: toolbar slots stay fixed when selecting ${format}`);
     assert.equal(layout.fits,true,`${width}x${height} ${format}: no horizontal overflow`);
     for(const control of layout.controls){assert.ok(control.x>=0&&control.y>=0&&control.right<=width+1&&control.bottom<=height+1,`${width}x${height} ${format}: ${control.label} stays on screen`);assert.equal(control.reachable,true,`${width}x${height} ${format}: ${control.label} is not covered by the preview`);assert.ok(control.height>=44,`${width}x${height} ${format}: ${control.label} has44px height`);}
     for(let i=0;i<layout.controls.length;i++)for(let j=i+1;j<layout.controls.length;j++){const a=layout.controls[i],b=layout.controls[j],overlap=Math.min(a.right,b.right)-Math.max(a.x,b.x)>1&&Math.min(a.bottom,b.bottom)-Math.max(a.y,b.y)>1;assert.equal(overlap,false,'Preview controls do not overlap');}

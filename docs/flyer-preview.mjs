@@ -1,7 +1,7 @@
 import {createInstagramPost} from './instagram-preview.mjs';
 import {captionFor} from './caption.mjs';
 import {feedImageIssue,measureImage} from './image-policy.mjs';
-import {flyerHtml,fitFlyerDocument} from './flyer-render.mjs';
+import {flyerHtml,fitFlyerDocument} from './flyer-render.mjs?v=20261021-preview-stable';
 import {fromLocal} from './time.mjs';
 
 const styles=new Set(['blueprint','editorial','refined-blueprint','editorial-poster','assembly-card']);
@@ -27,7 +27,11 @@ export function createFlyerPreview({form,getConfig,getExisting,getUpload,getStor
     const groupme=format==='groupme';
     inlinePost.root.hidden=groupme;expandedPost.root.hidden=groupme;
     inlineCanvas.classList.toggle('is-groupme-preview',groupme);canvas.classList.toggle('is-groupme-preview',groupme);
-    document.querySelector('.preview-zoom-label').hidden=groupme;document.querySelector('.inline-preview-zoom').hidden=groupme;captionToggle.hidden=format!=='feed';expandedCaptionToggle.hidden=format!=='feed';
+    document.querySelector('.inline-preview-zoom').hidden=groupme;captionToggle.hidden=format!=='feed';
+    // Reserve enlarged-toolbar slots across formats so switching never moves controls.
+    for(const [control,available]of [[document.querySelector('.preview-zoom-label'),!groupme],[expandedCaptionToggle,format==='feed']]){
+      control.hidden=false;control.style.visibility=available?'':'hidden';control.inert=!available;control.setAttribute('aria-hidden',String(!available));
+    }
     canvas.setAttribute('aria-label',groupme?'GroupMe announcement preview; scroll to read':'Enlarged artwork; scroll to inspect at 100 percent');
     const panel=groupMePanel();if(panel){const destination=expanded.open?canvas:inlineCanvas;if(panel.parentElement!==destination)destination.append(panel);panel.hidden=!groupme;}
   }
