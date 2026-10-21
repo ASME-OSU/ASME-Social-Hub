@@ -572,3 +572,52 @@ input::placeholder,textarea::placeholder{color:var(--muted);opacity:1}
 .card-engagement{border-top:1px solid var(--line);margin-top:18px;padding-top:14px}.card-engagement-values{display:flex;gap:16px;flex-wrap:wrap;align-items:center;font-size:14px}.card-engagement-values strong{font-size:20px;font-variant-numeric:tabular-nums}.card-engagement-values [aria-hidden]{font-size:24px;color:var(--scarlet);line-height:1}.card-engagement p,.card-engagement small{display:block;font-size:11px;line-height:1.6;color:var(--muted);margin:6px 0 0}.card-engagement.is-empty p{font-size:12px}
 .calendar-difference details{margin-top:10px}.calendar-difference summary{cursor:pointer;min-height:44px;padding:10px 0;font-size:13px}.calendar-difference dl{margin:0}.calendar-difference dt{font-weight:650;font-size:13px}.calendar-difference dd{margin:4px 0 12px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;line-height:1.7}
 .campaign-card .card-engagement+.steps{margin-top:16px}
+/* Keep the member-facing page one click away from the campaign view. */
+.detail-heading-actions{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.event-page-action{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:36px;padding:7px 11px;border:1px solid var(--line);border-radius:var(--radius);background:var(--paper);color:var(--ink);font-size:12px;font-weight:650;text-decoration:none;white-space:nowrap}
+.event-page-action:hover{background:var(--ice);border-color:var(--steel)}
+/* Fine-pointer desktops use a compact single-row preview toolbar. */
+@media(min-width:960px) and (hover:hover) and (pointer:fine){
+ .editor-preview-pane .preview-formats{flex-wrap:nowrap;gap:4px}
+ .editor-preview-pane .preview-formats button,.preview-dialog-heading .preview-formats button,#expanded-toggle-preview-caption,#close-preview{min-height:32px;height:32px;padding:5px 7px;font-size:11px;line-height:1.2;white-space:nowrap}
+ .preview-formats [data-preview-format]{gap:4px}
+ .preview-formats [data-preview-format] svg{width:16px;height:16px}
+ .inline-preview-zoom{flex:0 1 124px;min-width:105px}
+ .inline-preview-zoom select,.preview-zoom-label select{min-height:32px;height:32px;padding:4px 6px;font-size:11px;line-height:1.2}
+ .editor-preview-pane .preview-formats #enlarge-preview{display:inline-grid;place-items:center;width:32px;min-width:32px;padding:5px;flex-shrink:0}
+ .preview-dialog-heading{padding:6px 12px;gap:8px;flex-wrap:nowrap}
+ .preview-dialog-heading h2{font-size:16px;white-space:nowrap}
+ .preview-zoom-label{gap:5px;font-size:11px}
+ .preview-zoom-label select{width:124px}
+ #artwork-preview-status{font-size:10px!important}
+}
+@media(max-width:699px){
+ #detail .dialog-heading{align-items:flex-start;gap:8px;padding:16px}
+ #detail .dialog-heading h2{font-size:24px}
+ .detail-heading-actions{flex-direction:column-reverse;align-items:flex-end;gap:6px}
+ .event-page-action{min-height:44px;padding:8px;font-size:11px}
+}
+@media(pointer:coarse){.event-page-action{min-height:44px}}
+/* The campaign drawer prioritizes the complete first flyer over chrome. */
+#detail .dialog-heading{padding:16px 20px;gap:12px}
+#detail .dialog-heading>div:first-child{min-width:0;flex:1}
+#detail .dialog-heading .eyebrow{margin-bottom:6px;font-size:10px}
+#detail .dialog-heading h2{font-size:25px;line-height:1.18}
+#detail-content{padding:16px 20px}
+#detail .ig-detail-image>img{max-height:var(--detail-media-height,55dvh);object-fit:contain;background:#fafafa}
+#detail .ig-detail-post .ig-caption{max-height:150px}
+#detail .dialog-footer{padding:10px 20px;gap:6px}
+#detail .dialog-footer>span{margin:0;font-size:11px}
+@media(min-width:960px) and (hover:hover) and (pointer:fine){
+ #detail .dialog-heading .icon-button{min-height:32px;min-width:32px;width:32px;height:32px;padding:4px}
+ #detail .dialog-footer button{min-height:32px;padding:5px 8px;font-size:11px}
+ #detail-actions [data-cancel]{padding:5px 6px}
+ #detail .event-page-action{min-height:32px;padding:5px 9px;font-size:11px}
+}
+@media(max-width:699px){
+ #detail .dialog-heading{padding:12px 16px}
+ #detail .dialog-heading h2{font-size:23px}
+ #detail-content{padding:12px 16px}
+ #detail .dialog-footer{padding:10px 16px max(10px,env(safe-area-inset-bottom));gap:8px}
+ #detail .dialog-footer button{min-height:44px}
+}
