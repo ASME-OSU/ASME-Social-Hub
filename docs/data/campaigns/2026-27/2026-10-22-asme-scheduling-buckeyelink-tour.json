@@ -1,0 +1,70 @@
+{
+  "id": "2026-10-22-asme-scheduling-buckeyelink-tour",
+  "year": "2026-27",
+  "type": "gbm",
+  "title": "ASME Scheduling/BuckeyeLink Tour",
+  "start": "2026-10-22T21:30:00.000Z",
+  "end": "2026-10-22T22:30:00.000Z",
+  "location": {
+    "name": "Scott Laboratory E141"
+  },
+  "description": "Want to learn more about scheduling and degree planning? Come to our info session! See flyer for details. ⚙️🎓",
+  "food": false,
+  "template": "refined-blueprint",
+  "storyDesign": {
+    "background": "template",
+    "paletteSource": "flyer",
+    "palette": [
+      "#b11917",
+      "#d48c8b",
+      "#f4dfdf"
+    ]
+  },
+  "advertising": {},
+  "source": {
+    "kind": "ical",
+    "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-10-22T21:30:00.000Z",
+    "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+  },
+  "campaign": {
+    "groupme": {
+      "createAt": "immediately",
+      "reminders": [
+        604800,
+        86400
+      ],
+      "enabled": true,
+      "announce": true
+    },
+    "feed": {
+      "daysBefore": 1,
+      "time": "10:00",
+      "enabled": true
+    },
+    "story": {
+      "daysBefore": 0,
+      "time": "12:00",
+      "enabled": true
+    }
+  },
+  "notes": "",
+  "images": {
+    "feed": "",
+    "story": ""
+  },
+  "revision": 1,
+  "cancelled": false,
+  "status": {
+    "feed": "pending",
+    "story": "pending",
+    "groupme": "pending"
+  },
+  "results": {
+    "feed": {},
+    "story": {},
+    "groupme": {},
+    "insights": []
+  },
+  "log": [],
+  "flyerUrl": "https://raw.githubusercontent.com/ASME-OSU/ASME-Social-Hub/main/assets/uploads/2026-10-22-asme-scheduling-buckeyelink-tour-1792546874319-1.png"
+}

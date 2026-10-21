@@ -320,3 +320,304 @@ input::placeholder,textarea::placeholder{color:var(--muted);opacity:1}
 .gm-conversation{display:flex;align-items:flex-start;gap:10px;padding:18px 16px;background:var(--canvas)}.gm-avatar{display:grid;place-items:center;flex:none;width:40px;height:40px;border-radius:50%;overflow:hidden;background:var(--paper);border:1px solid var(--line);font-weight:700;color:var(--ink)}.gm-avatar img{display:block;width:100%;height:100%;object-fit:cover}.gm-message-column{flex:1;min-width:0}.gm-bot-heading{display:flex;align-items:center;gap:7px;margin:0 0 6px}.gm-bot-name{font-size:12px;overflow-wrap:anywhere}.gm-bot-badge{font-size:9px;letter-spacing:.04em;color:var(--muted);border:1px solid var(--line);border-radius:3px;padding:0 4px}
 .gm-message{background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:0 12px 12px 12px;padding:12px 14px;max-height:340px;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;font:13px/1.6 var(--font-body);white-space:pre-wrap;overflow-wrap:anywhere}.gm-message:focus-visible{outline:3px solid var(--focus);outline-offset:2px}.gm-preview-footer{padding:10px 16px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px}.gm-note{margin:0;color:var(--muted);font-size:11px;line-height:1.6}.gm-count{color:var(--muted);font-size:10px;white-space:nowrap}.gm-error{border-top:1px solid var(--line);padding:12px 16px;margin:0;font-size:12px;color:var(--ink);border-left:4px solid var(--scarlet);overflow-wrap:anywhere}.gm-preview[data-state=off] .gm-status{color:var(--muted)}.gm-preview[data-state=invalid] .gm-count{color:var(--scarlet)}
 @media(max-width:699px){.gm-conversation{padding:14px 12px;gap:8px}.gm-avatar{width:34px;height:34px}.gm-preview-heading,.gm-preview-footer{padding:10px 12px}.gm-preview-footer{display:block}.gm-count{display:block;margin-top:6px}.gm-message{padding:10px 12px;max-height:300px}}
+
+/* Keep late-warning styling compatible with the live dashboard markup. */
+.schedule-warning.late,.schedule-warning[data-state=late]{color:var(--muted)}.schedule-warning:before{content:'⚠ '}
+
+/* Feed, Story, and GroupMe share the same preview pane and enlarged viewer. */
+.preview-formats [data-preview-format]{display:inline-flex;align-items:center;justify-content:center;gap:7px}
+.preview-formats [data-preview-format] svg{width:20px;height:20px;flex:none}
+.inline-preview-canvas.is-groupme-preview{display:flex;align-items:stretch;justify-content:center;overflow:auto;overscroll-behavior:contain}
+#groupme-preview-panel{min-width:0;width:100%;max-width:600px;align-self:stretch;padding:0}
+#groupme-message-preview{height:100%;min-height:0}
+#groupme-preview-panel .gm-preview{margin:0;height:100%;display:flex;flex-direction:column;min-height:0}
+#groupme-preview-panel .gm-conversation{flex:1;min-height:0;overflow:auto;align-items:stretch}
+#groupme-preview-panel .gm-message-column{min-height:0;display:flex;flex-direction:column}
+#groupme-preview-panel .gm-message{max-height:100%;flex:0 1 auto;min-height:80px}
+#groupme-preview-panel .gm-preview-heading,#groupme-preview-panel .gm-preview-footer,#groupme-preview-panel .gm-error{flex-shrink:0}
+#preview-dialog-canvas.is-groupme-preview{display:flex;justify-content:center;align-items:stretch;padding:16px}
+#preview-dialog-canvas.is-groupme-preview #groupme-preview-panel{max-width:760px}
+@media(max-width:699px){.preview-formats [data-preview-format]{gap:5px}.preview-formats [data-preview-format] svg{width:17px;height:17px}.preview-dialog-heading .preview-formats{gap:4px}.preview-dialog-heading .preview-formats button{padding:8px 6px;font-size:11px}#preview-dialog-canvas.is-groupme-preview{padding:10px}}
+.ig-media.ig-swipeable{touch-action:pan-y pinch-zoom;cursor:grab;user-select:none}.ig-media.ig-swipeable:active{cursor:grabbing}.ig-media.ig-swipeable:focus-visible{outline:3px solid #1769aa;outline-offset:-3px}.ig-media img{ -webkit-user-drag:none }
+
+/* Keep preview controls grouped and reachable on phones and short screens. */
+.preview-dialog-heading{flex-wrap:nowrap}
+.ig-preview-note{font-size:11px;line-height:1.4}
+.ig-media>.ig-carousel button{width:44px;height:44px;min-height:44px;display:grid;place-items:center;border:0;background:transparent;box-shadow:none;isolation:isolate}
+.ig-media>.ig-carousel button::before{content:'';position:absolute;inset:6px;border:1px solid #ddd;border-radius:50%;background:#fffffff0;box-shadow:0 1px 5px #0003;z-index:-1}
+.ig-media>.ig-carousel .ig-previous{left:4px}.ig-media>.ig-carousel .ig-next{right:4px}
+@media(max-width:699px){
+ .preview-dialog-heading{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto;align-items:center;gap:8px;padding:8px}
+ .preview-dialog-heading .preview-formats{grid-column:1;grid-row:1;display:flex;flex-direction:row;flex-wrap:nowrap;min-width:0;gap:4px}
+ .preview-dialog-heading .preview-formats button{flex:1 1 auto;min-width:44px;width:auto;padding:8px 4px;font-size:11px;gap:4px}
+ .preview-dialog-heading .preview-formats button span{white-space:nowrap}
+ .preview-dialog-heading .preview-formats svg{width:16px;height:16px}
+ .preview-zoom-label{grid-column:1/-1;grid-row:2;display:flex;flex-direction:row;align-items:center;gap:8px;margin:0;font-size:11px}
+ .preview-zoom-label span{position:static;width:auto;height:auto;overflow:visible;clip-path:none;white-space:normal}
+ .preview-zoom-label select{width:80px;min-height:44px;margin:0}
+ #close-preview{grid-column:2;grid-row:1;margin:0;min-height:44px;padding:8px 10px;font-size:12px}
+}
+@media(min-width:600px) and (max-height:500px){
+ #preview-dialog[open]{display:flex;flex-direction:column}
+ .preview-dialog-heading{display:flex;flex-direction:row;align-items:center;flex-wrap:nowrap;gap:8px;padding:8px;border-right:0;border-bottom:1px solid var(--line);flex-shrink:0;overflow:visible}
+ .preview-dialog-heading h2{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+ .preview-dialog-heading .preview-formats{display:flex;flex-direction:row;flex-wrap:nowrap;min-width:0;gap:6px}
+ .preview-dialog-heading .preview-formats button{width:auto;min-width:44px;min-height:44px;padding:8px;font-size:12px}
+ .preview-zoom-label{display:flex;flex-direction:row;align-items:center;gap:8px;margin:0;font-size:11px}
+ .preview-zoom-label span{position:static;width:auto;height:auto;overflow:visible;clip-path:none;white-space:normal}
+ .preview-zoom-label select{width:80px;min-height:44px;margin:0}
+ #close-preview{margin:0 0 0 auto;min-height:44px;padding:8px 10px;font-size:12px}
+ #preview-dialog-canvas{flex:1;order:1;min-height:0}
+ #preview-dialog-status{order:2;padding:6px 10px;flex-shrink:0}
+}
+@media(min-width:600px) and (max-height:500px){
+ #preview-dialog-canvas>.ig-post:not(.ig-story-only){display:grid;grid-template-columns:auto 300px;grid-template-rows:62px minmax(0,1fr)}
+ #preview-dialog-canvas>.ig-post:not(.ig-story-only)>.ig-media{grid-column:1;grid-row:1/3}
+ #preview-dialog-canvas>.ig-post:not(.ig-story-only)>.ig-header{grid-column:2;grid-row:1;border-left:1px solid #eee}
+ #preview-dialog-canvas>.ig-post:not(.ig-story-only)>.ig-body{grid-column:2;grid-row:2;display:flex;flex-direction:column;min-height:0;border-left:1px solid #eee}
+ #preview-dialog-canvas>.ig-post:not(.ig-story-only) .ig-caption{max-height:none;flex:1;min-height:0;order:0;padding-top:16px}
+ #preview-dialog-canvas>.ig-post:not(.ig-story-only) .ig-actions{order:1;flex-shrink:0;border-top:1px solid #eee;margin-top:8px}
+ #preview-dialog-canvas>.ig-post:not(.ig-story-only) .ig-preview-note{order:2;margin-top:0;flex-shrink:0}
+}
+
+/* Dashboard hierarchy: keep publishing health visible and campaigns within reach. */
+#view-dashboard .page-heading{margin-bottom:24px;gap:24px}
+#view-dashboard .page-heading h1{font-size:clamp(36px,3.5vw,48px);line-height:1.15}
+#view-dashboard .page-heading p{margin-bottom:0;max-width:680px}
+#view-dashboard .eyebrow{margin-bottom:12px}
+#view-dashboard .section-heading{margin:28px 0 18px}
+#view-dashboard .stats{margin:18px 0 24px}
+#view-dashboard .stat{padding:14px 18px;min-height:0;display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center}
+#view-dashboard .stat strong{font-size:28px;line-height:1.2;margin:0;grid-column:2;grid-row:1/3}
+#view-dashboard .stat-label{font-size:12px;letter-spacing:.03em}
+#view-dashboard .stat small{font-size:12px;line-height:1.5}
+.dispatcher-health{background:var(--paper);padding:16px 20px;border-radius:4px;border-left:4px solid var(--steel);margin:0}
+.dispatcher-health[data-state="stale"],.dispatcher-health[data-state="unknown"]{border-left-color:var(--signal)}
+.dispatcher-summary{display:flex;justify-content:space-between;align-items:start;gap:16px}
+.dispatcher-summary h2{font:600 15px/1.5 var(--font-body);margin:0 0 2px}
+.dispatcher-summary #dispatcher-last-run{font-size:12px;color:var(--muted);margin:0}
+.dispatcher-summary a{font-size:13px;min-height:44px;display:inline-flex;align-items:center;white-space:nowrap}
+.dispatcher-health #dispatcher-warning{margin:8px 0 0;font-size:13px;font-weight:500}
+.dispatcher-controls{margin-top:8px;border-top:1px solid var(--line)}
+.dispatcher-controls summary{font-size:13px;font-weight:600;cursor:pointer;min-height:44px;padding:12px 0;width:fit-content}
+.dispatcher-controls p{font-size:13px;color:var(--muted);max-width:720px;margin:0 0 12px}
+.dispatcher-buttons{display:flex;gap:10px;flex-wrap:wrap}
+.dispatcher-buttons #dispatcher-preview{background:var(--ice);font-weight:650}
+#dispatcher-control-status{margin:8px 0 0;padding:10px 12px;background:var(--ice);font-size:13px}
+#dispatcher-control-status.control-error{border-left:3px solid var(--scarlet);background:var(--scarlet-tint);font-weight:600}
+.header-connection-pill.limited{border-color:var(--signal);background:var(--ice);color:var(--ink)}
+.header-connection-pill.limited .header-dot{background:var(--signal)}
+.header-sidebar-toggle,.theme-toggle,.header-connection-pill,.mobile-social-menu>summary{min-height:44px}
+.header-sidebar-toggle,.theme-toggle{min-width:44px}
+.sidebar-disconnected-badge .connect-shortcut-link{display:inline-flex;align-items:center;min-height:44px}
+@media(min-width:1000px){
+ .campaign-grid.few-campaigns{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .campaign-grid.few-campaigns:has(> :only-child){grid-template-columns:minmax(0,820px)}
+ .campaign-grid.few-campaigns>.campaign-card:only-child{display:grid;grid-template-columns:200px minmax(0,1fr)}
+ .campaign-grid.few-campaigns>.campaign-card:only-child .card-art{height:100%;min-height:280px;grid-row:1/3}
+ .campaign-grid.few-campaigns>.campaign-card:only-child .card-body{padding:22px 24px}
+ .campaign-grid.few-campaigns>.campaign-card:only-child .card-footer{grid-column:2;padding:12px 24px}
+}
+@media(max-width:699px){
+ #view-dashboard .page-heading{margin-bottom:20px}
+ #view-dashboard .stats{grid-template-columns:1fr 1fr;margin:16px 0 24px}
+ #view-dashboard .stat{padding:12px;display:flex;flex-direction:column;align-items:start;gap:4px}
+ #view-dashboard .stat strong{font-size:28px;order:-1}
+ #view-dashboard .stat small{display:none}
+ .dispatcher-health{padding:12px 14px}
+ .dispatcher-summary{gap:8px;flex-wrap:wrap}
+ .dispatcher-summary>div{flex:1;min-width:160px}
+ .dispatcher-summary h2{font-size:14px}
+ .dispatcher-summary a{min-height:44px}
+ .dispatcher-buttons{display:grid;grid-template-columns:1fr;width:100%}
+ .header-connection-pill{max-width:140px}
+ .theme-toggle{padding:8px 10px}
+}
+.mobile-social-menu>summary{min-width:44px}
+/* Calendar rows keep the event text together, with actions on their own row on phones. */
+.calendar-suggestion-controls{background:var(--paper)}
+.calendar-suggestion-controls label{flex-wrap:wrap}
+.calendar-suggestion-list .suggestion{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:18px;padding:16px 20px;align-items:center}
+.calendar-suggestion-list .suggestion>div:nth-child(2){min-width:0}
+.calendar-suggestion-list .suggestion strong{font-size:15px;overflow-wrap:anywhere}
+.calendar-suggestion-list .suggestion p{font-size:13px;margin:4px 0 0}
+.calendar-suggestion-list .suggestion button{margin:0;border-color:transparent;background:transparent;padding:10px 12px;font-size:13px}
+.calendar-suggestion-list .suggestion button:hover{background:var(--ice);text-decoration:underline}
+.calendar-suggestion-list .date-box{min-width:0;font-size:30px}
+.calendar-date-note{background:var(--ice);border-left:3px solid var(--signal);padding:12px 16px;line-height:1.6}
+@media(max-width:699px){
+ .calendar-suggestion-list .suggestion{grid-template-columns:42px minmax(0,1fr);gap:8px 12px;padding:16px 12px}
+ .calendar-suggestion-list .suggestion button{grid-column:2;justify-self:start;padding:10px 0;min-width:44px}
+ .calendar-suggestion-list .suggestion strong{font-size:14px}
+ .calendar-suggestion-controls>label{width:100%}
+ .calendar-suggestion-controls select{width:100%!important}
+}
+@media(max-width:699px){
+ /* A floating create button covered calendar details and row actions. */
+ #view-dashboard #new-campaign{position:static;display:inline-flex;align-items:center;margin-top:16px;box-shadow:none;min-height:48px}
+}
+.sidebar-foot .dot.limited{background:var(--signal)}
+@media(max-width:699px){
+ #view-dashboard .preview-banner{padding:8px 14px;margin-bottom:20px}
+ #view-dashboard .preview-banner>div,#view-dashboard .preview-banner>.preview-icon{display:none}
+ #view-dashboard .preview-banner button{margin:0;min-height:44px;padding:8px 0}
+ #view-dashboard .section-heading{flex-wrap:wrap}
+ #view-dashboard .section-heading #timezone-label{max-width:none;text-align:left;font-size:12px}
+}
+
+/* Familiar campaign sections with a height-first, complete-flyer preview. */
+#editor{width:min(1600px,calc(100% - 16px));height:98dvh;max-height:98dvh}
+#editor .dialog-heading{padding:10px 20px;align-items:center}
+#editor .dialog-heading h2{font-size:25px}
+#editor .dialog-footer{padding:8px 20px;min-height:60px}
+.editor-section-nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;padding:5px 16px;background:var(--paper);border-bottom:1px solid var(--line);flex-shrink:0}
+.editor-section-nav button{display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:8px;font-size:13px;border-color:transparent;background:transparent}
+.editor-section-nav button span{font-size:11px;color:var(--muted)}
+.editor-section-nav button[aria-current]{border-color:var(--line);background:var(--ice);box-shadow:inset 0 -3px var(--scarlet)}
+.editor-fields>section{scroll-margin-top:16px;padding-bottom:16px}
+.editor-fields>section>.form-section-heading:first-child{margin-top:8px}
+.editor-fields #campaign-groupme{border-top:1px solid var(--line);padding-top:16px}
+.editor-workspace{grid-template-columns:minmax(350px,.85fr) minmax(0,1.15fr)}
+.editor-fields{padding:18px 24px}
+.editor-preview-pane{padding:8px}
+.editor-preview-pane .artwork-preview[open]{position:relative;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto auto;padding:8px;gap:6px}
+.editor-preview-pane .artwork-preview>summary{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.editor-preview-pane .preview-formats{grid-column:1;grid-row:1;display:flex;flex-direction:row;align-items:center;flex-wrap:wrap;gap:5px;margin:0}
+.editor-preview-pane .preview-formats button{width:auto;min-height:44px;padding:8px 10px;font-size:12px}
+.editor-preview-pane .preview-formats button[aria-pressed=true]::before{display:none}
+.inline-preview-zoom{margin:0!important;min-width:0;flex:1}
+.inline-preview-zoom select{width:100%;min-height:44px;margin:0;padding:8px;font-size:12px}
+.editor-preview-pane .inline-preview-canvas{grid-column:1;grid-row:2;overflow:hidden;min-height:0;display:grid;place-items:center}
+.inline-preview-canvas>.ig-post{max-width:none;align-self:center}
+.inline-preview-canvas>.ig-post>.ig-header{min-height:44px;padding:6px 10px}
+.inline-preview-canvas .ig-avatar{width:30px;height:30px}
+.ig-post.caption-collapsed>.ig-body{display:none!important}
+.inline-preview-canvas>.ig-post:not(.caption-collapsed)>.ig-body{max-height:170px;display:flex;flex-direction:column}
+.inline-preview-canvas .ig-caption{min-height:0;max-height:100px;overflow:auto}
+.inline-preview-canvas .ig-actions{height:32px;flex-shrink:0}
+#artwork-preview-status{grid-column:1;grid-row:4;margin:0;font-size:11px!important;line-height:1.4}
+#artwork-preview-caption{grid-column:1;grid-row:3;margin:0;font-size:11px!important;line-height:1.4}
+.inline-preview-canvas.is-zoomed{display:block;overflow:auto;overscroll-behavior:contain}
+.inline-preview-canvas.is-zoomed>.ig-post{max-width:none;margin:auto}
+#preview-dialog[open]{display:flex;flex-direction:column}
+.preview-dialog-heading{display:flex;flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;padding:8px 16px;border-right:0;border-bottom:1px solid var(--line);overflow:visible;flex-shrink:0}
+.preview-dialog-heading h2{font-size:18px;margin:0}
+.preview-dialog-heading .preview-formats{display:flex;flex-direction:row;flex-wrap:nowrap;gap:5px;margin:0}
+.preview-zoom-label{display:flex;flex-direction:row;align-items:center;gap:6px;margin:0}
+.preview-zoom-label select{width:auto;min-height:44px}
+#close-preview{margin:0}
+#preview-dialog-canvas{flex:1;min-height:0;padding:0;scrollbar-gutter:auto;display:grid;place-items:center}
+#preview-dialog-canvas>.ig-post{margin:0;max-width:none}
+#preview-dialog-canvas>.ig-post.caption-collapsed{display:flex;flex-direction:column}
+#preview-dialog-canvas>.ig-post.caption-collapsed>.ig-header{grid-column:auto;grid-row:auto;order:0;min-height:44px;padding:6px 10px;border-left:0}
+#preview-dialog-canvas>.ig-post.caption-collapsed>.ig-header .ig-avatar{width:30px;height:30px}
+#preview-dialog-canvas>.ig-post.caption-collapsed>.ig-media{grid-column:auto;grid-row:auto;order:1}
+.expanded-preview-stage{margin:0}
+#preview-dialog-status{padding:6px 16px;flex-shrink:0;font-size:11px;line-height:1.4}
+#open-campaign-event-page{margin:8px 0 0}
+.local-editor-banner{margin:0;padding:10px 16px;background:var(--ice);border-left:3px solid var(--signal);font-size:13px}
+@media(max-width:959px){
+ .editor-workspace{display:block}
+ .editor-preview-pane{padding:12px}
+ .editor-preview-pane .artwork-preview[open]{display:grid;height:min(78dvh,800px);min-height:420px}
+ .editor-preview-pane .inline-preview-canvas{height:auto;min-height:0}
+ .editor-preview-pane .preview-formats{flex-direction:row}
+ .editor-fields .two-col{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+}
+@media(max-width:699px){
+ #editor{width:100%;height:100dvh;max-height:100dvh}
+ #editor .dialog-heading{padding:8px 12px}
+ #editor .dialog-heading h2{font-size:23px}
+ .editor-section-nav{padding:4px;gap:0}
+ .editor-section-nav button{flex-direction:column;gap:0;padding:4px 2px;font-size:11px;min-width:44px}
+ .editor-section-nav button span{font-size:10px}
+ .editor-fields{padding:16px}
+ .editor-fields .two-col{grid-template-columns:minmax(0,1fr)}
+ .editor-preview-pane .preview-formats{gap:4px}
+ .editor-preview-pane .preview-formats button{padding:8px 6px;font-size:11px}
+ .inline-preview-zoom{flex-basis:100%}
+ .preview-dialog-heading{padding:6px;gap:5px}
+ .preview-dialog-heading .preview-formats button{padding:8px 6px;min-width:44px;font-size:11px}
+ .preview-zoom-label span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+ .preview-zoom-label select{width:100px;font-size:11px;padding:8px 4px}
+ #preview-dialog-status{padding:5px 8px;font-size:11px}
+}
+/* A narrow fit must not grow the account header and push the flyer below the canvas. */
+.inline-preview-canvas>.ig-post>.ig-header,#preview-dialog-canvas>.ig-post.caption-collapsed>.ig-header{height:48px;min-height:48px;max-height:48px;box-sizing:border-box;flex-shrink:0}
+.ig-header .ig-avatar{flex-shrink:0}.ig-header .ig-account{min-width:0;overflow:hidden}.ig-header .ig-account strong,.ig-header .ig-account small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}.ig-header .ig-more{flex-shrink:0}
+.editor-preview-pane .inline-preview-canvas.is-groupme-preview{display:flex;align-items:stretch;overflow:hidden}
+.is-groupme-preview #groupme-preview-panel{height:100%;min-height:0;overflow:hidden}
+#groupme-preview-panel .gm-message{flex:1;min-height:0;max-height:none}
+/* Always-available help, including a complete officer setup guide. */
+.hub-guide-button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:44px;min-height:44px;padding:8px 10px;font-size:12px;flex-shrink:0}
+.info-symbol{display:inline-grid;place-items:center;border:1.5px solid currentColor;border-radius:50%;width:19px;height:19px;font:italic 700 14px Georgia,serif;flex:none}
+.token-guide-open{display:inline-flex;align-items:center;gap:8px;margin-top:20px;min-height:44px;text-align:left}
+#hub-guide{width:min(860px,calc(100% - 32px));height:min(850px,90dvh);max-height:90dvh;padding:0;overflow:hidden;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:12px}
+#hub-guide[open]{display:flex;flex-direction:column}
+.guide-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:24px 28px 16px;border-bottom:1px solid var(--line);flex-shrink:0}
+.guide-heading .eyebrow{margin:0 0 8px}.guide-heading h2{font-size:29px;line-height:1.2;margin:0}.guide-heading button{min-width:44px;min-height:44px}
+.guide-tabs{display:flex;gap:6px;padding:10px 24px;border-bottom:1px solid var(--line);flex-shrink:0}
+.guide-tabs button{min-height:44px;flex:1;padding:8px 10px;font-size:13px}
+.guide-tabs button[aria-selected=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.guide-body{overflow:auto;min-height:0;padding:22px 28px;overscroll-behavior:contain;font-size:14px;line-height:1.75}
+.guide-body [role=tabpanel]:focus-visible{outline:3px solid var(--focus);outline-offset:4px}
+.guide-body h3{margin:24px 0 8px;font-size:19px}.guide-intro{font-size:17px;margin:0 0 20px;line-height:1.6;color:var(--ink)}
+.guide-steps{padding-left:24px;margin:20px 0}.guide-steps li{padding-left:7px;margin-bottom:16px}.guide-steps li::marker{color:var(--scarlet);font-weight:700}.guide-steps li>strong{display:block;color:var(--ink)}
+.guide-primary{display:inline-flex;align-items:center;min-height:44px;padding:10px 16px;border-radius:6px;background:var(--action-bg);color:#fff;text-decoration:none;font-weight:650;margin:6px 0}
+.guide-table-wrap{max-width:100%;overflow:auto}.guide-permissions{width:100%;border-collapse:collapse;font-size:13px;line-height:1.6;margin:16px 0;table-layout:fixed}.guide-permissions caption{text-align:left;font-weight:700;margin-bottom:8px}.guide-permissions th,.guide-permissions td{text-align:left;border:1px solid var(--line);padding:10px;vertical-align:top;overflow-wrap:anywhere}.guide-permissions thead{background:var(--ice)}.guide-permissions th:first-child{width:23%}.guide-permissions th:nth-child(2){width:26%}
+.guide-connection,.guide-access{margin:18px 0}.guide-connection>div,.guide-access>div{padding:12px 0;border-bottom:1px solid var(--line)}.guide-connection dt,.guide-access dt{font-weight:650}.guide-connection dd,.guide-access dd{margin:4px 0 0;overflow-wrap:anywhere}
+.guide-callout{padding:14px 16px;background:var(--ice);border-left:3px solid var(--signal);line-height:1.7}.guide-troubleshooting summary{cursor:pointer;min-height:44px;display:list-item;font-weight:650;padding:10px 0}.guide-troubleshooting li{margin:10px 0}.guide-sources{font-size:12px;line-height:1.7;color:var(--muted)}
+@media(max-width:699px){.guide-button-label{display:none}.hub-guide-button{padding:8px;min-width:44px}.header-actions{gap:4px}#hub-guide{width:100%;max-width:none;height:100dvh;max-height:100dvh;margin:0;border-radius:0}.guide-heading{padding:16px}.guide-heading h2{font-size:23px}.guide-tabs{padding:8px;gap:4px}.guide-tabs button{font-size:12px;padding:8px 6px}.guide-body{padding:18px 16px}.guide-permissions th,.guide-permissions td{padding:7px;font-size:12px}.guide-steps{padding-left:20px}}
+@media(max-height:450px){.guide-heading{padding:8px 16px}.guide-heading .eyebrow{display:none}.guide-heading h2{font-size:20px}.guide-tabs{padding:4px 8px}}
+.card-engagement{border-top:1px solid var(--line);margin-top:18px;padding-top:14px}.card-engagement-values{display:flex;gap:16px;flex-wrap:wrap;align-items:center;font-size:14px}.card-engagement-values strong{font-size:20px;font-variant-numeric:tabular-nums}.card-engagement-values [aria-hidden]{font-size:24px;color:var(--scarlet);line-height:1}.card-engagement p,.card-engagement small{display:block;font-size:11px;line-height:1.6;color:var(--muted);margin:6px 0 0}.card-engagement.is-empty p{font-size:12px}
+.calendar-difference details{margin-top:10px}.calendar-difference summary{cursor:pointer;min-height:44px;padding:10px 0;font-size:13px}.calendar-difference dl{margin:0}.calendar-difference dt{font-weight:650;font-size:13px}.calendar-difference dd{margin:4px 0 12px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;line-height:1.7}
+.campaign-card .card-engagement+.steps{margin-top:16px}
+/* Keep the member-facing page one click away from the campaign view. */
+.detail-heading-actions{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.event-page-action{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:36px;padding:7px 11px;border:1px solid var(--line);border-radius:var(--radius);background:var(--paper);color:var(--ink);font-size:12px;font-weight:650;text-decoration:none;white-space:nowrap}
+.event-page-action:hover{background:var(--ice);border-color:var(--steel)}
+/* Fine-pointer desktops use a compact single-row preview toolbar. */
+@media(min-width:960px) and (hover:hover) and (pointer:fine){
+ .editor-preview-pane .preview-formats{flex-wrap:nowrap;gap:4px}
+ .editor-preview-pane .preview-formats button,.preview-dialog-heading .preview-formats button,#expanded-toggle-preview-caption,#close-preview{min-height:32px;height:32px;padding:5px 7px;font-size:11px;line-height:1.2;white-space:nowrap}
+ .preview-formats [data-preview-format]{gap:4px}
+ .preview-formats [data-preview-format] svg{width:16px;height:16px}
+ .inline-preview-zoom{flex:0 1 124px;min-width:105px}
+ .inline-preview-zoom select,.preview-zoom-label select{min-height:32px;height:32px;padding:4px 6px;font-size:11px;line-height:1.2}
+ .editor-preview-pane .preview-formats #enlarge-preview{display:inline-grid;place-items:center;width:32px;min-width:32px;padding:5px;flex-shrink:0}
+ .preview-dialog-heading{padding:6px 12px;gap:8px;flex-wrap:nowrap}
+ .preview-dialog-heading h2{font-size:16px;white-space:nowrap}
+ .preview-zoom-label{gap:5px;font-size:11px}
+ .preview-zoom-label select{width:124px}
+ #artwork-preview-status{font-size:10px!important}
+}
+@media(max-width:699px){
+ #detail .dialog-heading{align-items:flex-start;gap:8px;padding:16px}
+ #detail .dialog-heading h2{font-size:24px}
+ .detail-heading-actions{flex-direction:column-reverse;align-items:flex-end;gap:6px}
+ .event-page-action{min-height:44px;padding:8px;font-size:11px}
+}
+@media(pointer:coarse){.event-page-action{min-height:44px}}
+/* The campaign drawer prioritizes the complete first flyer over chrome. */
+#detail .dialog-heading{padding:16px 20px;gap:12px}
+#detail .dialog-heading>div:first-child{min-width:0;flex:1}
+#detail .dialog-heading .eyebrow{margin-bottom:6px;font-size:10px}
+#detail .dialog-heading h2{font-size:25px;line-height:1.18}
+#detail-content{padding:16px 20px}
+#detail .ig-detail-image img{max-height:var(--detail-media-height,55dvh);object-fit:contain;background:#fafafa}
+#detail .ig-detail-post .ig-caption{max-height:150px}
+#detail .dialog-footer{padding:10px 20px;gap:6px}
+#detail .dialog-footer>span{margin:0;font-size:11px}
+@media(min-width:960px) and (hover:hover) and (pointer:fine){
+ #detail .dialog-heading .icon-button{min-height:32px;min-width:32px;width:32px;height:32px;padding:4px}
+ #detail .dialog-footer button{min-height:32px;padding:5px 8px;font-size:11px}
+ #detail-actions [data-cancel]{padding:5px 6px}
+ #detail .event-page-action{min-height:32px;padding:5px 9px;font-size:11px}
+}
+@media(max-width:699px){
+ #detail .dialog-heading{padding:12px 16px}
+ #detail .dialog-heading h2{font-size:23px}
+ #detail-content{padding:12px 16px}
+ #detail .dialog-footer{padding:10px 16px max(10px,env(safe-area-inset-bottom));gap:8px}
+ #detail .dialog-footer button{min-height:44px}
+}

@@ -1,5 +1,7 @@
 import {checkDispatcherAccess} from './check-dispatcher-access.mjs';
 import {checkMemberEvent} from './check-member-event.mjs';
+import {checkDashboardDesign} from './check-dashboard-design.mjs';
+import {checkPreviewPane} from './check-preview-pane.mjs';
 import {checkGroupMePreview} from './check-groupme-preview.mjs';
 import {checkCampaignControls} from './check-campaign-controls.mjs';
 import {checkEditorLayout} from './check-editor-layout.mjs';
@@ -20,6 +22,8 @@ try {
  browser=await chromium.launch({headless:true});
  await checkDispatcherAccess(browser,base);
  await checkMemberEvent(browser,base);
+ await checkDashboardDesign(browser,base);
+ await checkPreviewPane(browser,base);
  await checkCampaignControls(browser,base);
  await checkGroupMePreview(browser,base);
  await checkThemes(browser,base);
@@ -28,6 +32,9 @@ try {
  const page=await browser.newPage({viewport:{width:1440,height:1080},timezoneId:'America/Los_Angeles'});
  await page.clock.install({time:new Date('2026-10-15T16:00:00Z')});
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ // Exercise only labeled examples, even when deployed Pages data includes live campaigns.
+ await page.route('**/data/archive-index.json',async route=>{const response=await route.fetch(),archive=await response.json();await route.fulfill({json:{...archive,campaigns:(archive.campaigns||[]).filter(c=>c.demo===true)}});});
+ await page.route('**/data/candidates.json',route=>route.fulfill({json:{events:[{uid:'browser-calendar-fixture',title:'Browser calendar suggestion',start:'2026-11-25T23:00:00Z',end:'2026-11-26T00:00:00Z',location:{name:'Fixture room'}}],changes:[]}}));
  let healthRecord={lastSuccessfulLiveRunAt:'2026-10-15T14:00:00Z'};
  await page.route('**/data/dispatcher-health.json',route=>healthRecord?route.fulfill({json:healthRecord}):route.fulfill({status:404,json:{}}));
  await page.goto(base);await page.waitForSelector('#campaign-list .empty');
@@ -134,6 +141,7 @@ try {
  await page.waitForFunction(()=>document.querySelector('#connection-label').textContent==='Connected');
  assert.equal(await page.locator('#header-connection-text').textContent(),'Connected');assert.match(await page.locator('#settings-connection-state').textContent(),/Token connected/);assert.match(await page.locator('#connection-access-dispatch').textContent(),/Not checked/);
  await page.locator('[data-view=dashboard]').click();
+ await page.locator('#dispatcher-controls > summary').click();
  await page.locator('#dispatcher-preview').click();await page.waitForFunction(()=>document.querySelector('#dispatcher-control-status').textContent.includes('Preview dispatcher requested'));
  assert.deepEqual(dispatcherRequests,[{ref:'main',inputs:{dry_run:true}}]);
  page.once('dialog',dialog=>dialog.dismiss());await page.locator('#dispatcher-live').click();assert.equal(dispatcherRequests.length,1);
@@ -181,6 +189,8 @@ try {
  assert.equal(storyOnly.status.feed,'skipped');assert.equal(storyOnly.status.story,'pending');assert.equal(storyOnly.flyerUrl,pngSaved.flyerUrl);
  // Opt-in bot controls in an isolated browser: no credentials or live writes.
  const botPage=await browser.newPage({viewport:{width:1440,height:1080}});
+ await botPage.route('**/data/archive-index.json',route=>route.fulfill({json:{campaigns:[]}}));
+ await botPage.route('**/data/candidates.json',route=>route.fulfill({json:{events:[],changes:[]}}));
  await botPage.clock.install({time:new Date('2026-10-15T16:00:00Z')});
  await botPage.route('**/config/chapter.json',async route=>{
   const response=await route.fetch(),config=await response.json();
