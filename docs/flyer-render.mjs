@@ -47,7 +47,7 @@ export function flyerHtml(template, campaign, config, format, assets = {}) {
     logo:logo ? `<img class="logo" src="${logo}" alt="">` : ''
   };
   if(assets.previewMissingDate)Object.assign(values,{date:'Choose a date',day:'—',month:'DATE',shortDate:'Choose a date',time:'Choose a time'});
-  if(format==='story'&&campaign.storyDesign?.background&&campaign.storyDesign.background!=='template')return renderStoryDesign({campaign,config,assets,values});
+  if(format==='story'&&((!image&&assets.previewMissingDate)||(campaign.storyDesign?.background&&campaign.storyDesign.background!=='template')))return renderStoryDesign({campaign,config,assets,values});
   return template.replace(/{{(\w+)}}/g,(_,key)=>values[key] ?? '');
 }
 export async function fitFlyerDocument(doc = document) {
@@ -55,6 +55,13 @@ export async function fitFlyerDocument(doc = document) {
     await Promise.all([...doc.images].map(image => image.decode().catch(() => {if(image.classList.contains('logo')){image.replaceWith(doc.createTextNode(image.alt||doc.body.dataset.chapter||'Chapter'));return;}if(image.classList.contains('story-flyer')||image.classList.contains('uploaded-feed'))throw Error('The uploaded flyer could not load. Check its URL or upload the image again.');})));
     const page = doc.querySelector('.page');
     if (!page) return;
+    if(page.classList.contains('text-story')){
+      const hero=page.querySelector('.hero'),card=page.querySelector('.title-card'),title=page.querySelector('h1'),style=doc.defaultView.getComputedStyle(hero);
+      const available=hero.clientHeight-parseFloat(style.paddingTop)-parseFloat(style.paddingBottom);
+      for(let size=parseFloat(doc.defaultView.getComputedStyle(title).fontSize);size>44&&card.getBoundingClientRect().height>available;size-=2)title.style.fontSize=`${Math.max(44,size-2)}px`;
+      if(card.getBoundingClientRect().height>available+1)throw Error('Story text exceeds the safe layout; shorten the title or event details');
+      return;
+    }
     if(page.classList.contains('flyer-showcase')){
       const hero=page.querySelector('.hero'),artwork=page.querySelector('.artwork'),caption=page.querySelector('.showcase-caption'),image=page.querySelector('.story-flyer'),style=doc.defaultView.getComputedStyle(page);
       const available=page.clientHeight-parseFloat(style.paddingTop)-parseFloat(style.paddingBottom);

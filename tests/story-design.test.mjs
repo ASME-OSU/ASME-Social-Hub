@@ -27,5 +27,14 @@ test('treatments retain uncropped flyer, escaped values, and fitter structure',(
 
 test('blueprint grid uses dark lines on bright palettes',()=>{
  const html=renderStoryDesign({campaign:{storyDesign:{background:'blueprint-rings',palette:['#eeffee','#dd0000','#ffffff']}},config:{},values:{}});
- assert.match(html,/#10284020 1px/);assert.match(html,/stroke="#102840"/);
+ assert.match(html,/#10284008 1px/);assert.doesNotMatch(html,/<svg/);
+});
+
+
+test('Stories without media use full-height type-led artwork without placeholder symbols',()=>{
+ for(const background of ['color-wash','blueprint-rings','folded-paper']){
+  const html=renderStoryDesign({campaign:{storyDesign:{background}},config:{},values:{title:'Meet &lt;engineers&gt;',chapter:'ASME',shortDate:'Thu, Oct 22',time:'6:00 PM EDT',location:'Scott E100',foodClass:'nofood'}});
+  assert.match(html,/text-story/);assert.match(html,/height:1920px/);assert.match(html,/grid-template-rows:auto minmax\(0,1fr\) auto auto/);
+  assert.match(html,/Meet &lt;engineers&gt;/);assert.match(html,/Scott E100/);assert.doesNotMatch(html,/<svg|abstract-card|class="logo"|story-flyer/);
+ }
 });

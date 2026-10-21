@@ -66,9 +66,9 @@ export async function checkCampaignControls(browser,base) {
   assert.equal(await page.locator('.campaign-management-actions [data-delete]').count(),1);
   assert.match(await page.locator('#campaign-cancel-help').textContent(),/keep this campaign in the archive/);
   assert.match(await page.locator('#campaign-delete-help').textContent(),/Remove this campaign from the dashboard and archive/);
-  assert.equal(await page.locator('#detail .member-event-link a').getAttribute('href'),eventPageUrl(campaign,config));
-  assert.equal(await page.locator('#detail .member-event-link a').getAttribute('target'),'_blank');
-  assert.match(await page.locator('#detail .member-event-link a').getAttribute('rel'),/noopener/);
+  assert.equal(await page.locator('#detail #detail-event-page').getAttribute('href'),eventPageUrl(campaign,config));
+  assert.equal(await page.locator('#detail #detail-event-page').getAttribute('target'),'_blank');
+  assert.match(await page.locator('#detail #detail-event-page').getAttribute('rel'),/noopener/);
   const detailPost=page.locator('#detail-instagram-preview .ig-post');
   assert.equal(await detailPost.locator('.ig-account strong').textContent(),config.instagramHandle.replace(/^@/,''));
   assert.equal(await detailPost.locator('.ig-caption-text').textContent(),captionFor(campaign,config));

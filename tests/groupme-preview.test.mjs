@@ -8,7 +8,7 @@ const campaign={id:'fixture',year:'2026-27',title:'Fixture design night',descrip
 test('GroupMe preview exactly matches the live publisher including date, ads, and links',()=>{
  assert.equal(botAnnouncementText,publisherText);
  const content=groupMePreviewContent(campaign,config);assert.equal(content.text,publisherText(campaign,config));assert.equal(content.text,groupMeAnnouncementDraft(campaign,config));assert.equal(content.name,'Gearley');assert.equal(content.avatar,'assets/logos/groupme-bot.png');assert.equal(content.state,'preview');assert.equal(content.count,content.text.length);
- for(const part of ['6:30 PM (America/New_York)','Food provided! Pizza','Bring / dress: Bring a laptop','RSVP: https://example.org/rsvp','Event details: https://example.org/hub/event.html?year=2026-27&id=fixture'])assert.ok(content.text.includes(part),part);
+ for(const part of ['6:30 PM EST','Food provided! Pizza','Bring / dress: Bring a laptop','RSVP: https://example.org/rsvp','Event details: https://example.org/hub/event.html?year=2026-27&id=fixture'])assert.ok(content.text.includes(part),part);
  assert.doesNotMatch(content.text,/Calendar:|Flyer:/);
 });
 test('sent and attempted message snapshots stay unchanged when event content is edited',()=>{
@@ -38,3 +38,10 @@ test('bot identity defaults are stable and avatar values reject unsafe schemes a
 test('pending flyer uploads disclose that final public links are not available yet',()=>{const content=groupMePreviewContent(campaign,config,{pendingFlyerUpload:true});assert.match(content.note,/New flyer links are finalized when uploads are saved/);assert.doesNotMatch(content.note,/exact message/);assert.equal(content.text,publisherText(campaign,config));});
 
 test('examples, archives, and inactive years never claim an announcement is scheduled',()=>{for(const draft of [{...campaign,demo:true},{...campaign,archived:true},{...campaign,year:'2025-26'}]){const content=groupMePreviewContent(draft,{...config,activeYear:'2026-27'});assert.equal(content.enabled,false);assert.equal(content.state,'off');assert.doesNotMatch(content.note,/exact message/);}});
+
+test('new announcement times show event-date daylight or standard time without IANA noise',()=>{
+ const summer=groupMeAnnouncementDraft({...campaign,start:'2026-10-22T21:30:00Z'},config);
+ const winter=groupMeAnnouncementDraft(campaign,config);
+ assert.match(summer,/5:30 PM EDT/);assert.match(winter,/6:30 PM EST/);
+ assert.doesNotMatch(summer,/America\/New_York/);assert.doesNotMatch(winter,/America\/New_York/);
+});

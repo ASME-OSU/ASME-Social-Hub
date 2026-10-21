@@ -1,3 +1,5 @@
+import {checkUiRefinements} from './check-ui-refinements.mjs';
+import {checkStoryEmptyMedia} from './check-story-empty-media.mjs';
 import {checkDispatcherAccess} from './check-dispatcher-access.mjs';
 import {checkMemberEvent} from './check-member-event.mjs';
 import {checkDashboardDesign} from './check-dashboard-design.mjs';
@@ -27,8 +29,10 @@ try {
  await checkCampaignControls(browser,base);
  await checkGroupMePreview(browser,base);
  await checkThemes(browser,base);
+ await checkUiRefinements(browser,base);
  await checkEditorLayout(browser,base);
  await checkStoryDesigns(browser,base);
+ await checkStoryEmptyMedia(browser,base);
  const page=await browser.newPage({viewport:{width:1440,height:1080},timezoneId:'America/Los_Angeles'});
  await page.clock.install({time:new Date('2026-10-15T16:00:00Z')});
  const errors=[];page.on('pageerror',e=>errors.push(e.message));

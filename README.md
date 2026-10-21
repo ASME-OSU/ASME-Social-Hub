@@ -27,7 +27,7 @@ The dispatcher is scheduled every 15 minutes and uses chapter-local calendar dat
 
 Campaign details group **Cancel campaign** (stop pending posts and retain the archive record) beside **Delete from hub** (hide the campaign from the dashboard and archive while retaining publishing receipts). Click a feed or story image to open a centered preview; close it with X, Escape, or the backdrop.
 
-GroupMe bot announcements include one member event link instead of separate calendar and flyer links. `event.html?year=<year>&id=<campaign-id>` displays public event details, RSVP, the flyer, and a calendar download. It follows the device’s light/dark appearance automatically, including changes while the page is open. Campaign details include a link to this member view.
+GroupMe bot announcements include one member event link instead of separate calendar and flyer links. `event.html?year=<year>&id=<campaign-id>` displays public event details, RSVP, the flyer, and separate Google Calendar and Apple Calendar actions. Dates use Columbus time with the correct EDT/EST abbreviation. It follows the device’s light/dark appearance automatically, including changes while the page is open. Campaign details include a link to this member view.
 
 See [SETUP.md](SETUP.md), [HANDOFF.md](HANDOFF.md), [FORKING.md](FORKING.md), and [INTEGRATIONS.md](INTEGRATIONS.md). Calendar recurrence parsing was extracted from the neighboring ASME Newsletter Builder and uses `node-ical@0.26.1`.
 

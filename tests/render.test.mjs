@@ -88,3 +88,11 @@ test('Chapter template Stories never use the uploaded flyer as a backdrop',()=>{
  const html=flyerHtml(blueprint,{...campaign,flyerUrl:'https://example.org/flyer.png'},config,'story');
  assert.doesNotMatch(html,/<img class="flyer"/);assert.doesNotMatch(html,/src="https:\/\/example.org\/flyer.png"/);assert.match(html,/6:00 PM EST/);
 });
+
+
+test('an empty-date Chapter Story preview uses clean text artwork without changing complete template exports',()=>{
+ const ordinary=flyerHtml(blueprint,campaign,config,'story');
+ const preview=flyerHtml(blueprint,campaign,config,'story',{previewMissingDate:true});
+ assert.match(preview,/text-story/);assert.match(preview,/Choose a date/);assert.match(preview,/Choose a time/);assert.doesNotMatch(preview,/<svg|abstract-card/);
+ assert.doesNotMatch(ordinary,/text-story/);
+});

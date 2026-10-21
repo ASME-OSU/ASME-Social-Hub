@@ -1,3 +1,4 @@
+import {timeZoneName} from './display-time.mjs';
 import {fireTime} from './time.mjs';
 
 const labels={feed:'Instagram feed',story:'Instagram story',groupme:'GroupMe announcement'};
@@ -25,7 +26,7 @@ export function scheduleWarnings(c, config, now=new Date()) {
     try {due=fireTime({...c,campaign:{...c.campaign,[bot?'feed':channel]:cadence}},bot?'feed':channel,config.timezone);}catch{continue;}
     const dueAt=Date.parse(due);
     if(current<start&&current<=dueAt)continue;
-    const scheduled=new Intl.DateTimeFormat('en-US',{timeZone:config.timezone,dateStyle:'medium',timeStyle:'short'}).format(new Date(dueAt))+' ('+config.timezone+')';
+    const scheduled=new Intl.DateTimeFormat('en-US',{timeZone:config.timezone,dateStyle:'medium',timeStyle:'short'}).format(new Date(dueAt))+' '+timeZoneName(dueAt,config.timezone);
     const missed=skippedMissed||current>=start||current-dueAt>WINDOW_MS;
     const message=skippedMissed
       ? `${labels[channel]} will not be posted: it is marked skipped after a missed publishing window. Scheduled for ${scheduled}. A posting time that is still in the past will not reopen it. Choose a future posting time and save the campaign.`

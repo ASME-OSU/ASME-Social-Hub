@@ -9,8 +9,8 @@ import {groupMeAnnouncementDraft} from '../docs/groupme-message.mjs';
 const config={chapterName:'ASME',timezone:'America/New_York',siteUrl:'https://example.org/hub'};
 const c={id:'meeting',year:'2026-27',title:'Meeting <script>',description:'Details & more',start:'2026-11-20T18:00:00-05:00',end:'2026-11-20T19:00:00-05:00',location:{name:'Scott E100'},advertising:{rsvpUrl:'https://example.org/rsvp'}};
 test('member page escapes event content and offers accurate calendar and RSVP actions',()=>{
- const html=renderEventPage(c,config);assert.match(html,/Meeting &lt;script&gt;/);assert.doesNotMatch(html,/<script>/);assert.match(html,/20261120T230000Z%2F20261121T000000Z/);assert.match(html,/https:\/\/example.org\/hub\/calendar\/2026-27\/meeting.ics/);assert.match(html,/https:\/\/example.org\/rsvp/);
- const cancelled=renderEventPage({...c,cancelled:true},config);assert.match(cancelled,/has been cancelled/);assert.doesNotMatch(cancelled,/Add to Google Calendar|>RSVP/);
+ const html=renderEventPage(c,config);assert.match(html,/Meeting &lt;script&gt;/);assert.doesNotMatch(html,/<script>/);assert.match(html,/20261120T230000Z%2F20261121T000000Z/);assert.match(html,/https:\/\/example.org\/hub\/calendar\/2026-27\/meeting.ics/);assert.match(html,/https:\/\/example.org\/rsvp/);assert.match(html,/Add to Apple Calendar/);assert.match(html,/Columbus time · EST/);assert.doesNotMatch(html,/>America\/New_York</);
+ const cancelled=renderEventPage({...c,cancelled:true},config);assert.match(cancelled,/has been cancelled/);assert.doesNotMatch(cancelled,/Add to Google Calendar|Add to Apple Calendar|>RSVP/);
 });
 test('event links require HTTPS, with loopback allowed only in local preview',()=>{
  assert.equal(publicEventURL(c,{...config,siteUrl:'javascript:alert(1)'}),'');assert.equal(publicEventURL(c,{...config,siteUrl:'http://localhost:4275'}),'');assert.equal(publicEventURL(c,{...config,siteUrl:'http://localhost:4275',previewOnly:true}),'http://localhost:4275/events/2026-27/meeting/');
