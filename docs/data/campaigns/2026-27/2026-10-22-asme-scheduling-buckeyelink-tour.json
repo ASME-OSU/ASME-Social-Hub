@@ -34,7 +34,8 @@
         86400
       ],
       "enabled": true,
-      "announce": true
+      "announce": true,
+      "includeEventPage": false
     },
     "feed": {
       "daysBefore": 1,
@@ -43,7 +44,7 @@
     },
     "story": {
       "daysBefore": 0,
-      "time": "12:00",
+      "time": "23:30",
       "enabled": true
     }
   },
@@ -52,7 +53,7 @@
     "feed": "",
     "story": ""
   },
-  "revision": 1,
+  "revision": 2,
   "cancelled": false,
   "status": {
     "feed": "done",
