@@ -35,6 +35,7 @@ export async function checkGroupMePreview(browser,base) {
   assert.doesNotMatch(await detail.locator('.gm-message-text').textContent(),/Current edited event title/);
   await detail.locator('.gm-avatar img').evaluate(image=>image.decode());
   assert.match(await detail.locator('.gm-avatar img').getAttribute('src'),/groupme-bot\.png$/);
+  assert.equal(await detail.locator('.gm-avatar img').evaluate(img=>getComputedStyle(img).filter),'grayscale(1)');
   assert.equal(await page.locator('[data-preview-format=groupme] svg').count(),0,'GroupMe preview buttons use text only');
   for(const button of await page.locator('[data-preview-format=groupme]').all())assert.equal((await button.textContent()).trim(),'GroupMe');
   assert.ok(await detail.locator('.gm-message').evaluate(element=>element.scrollHeight>element.clientHeight));

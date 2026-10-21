@@ -21,7 +21,7 @@ import {createFlyerUploads} from './flyer-uploads.mjs';
 import {createFeedImageGuard} from './image-policy.mjs';
 import {createStoryControls} from './story-controls.mjs';
 import {renderSocialLinks} from './social-links.mjs';
-import {createFlyerPreview} from './flyer-preview.mjs';
+import {createFlyerPreview} from './flyer-preview.mjs?v=20261021-caption-visible';
 import {localInput,fromLocal,fireTime} from './time.mjs';
 import {DEFAULT_CHANNELS,readChannelDefaults,saveChannelDefaults,resetChannelDefaults} from './channel-preferences.mjs';
 const memberEventURL=c=>config?.previewOnly?publicEventURL(c,config):eventPageUrl(c,config);

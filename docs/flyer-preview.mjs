@@ -13,7 +13,7 @@ export function createFlyerPreview({form,getConfig,getExisting,getUpload,getStor
   const expanded=document.querySelector('#preview-dialog'),canvas=document.querySelector('#preview-dialog-canvas'),expandedStage=document.querySelector('.expanded-preview-stage'),zoom=document.querySelector('#preview-zoom');
   const inlineCanvas=document.querySelector('.inline-preview-canvas'),inlineZoom=document.querySelector('#inline-preview-zoom'),captionToggle=document.querySelector('#toggle-preview-caption');
   const expandedCaptionToggle=document.querySelector('#expanded-toggle-preview-caption');
-  let showCaption=false;
+  let showCaption=true;
   const syncCaption=()=>{inlinePost.root.classList.toggle('caption-collapsed',!showCaption);expandedPost.root.classList.toggle('caption-collapsed',!showCaption);captionToggle.setAttribute('aria-pressed',String(showCaption));captionToggle.textContent=showCaption?'Hide caption':'Show caption';expandedCaptionToggle.setAttribute('aria-pressed',String(showCaption));expandedCaptionToggle.textContent=captionToggle.textContent;};
   const selectImage=delta=>{const info=getFeedInfo();document.querySelectorAll('#flyer-image-list .flyer-image-pick')[info.index+delta]?.click();};
   const inlinePost=createInstagramPost({media:inlineStage,onPrevious:()=>selectImage(-1),onNext:()=>selectImage(1)}),expandedPost=createInstagramPost({media:expandedStage,onPrevious:()=>selectImage(-1),onNext:()=>selectImage(1)});
@@ -128,5 +128,5 @@ export function createFlyerPreview({form,getConfig,getExisting,getUpload,getStor
   function setFormat(value){if(!['feed','story','groupme'].includes(value))return;clearTimeout(timer);format=value;document.querySelectorAll('[data-preview-format]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.previewFormat===format)));update();}
   document.querySelectorAll('[data-preview-format]').forEach(button=>button.addEventListener('click',()=>setFormat(button.dataset.previewFormat)));
   document.querySelector('#editor').addEventListener('close',()=>{++revision;clearTimeout(timer);closePreview();frame.onload=null;frame.removeAttribute('srcdoc');status.textContent='';});
-  return {update,schedule,resetView(){showCaption=false;syncCaption();zoom.value='fit';inlineZoom.value='fit';resize();},getFormat:()=>format,showGroupMe:()=>setFormat('groupme'),showFeed:()=>setFormat('feed'),showStory:()=>{setFormat('story');if(matchMedia('(max-width:959px)').matches&&document.querySelector('#editor').open)openPreview();}};
+  return {update,schedule,resetView(){showCaption=true;syncCaption();zoom.value='fit';inlineZoom.value='fit';resize();},getFormat:()=>format,showGroupMe:()=>setFormat('groupme'),showFeed:()=>setFormat('feed'),showStory:()=>{setFormat('story');if(matchMedia('(max-width:959px)').matches&&document.querySelector('#editor').open)openPreview();}};
 }

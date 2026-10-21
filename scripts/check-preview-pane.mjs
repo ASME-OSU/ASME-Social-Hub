@@ -57,6 +57,9 @@ export async function checkPreviewPane(browser,base){
   await page.locator('[name=flyer]').setInputFiles(images.map((buffer,index)=>({name:`image-${index+1}.png`,mimeType:'image/png',buffer})));
   await page.waitForFunction(()=>document.querySelectorAll('#flyer-image-list .flyer-image-pick').length===3);
   const feed=page.locator('.inline-preview-canvas > .ig-post'),media=feed.locator('.ig-media');
+  assert.equal(await feed.locator('.ig-caption').isVisible(),true,'Caption is visible by default');
+  assert.match(await feed.locator('.ig-caption-text').textContent(),/Swipe preview fixture/);
+  assert.equal(await page.locator('#toggle-preview-caption').getAttribute('aria-pressed'),'true');
   await page.waitForFunction(()=>document.querySelector('.inline-preview-canvas .ig-position')?.textContent==='1 / 3');
   await swipe(page,media,-110);await page.waitForFunction(()=>document.querySelector('.inline-preview-canvas .ig-position')?.textContent==='2 / 3');
   assert.equal(await page.locator('#flyer-image-list .flyer-image-pick').nth(1).getAttribute('aria-pressed'),'true');
