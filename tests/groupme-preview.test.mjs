@@ -8,7 +8,8 @@ const campaign={id:'fixture',year:'2026-27',title:'Fixture design night',descrip
 test('GroupMe preview exactly matches the live publisher including date, ads, and links',()=>{
  assert.equal(botAnnouncementText,publisherText);
  const content=groupMePreviewContent(campaign,config);assert.equal(content.text,publisherText(campaign,config));assert.equal(content.text,groupMeAnnouncementDraft(campaign,config));assert.equal(content.name,'Gearley');assert.equal(content.avatar,'assets/logos/groupme-bot.png');assert.equal(content.state,'preview');assert.equal(content.count,content.text.length);
- for(const part of ['6:30 PM (America/New_York)','Food provided! Pizza','Bring / dress: Bring a laptop','RSVP: https://example.org/rsvp','Calendar: https://example.org/hub/calendar/2026-27/fixture.ics','Flyer: https://example.org/hub/media/2026-27/fixture-feed.jpg'])assert.ok(content.text.includes(part),part);
+ for(const part of ['6:30 PM (America/New_York)','Food provided! Pizza','Bring / dress: Bring a laptop','RSVP: https://example.org/rsvp','Event details: https://example.org/hub/event.html?year=2026-27&id=fixture'])assert.ok(content.text.includes(part),part);
+ assert.doesNotMatch(content.text,/Calendar:|Flyer:/);
 });
 test('sent and attempted message snapshots stay unchanged when event content is edited',()=>{
  for(const receipt of [{botSentAt:'2026-11-13T17:00:00Z'},{botAttemptedAt:'2026-11-13T17:00:00Z'}]){

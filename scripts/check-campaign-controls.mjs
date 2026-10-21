@@ -4,6 +4,7 @@ import {spawn} from 'node:child_process';
 import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {captionFor} from '../docs/caption.mjs';
+import {eventPageUrl} from '../docs/event-links.mjs';
 
 async function waitForPaintedArtwork(page,title) {
  await page.waitForFunction(expected=>{
@@ -58,8 +59,16 @@ export async function checkCampaignControls(browser,base) {
    // No dispatch, publishing, or unmatched GitHub request is allowed through.
    return route.fulfill({status:404,json:{message:'Fixture response only'}});
   });
+  await mkdir('test-results/campaign-controls',{recursive:true});
   await page.goto(base);await page.locator(`#campaign-list [data-detail="${campaign.id}"]`).click();
-  assert.equal(await page.locator('[data-delete]').isVisible(),true,'Campaign detail exposes Delete campaign');
+  assert.equal(await page.locator('[data-delete]').isVisible(),true,'Campaign detail exposes Delete from hub');
+  assert.equal(await page.locator('.campaign-management-actions [data-cancel]').count(),1,'Cancel and delete share one management group');
+  assert.equal(await page.locator('.campaign-management-actions [data-delete]').count(),1);
+  assert.match(await page.locator('#campaign-cancel-help').textContent(),/keep this campaign in the archive/);
+  assert.match(await page.locator('#campaign-delete-help').textContent(),/Remove this campaign from the dashboard and archive/);
+  assert.equal(await page.locator('#detail .member-event-link a').getAttribute('href'),eventPageUrl(campaign,config));
+  assert.equal(await page.locator('#detail .member-event-link a').getAttribute('target'),'_blank');
+  assert.match(await page.locator('#detail .member-event-link a').getAttribute('rel'),/noopener/);
   const detailPost=page.locator('#detail-instagram-preview .ig-post');
   assert.equal(await detailPost.locator('.ig-account strong').textContent(),config.instagramHandle.replace(/^@/,''));
   assert.equal(await detailPost.locator('.ig-caption-text').textContent(),captionFor(campaign,config));
@@ -68,6 +77,33 @@ export async function checkCampaignControls(browser,base) {
   assert.equal(await detailPost.locator('.ig-position').textContent(),'1 / 2');
   const firstImage=await detailPost.locator('.ig-detail-image img').getAttribute('src');await detailPost.locator('.ig-next').click();
   assert.equal(await detailPost.locator('.ig-position').textContent(),'2 / 2');assert.notEqual(await detailPost.locator('.ig-detail-image img').getAttribute('src'),firstImage);
+  const feedTrigger=detailPost.locator('.detail-artwork-trigger');
+  await feedTrigger.click();
+  const enlarged=page.locator('#detail-artwork-dialog');await enlarged.waitFor({state:'visible'});
+  assert.equal(await enlarged.locator('.ig-position').textContent(),'2 / 2','Enlarged feed starts with the selected carousel image');
+  assert.equal(await enlarged.locator('.ig-detail-image img').getAttribute('src'),await detailPost.locator('.ig-detail-image img').getAttribute('src'));
+  await enlarged.locator('.ig-detail-image img').evaluate(image=>image.decode());
+  const enlargedFeedBounds=await enlarged.boundingBox();
+  assert.ok(Math.abs(enlargedFeedBounds.x+enlargedFeedBounds.width/2-720)<2,'Artwork dialog is horizontally centered');
+  assert.ok(Math.abs(enlargedFeedBounds.y+enlargedFeedBounds.height/2-500)<2,'Artwork dialog is vertically centered');
+  await page.screenshot({path:'test-results/campaign-controls/enlarged-feed-desktop.png'});
+  await enlarged.locator('.detail-artwork-close').click();await enlarged.waitFor({state:'hidden'});
+  await page.waitForFunction(()=>document.activeElement?.getAttribute('aria-label')==='Enlarge Instagram feed preview');
+  await feedTrigger.focus();await page.keyboard.press('Enter');await enlarged.waitFor({state:'visible'});
+  await enlarged.locator('.ig-previous').click();assert.equal(await enlarged.locator('.ig-position').textContent(),'1 / 2');
+  await page.keyboard.press('Escape');await enlarged.waitFor({state:'hidden'});
+  await feedTrigger.click();await enlarged.waitFor({state:'visible'});
+  const modalBounds=await enlarged.boundingBox();
+  assert.ok(modalBounds.x>1||modalBounds.y>1,'Enlarged artwork has a surrounding backdrop');
+  await page.mouse.click(modalBounds.x>1?modalBounds.x-1:modalBounds.x+modalBounds.width/2,modalBounds.x>1?modalBounds.y+modalBounds.height/2:modalBounds.y-1);
+  await enlarged.waitFor({state:'hidden'});
+  const storyTrigger=page.locator('#detail .detail-images .detail-artwork-trigger');await storyTrigger.click();
+  await enlarged.waitFor({state:'visible'});assert.match(await enlarged.locator('h2').textContent(),/Instagram story/);
+  assert.equal(await enlarged.locator('.detail-artwork-story img').getAttribute('src'),await storyTrigger.locator('img').evaluate(image=>image.src));
+  await enlarged.locator('.detail-artwork-story img').evaluate(image=>image.decode());
+  await page.screenshot({path:'test-results/campaign-controls/enlarged-story-desktop.png'});
+  await page.keyboard.press('Escape');await enlarged.waitFor({state:'hidden'});
+  await page.waitForFunction(()=>document.activeElement?.getAttribute('aria-label')==='Enlarge Instagram story preview');
   await detailPost.locator('.ig-previous').click();
   assert.equal(await detailPost.locator('.ig-caption').evaluate(element=>element.scrollHeight>element.clientHeight),true,'Long captions are scrollable');
   await detailPost.locator('.ig-caption').focus();await page.keyboard.press('End');await page.waitForFunction(()=>document.querySelector('#detail-instagram-preview .ig-caption').scrollTop>0);
@@ -77,9 +113,24 @@ export async function checkCampaignControls(browser,base) {
   await page.setViewportSize({width:390,height:844});await page.locator('#detail').evaluate(element=>element.scrollTop=0);
   assert.equal(await page.locator('#detail').evaluate(element=>element.scrollWidth<=element.clientWidth),true,'Instagram detail fits a phone');
   await page.screenshot({path:'test-results/campaign-controls/instagram-detail-mobile.png'});
+  await feedTrigger.click();await enlarged.waitFor({state:'visible'});
+  assert.equal(await enlarged.evaluate(element=>element.scrollWidth<=element.clientWidth),true,'Enlarged feed fits a phone');
+  await enlarged.locator('.ig-detail-image img').evaluate(image=>image.decode());
+  await page.screenshot({path:'test-results/campaign-controls/enlarged-feed-mobile.png'});
+  await page.keyboard.press('Escape');await enlarged.waitFor({state:'hidden'});
+  await storyTrigger.click();await enlarged.waitFor({state:'visible'});
+  assert.equal(await enlarged.evaluate(element=>element.scrollWidth<=element.clientWidth),true,'Enlarged story fits a phone');
+  await enlarged.locator('.detail-artwork-story img').evaluate(image=>image.decode());
+  await page.screenshot({path:'test-results/campaign-controls/enlarged-story-mobile.png'});
+  await page.keyboard.press('Escape');await enlarged.waitFor({state:'hidden'});
+  await page.locator('.campaign-management').screenshot({path:'test-results/campaign-controls/campaign-management-mobile.png'});
   await page.setViewportSize({width:1440,height:1000});
+  await page.locator('.campaign-management').screenshot({path:'test-results/campaign-controls/campaign-management-desktop.png'});
   await page.locator('[data-delete]').click();
   assert.equal(writes.length,0,'Preview mode cannot delete repository campaigns');
+  await page.locator('[data-cancel]').click();
+  assert.equal(writes.length,0,'Preview mode cannot cancel repository campaigns');
+  assert.match(await page.locator('#detail-error').textContent(),/No campaign was cancelled/);
   assert.equal(await page.locator('#detail').evaluate(element=>element.open),true);
   await page.locator('[data-close=detail]').click();
 
@@ -136,6 +187,45 @@ export async function checkCampaignControls(browser,base) {
   assert.equal(await page.locator(`#campaign-list [data-detail="${campaign.id}"]`).count(),0);
   await page.locator('[data-view=archive]').click();assert.equal(await page.locator(`#archive-list [data-detail="${campaign.id}"]`).count(),0);
   await page.reload();await page.waitForSelector('#campaign-list .empty');assert.equal(await page.locator('[data-detail]').count(),0,'Deleted tombstone stays hidden after reload');
+  // Cancellation stops posts but keeps an officer-visible archive record.
+  remote=structuredClone(campaign);archive=[structuredClone(remote)];await page.reload();
+  await page.locator('[data-view=settings]').click();await page.locator('[name=token]').fill('mock-fixture-token-not-a-credential');await page.locator('#settings-form button.primary').click();
+  await page.waitForFunction(()=>document.querySelector('#connection-label').textContent==='Connected');await page.locator('[data-view=dashboard]').click();
+  await page.locator(`#campaign-list [data-detail="${campaign.id}"]`).click();
+  const beforeCancellation=writes.length;
+  page.once('dialog',dialog=>{assert.match(dialog.message(),/stay in the archive marked cancelled/);dialog.dismiss();});
+  await page.locator('[data-cancel]').click();assert.equal(writes.length,beforeCancellation,'Dismissed cancellation cannot write');
+  page.once('dialog',dialog=>dialog.accept());await page.locator('[data-cancel]').click();
+  await page.waitForFunction(()=>!document.querySelector('#detail').open);
+  assert.equal(remote.cancelled,true);assert.equal(remote.deletedAt,undefined);
+  assert.equal(await page.locator(`#campaign-list [data-detail="${campaign.id}"]`).count(),0);
+  await page.locator('[data-view=archive]').click();await page.locator(`#archive-list [data-detail="${campaign.id}"]`).click();
+  assert.equal(await page.locator('[data-cancel]').count(),0,'Cancelled campaigns cannot be cancelled twice');
+  assert.equal(await page.locator('[data-delete]').count(),1,'A cancelled record can still be removed from the hub');
+  assert.match(await page.locator('#campaign-cancel-help').textContent(),/stays in the archive/);
+  // A missing Story asset keeps its fallback visible after the image gains an enlarge button.
+  await page.route('**/media/2026-27/browser-controls-fixture-story.jpg',route=>route.fulfill({status:404,body:'Fixture story unavailable'}));
+  await page.locator('[data-close=detail]').click();await page.locator(`#archive-list [data-detail="${campaign.id}"]`).click();
+  await page.locator('#detail .detail-images').scrollIntoViewIfNeeded();
+  await page.locator('#detail .detail-images .image-unavailable').waitFor({state:'visible'});
+  assert.equal(await page.locator('#detail .detail-images .detail-artwork-trigger').isVisible(),false,'Unavailable artwork does not expose an empty enlarge button');
+  assert.match(await page.locator('#detail .detail-images .image-unavailable').textContent(),/Preview unavailable/);
+  assert.equal(await page.locator('#detail-artwork-dialog').isVisible(),false);
+  // A failed feed image must not hide the shared enlarge trigger for later carousel images.
+  await page.route('**/media/2026-27/browser-controls-fixture-feed.jpg',route=>route.fulfill({status:404,body:'Fixture feed cover unavailable'}));
+  await page.locator('[data-close=detail]').click();await page.locator(`#archive-list [data-detail="${campaign.id}"]`).click();
+  const recoveringFeed=page.locator('#detail-instagram-preview');
+  await recoveringFeed.locator('.ig-image-unavailable').waitFor({state:'visible'});
+  await recoveringFeed.locator('.ig-next').click();
+  await recoveringFeed.locator('.ig-detail-image img').waitFor({state:'visible'});
+  await recoveringFeed.locator('.ig-detail-image img').evaluate(image=>image.decode());
+  assert.equal(await recoveringFeed.locator('.detail-artwork-trigger').isVisible(),true,'The next valid feed image remains visible and enlargeable');
+  assert.equal(await recoveringFeed.locator('.ig-image-unavailable').isVisible(),false);
+  assert.match(await recoveringFeed.locator('.ig-detail-image img').getAttribute('src'),/fixture-feed-2\.jpg/);
+  await recoveringFeed.locator('.detail-artwork-trigger').click();
+  await page.locator('#detail-artwork-dialog').waitFor({state:'visible'});
+  assert.equal(await page.locator('#detail-artwork-dialog .ig-position').textContent(),'2 / 2');
+  await page.keyboard.press('Escape');
   assert.deepEqual(errors,[]);
   console.log('Campaign control checks passed: Instagram editor/detail previews, scrollable captions, carousel, mobile layouts, missed-window warnings, late catch-up, disabled channels, confirmed deletion, preview protection, content conflicts, SHA rejection, receipt preservation, and reload persistence.');
  }finally{await context.close();}

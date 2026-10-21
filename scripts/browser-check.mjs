@@ -1,3 +1,5 @@
+import {checkDispatcherAccess} from './check-dispatcher-access.mjs';
+import {checkMemberEvent} from './check-member-event.mjs';
 import {checkGroupMePreview} from './check-groupme-preview.mjs';
 import {checkCampaignControls} from './check-campaign-controls.mjs';
 import {checkEditorLayout} from './check-editor-layout.mjs';
@@ -16,6 +18,8 @@ let browser;
 try {
  for(let i=0;i<50;i++){try{if((await fetch(base)).ok)break;}catch{}await new Promise(r=>setTimeout(r,100));}
  browser=await chromium.launch({headless:true});
+ await checkDispatcherAccess(browser,base);
+ await checkMemberEvent(browser,base);
  await checkCampaignControls(browser,base);
  await checkGroupMePreview(browser,base);
  await checkThemes(browser,base);
@@ -28,7 +32,9 @@ try {
  await page.route('**/data/dispatcher-health.json',route=>healthRecord?route.fulfill({json:healthRecord}):route.fulfill({status:404,json:{}}));
  await page.goto(base);await page.waitForSelector('#campaign-list .empty');
  assert.match(await page.locator('#dispatcher-last-run').textContent(),/Oct 15/);
- assert.match(await page.locator('#dispatcher-warning').textContent(),/more than 90 minutes/);
+ assert.equal(await page.locator('#dispatcher-warning').getAttribute('data-state'),'delayed');assert.match(await page.locator('#dispatcher-warning').textContent(),/scheduled run is delayed/);
+ healthRecord={lastSuccessfulLiveRunAt:'2026-10-15T02:00:00Z'};await page.clock.fastForward(60000);await page.waitForFunction(()=>document.querySelector('#dispatcher-warning').dataset.state==='stale');assert.match(await page.locator('#dispatcher-warning').textContent(),/more than 12 hours/);
+ healthRecord={lastSuccessfulLiveRunAt:'2026-10-15T16:00:00Z',lastLiveRunAt:'2026-10-15T16:01:00Z',lastLiveRunStatus:'failed'};await page.clock.fastForward(60000);await page.waitForFunction(()=>document.querySelector('#dispatcher-warning').dataset.state==='failed');assert.match(await page.locator('#dispatcher-warning').textContent(),/publishing failure/);
  healthRecord={lastSuccessfulLiveRunAt:'2026-10-15T16:00:00Z'};await page.clock.fastForward(60000);await page.waitForFunction(()=>document.querySelector('#dispatcher-warning').hidden);
  healthRecord=null;await page.clock.fastForward(60000);await page.waitForFunction(()=>!document.querySelector('#dispatcher-warning').hidden);assert.match(await page.locator('#dispatcher-warning').textContent(),/unknown/);
  assert.equal(await page.locator('.campaign-card').count(),0);
@@ -126,7 +132,7 @@ try {
  await page.waitForFunction(()=>document.querySelector('#settings-form').getAttribute('aria-busy')==='true');
  assert.equal(await page.locator('#settings-form button.primary').isDisabled(),true);releaseVerification();
  await page.waitForFunction(()=>document.querySelector('#connection-label').textContent==='Connected');
- assert.equal(await page.locator('#header-connection-text').textContent(),'Connected');assert.equal(await page.locator('#settings-connection-state').textContent(),'Connected');
+ assert.equal(await page.locator('#header-connection-text').textContent(),'Connected');assert.match(await page.locator('#settings-connection-state').textContent(),/Token connected/);assert.match(await page.locator('#connection-access-dispatch').textContent(),/Not checked/);
  await page.locator('[data-view=dashboard]').click();
  await page.locator('#dispatcher-preview').click();await page.waitForFunction(()=>document.querySelector('#dispatcher-control-status').textContent.includes('Preview dispatcher requested'));
  assert.deepEqual(dispatcherRequests,[{ref:'main',inputs:{dry_run:true}}]);

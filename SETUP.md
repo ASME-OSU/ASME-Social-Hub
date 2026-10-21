@@ -6,7 +6,7 @@
 2. In repository **Settings → Pages**, select **GitHub Actions** as the source. Allow Actions to write repository contents. The render workflow deploys `docs/`.
 3. Set `repository`, `siteUrl`, `timezone`, `activeYear`, chapter branding, captions, and event types in `config/chapter.json`. Calendar and Instagram handle are intentionally blank until officers supply them. All committed data, uploaded flyers, and dashboard content are public.
 4. Run **Render and publish dashboard** after changing configuration or campaigns. A dashboard save with an officer PAT triggers this automatically. The issue fallback automatically renders and deploys after a successful import.
-5. Connect a fine-grained PAT with access only to this repository and **Contents read/write** in dashboard Settings. Approve organization access if required. It is used only to commit campaign JSON and flyer uploads. Store it in the browser only on a trusted personal device. Clear connection on shared computers.
+5. Connect a fine-grained PAT with access only to this repository and **Contents read/write** for campaign JSON and flyer uploads, plus **Actions read/write** for the dashboard’s **Preview dispatcher** and **Run live** buttons. Approve organization access and updated permissions if required. Connecting verifies a repository read only; it does not establish either write capability. Store it in the browser only on a trusted personal device. Clear connection on shared computers.
 
 ## Instagram Login
 
@@ -94,3 +94,11 @@ Add up to **10 JPEG or PNG images** in the campaign editor. Additional selection
 The feed publishes the uploaded images as one ordered carousel, without adding a design. Story publishes one generated Story using the first image and the selected Story treatment. Carousel images must have matching proportions and fit the feed publishing range; the editor explains incompatible selections before saving. A direct Feed image URL replaces the entire carousel with one image. A direct Story image URL replaces only the Story.
 
 Desktop previews use a larger canvas with controls at the side. The enlarged view fills the window and keeps Feed, Story, zoom, and Close controls beside the artwork; mobile uses a compact toolbar.
+
+## Repository connects, but Preview dispatcher returns 403
+
+The manual preview starts a GitHub Actions workflow even though the workflow itself does not publish. Both Preview dispatcher and Run live therefore require **Actions → Read and write**, separately from the **Contents → Read and write** permission used to save campaigns. A loaded token or successful repository read does not prove either write permission. The dashboard shows the last observed result of reading, saving, and requesting a workflow separately.
+
+In [fine-grained token settings](https://github.com/settings/personal-access-tokens), edit the token used by this dashboard. Confirm the resource owner is ASME-OSU, repository access includes ASME-Social-Hub, and repository permissions include Contents read/write and Actions read/write. Save the change; if GitHub requires approval, have an ASME-OSU owner approve the updated permissions. Reconnect in dashboard Settings, then explicitly request Preview dispatcher again. This does not change publishing credentials in Actions secrets. A 403 may also reflect organization policy or your account’s repository role; if permissions and approval are correct, ask an organization owner to review those restrictions. A rate-limit response requires waiting rather than adding permissions.
+
+See GitHub’s [workflow dispatch permissions](https://docs.github.com/en/rest/actions/workflows#create-a-workflow-dispatch-event) and [REST API access troubleshooting](https://docs.github.com/en/rest/using-the-rest-api/troubleshooting-the-rest-api#resource-not-accessible).

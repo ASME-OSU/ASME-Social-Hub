@@ -34,7 +34,7 @@ export function mountCampaignInstagramPreview(container,campaign,config,options=
   const {caption,captionError,images:sources}=instagramPreviewContent(campaign,config,options);
   const media=document.createElement('div');media.className='ig-detail-image';const image=document.createElement('img');image.alt=campaign.title+' · Instagram feed';media.append(image);
   const unavailable=document.createElement('p');unavailable.className='ig-image-unavailable';unavailable.textContent='Image preview unavailable. Check again after rendering finishes.';unavailable.hidden=true;media.append(unavailable);
-  let index=0;
+  let index=Math.min(Math.max(0,Math.trunc(Number(options.index)||0)),Math.max(0,sources.length-1));
   const show=()=>{unavailable.hidden=true;image.hidden=false;image.src=sources[index]||'';post.update({config,caption,captionError,count:Math.max(1,sources.length),index});};
   image.addEventListener('error',()=>{image.hidden=true;unavailable.hidden=false;});
   const post=createInstagramPost({media,config,caption,captionError,count:Math.max(1,sources.length),onPrevious(){if(index>0){index--;show();}},onNext(){if(index<sources.length-1){index++;show();}}});

@@ -130,7 +130,7 @@ test('feed, story and bot switches independently suppress every unchecked channe
  }
 });
 test('bot-only dry run previews text without writes or network',async t=>{
- const {root,file}=await botFixture(t),before=await readFile(file,'utf8');const actions=await dispatch({root,now:'2026-10-14T17:00:00Z',dryRun:true,services:new Proxy({},{get(){throw Error('network');}})});assert.match(actions.find(a=>a.action==='announce').text,/Calendar:/);assert.equal(await readFile(file,'utf8'),before);
+ const {root,file}=await botFixture(t),before=await readFile(file,'utf8');const actions=await dispatch({root,now:'2026-10-14T17:00:00Z',dryRun:true,services:new Proxy({},{get(){throw Error('network');}})});assert.match(actions.find(a=>a.action==='announce').text,/Event details:/);assert.equal(await readFile(file,'utf8'),before);
 });
 test('bot-only ambiguous failures never retry, and checkpoint failure prevents send',async t=>{
  const {root,file}=await botFixture(t);let calls=0;const services={postBotMessage:async()=>{calls++;throw Error('secret=TOKEN');}};
