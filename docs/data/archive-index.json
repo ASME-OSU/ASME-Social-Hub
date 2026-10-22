@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-22T17:26:50.759Z",
+  "generatedAt": "2026-10-22T21:43:19.140Z",
   "campaigns": [
     {
       "id": "2026-11-12-fall-social",
@@ -260,6 +260,16 @@
               "likes": 17,
               "saved": 0
             }
+          },
+          {
+            "channel": "story",
+            "day": 0,
+            "mediaId": "17962746963229062",
+            "recordedAt": "2026-10-22T21:43:18.666Z",
+            "metrics": {
+              "reach": 171,
+              "replies": 0
+            }
           }
         ]
       },
@@ -351,7 +361,7 @@
       "cancelled": false,
       "status": {
         "feed": "done",
-        "story": "pending",
+        "story": "skipped",
         "groupme": "done"
       },
       "results": {
@@ -368,13 +378,27 @@
           "postedAt": "2026-10-21T14:59:17.343Z",
           "permalink": "https://www.instagram.com/p/DewraTGG80B/"
         },
-        "story": {},
+        "story": {
+          "skipReason": "publishing-window-missed"
+        },
         "groupme": {
           "botText": "ASME Scheduling/BuckeyeLink Tour\nThursday, October 22, 2026 at 5:30 PM (America/New_York)\nScott Laboratory E141\nWant to learn more about scheduling and degree planning? Come to our info session! See flyer for details. ⚙️🎓\nCalendar: https://asme-osu.github.io/ASME-Social-Hub/calendar/2026-27/2026-10-22-asme-scheduling-buckeyelink-tour.ics\nFlyer: https://raw.githubusercontent.com/ASME-OSU/ASME-Social-Hub/main/assets/uploads/2026-10-22-asme-scheduling-buckeyelink-tour-1792546874319-1.png",
           "botAttemptedAt": "2026-10-21T14:59:17.343Z",
           "botSentAt": "2026-10-21T14:59:17.343Z"
         },
-        "insights": []
+        "insights": [
+          {
+            "channel": "feed",
+            "day": 1,
+            "mediaId": "17907468615666355",
+            "recordedAt": "2026-10-22T21:43:17.942Z",
+            "metrics": {
+              "reach": 106,
+              "likes": 3,
+              "saved": 0
+            }
+          }
+        ]
       },
       "log": [
         {
@@ -386,6 +410,11 @@
           "at": "2026-10-21T14:59:17.343Z",
           "channel": "groupme",
           "message": "Bot announcement sent"
+        },
+        {
+          "at": "2026-10-22T21:43:16.329Z",
+          "channel": "story",
+          "message": "Publishing window missed"
         }
       ],
       "flyerUrl": "https://raw.githubusercontent.com/ASME-OSU/ASME-Social-Hub/main/assets/uploads/2026-10-22-asme-scheduling-buckeyelink-tour-1792546874319-1.png"
