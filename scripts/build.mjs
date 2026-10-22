@@ -4,6 +4,7 @@ import {fileURLToPath} from 'node:url';
 import {readCampaigns} from './core.mjs';
 import {writeCalendarFiles} from './ics.mjs';
 import {writeEventPages} from './event-pages.mjs';
+import {writePwa} from './pwa.mjs';
 import {writePostingHealth} from './posting-health.mjs';
 
 export async function build(root = process.cwd()) {
@@ -23,6 +24,7 @@ export async function build(root = process.cwd()) {
   if (!chapter.chapterName) throw new Error('chapterName is required');
   await writeEventPages(root,campaigns,chapter);
   await writePostingHealth(root,{campaigns,config:chapter});
+  await writePwa(root);
   console.log('Pages site prepared in docs/');
 }
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await build();
