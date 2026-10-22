@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-22T14:03:36.496Z",
+  "generatedAt": "2026-10-22T17:04:48.158Z",
   "activeYear": "2026-27",
   "config": {
     "timezone": "America/New_York",
@@ -23,7 +23,7 @@
     "status": "unknown",
     "warning": false,
     "configured": true,
-    "checkedAt": "2026-10-22T14:03:36.304Z",
+    "checkedAt": "2026-10-22T17:04:47.927Z",
     "expiresAt": null,
     "daysRemaining": null
   },
@@ -1192,14 +1192,14 @@
             "daysBefore": 1,
             "time": "12:00"
           },
-          "status": "pending",
-          "mediaId": null,
-          "postedAt": null,
+          "status": "done",
+          "mediaId": "17962746963229062",
+          "postedAt": "2026-10-22T17:04:33.671Z",
           "eventId": null,
           "syncedRevision": null,
           "botSentAt": null,
           "deletedAt": null,
-          "publishAttemptedAt": null,
+          "publishAttemptedAt": "2026-10-22T17:04:33.671Z",
           "createAttemptedAt": null,
           "botAttemptedAt": null
         },
