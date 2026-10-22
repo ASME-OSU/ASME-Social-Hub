@@ -9,12 +9,13 @@
   "scripts": {
     "test": "node --test",
     "build": "node scripts/archive.mjs && node scripts/build.mjs",
-    "dev": "node scripts/serve.mjs",
+    "dev": "node scripts/pwa.mjs && node scripts/serve.mjs",
     "dry-run": "node scripts/dispatch.mjs --dry-run",
     "render": "node scripts/render-flyers.mjs",
     "doctor": "node scripts/doctor.mjs",
     "calendar": "node scripts/ical.mjs",
     "check": "node scripts/check.mjs",
+    "check:pwa": "node scripts/check-pwa.mjs",
     "check:browser": "node scripts/browser-check.mjs"
   },
   "dependencies": {
