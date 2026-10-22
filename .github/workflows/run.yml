@@ -67,6 +67,11 @@ jobs:
           DRY_RUN: ${{ inputs.dry_run }}
         run: |
           if [ "$DRY_RUN" = true ]; then npm run dry-run; else node scripts/dispatch.mjs; fi
+      - name: Catch up due campaigns during scheduled insights
+        if: inputs.task == 'insights' && github.event_name == 'schedule' && !inputs.dry_run
+        env:
+          CAMPAIGN_GIT_CHECKPOINT: '1'
+        run: node scripts/dispatch.mjs
       - name: Calendar suggestions
         if: inputs.task == 'calendar'
         run: node scripts/tasks.mjs calendar

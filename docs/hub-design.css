@@ -177,3 +177,104 @@ button.primary{border-radius:2px;box-shadow:0 3px 0 #00000012}
  .campaign-card .step-row+.step-row{border-left:0;border-top:1px solid var(--line)}
 }
 @media(max-width:699px){.campaign-grid{grid-template-columns:minmax(0,1fr);gap:16px}.campaign-card .card-body{padding:14px}.campaign-card .card-footer{padding-inline:14px}.campaign-card .card-art{padding-inline:14px}}
+
+/* Campaign details use a centered workspace with preview and summary together. */
+#detail{inset:0;margin:auto;width:min(1200px,calc(100vw - 48px));max-width:calc(100vw - 48px);height:min(880px,calc(100dvh - 48px));max-height:calc(100dvh - 48px);border:1px solid var(--line);border-radius:16px;background:var(--paper);animation:none;overflow:hidden}
+#detail[open]{display:flex;flex-direction:column}
+#detail::backdrop{background:#08142499;backdrop-filter:blur(3px)}
+#detail .dialog-heading{position:static;flex:none;padding:18px 24px;align-items:center;gap:20px}
+#detail .dialog-heading h2{font-size:28px;line-height:1.15;overflow-wrap:anywhere}
+#detail .dialog-heading .eyebrow{margin-bottom:5px}
+#detail .detail-heading-actions{flex-direction:row;align-items:center;gap:10px}
+#detail .dialog-heading .icon-button{width:44px;height:44px;min-width:44px;min-height:44px}
+#detail .event-page-action{min-height:44px;padding:8px 12px}
+#detail-error{margin:0;flex:none;padding:10px 24px}
+#detail-content{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.15fr);gap:24px;align-items:start;overflow:auto;overscroll-behavior:contain;min-height:0;flex:1;padding:20px 24px}
+.detail-preview-pane,.detail-info-pane{min-width:0}
+.detail-preview-pane{position:sticky;top:0;background:var(--ice);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.detail-preview-tabs{display:flex;gap:4px;padding:6px;border-bottom:1px solid var(--line);background:var(--paper)}
+.detail-preview-tabs button{flex:1;min-width:0;min-height:44px;padding:8px;border-color:transparent;font-size:12px;border-radius:5px;background:transparent}
+.detail-preview-tabs button[aria-selected=true]{background:var(--ice);color:var(--navy);border-color:var(--line)}
+.detail-preview-panel{padding:12px;min-width:0}
+#detail .ig-detail-post{width:100%;margin:0;border-radius:6px;overflow:hidden}
+#detail .ig-detail-image img{width:100%;height:auto;max-height:min(40dvh,340px);object-fit:contain;background:#fafafa}
+#detail .ig-detail-post .ig-caption{max-height:90px;font-size:12px;line-height:1.6}
+#detail .ig-preview-note{font-size:10px}
+#detail .detail-images{display:block;margin:0}
+#detail .detail-images figure{margin:0;min-width:0;text-align:center}
+#detail .detail-images .detail-artwork-trigger{width:100%;display:block}
+#detail .detail-images .detail-artwork-trigger img{width:100%;height:auto;max-height:calc(100dvh - 290px);object-fit:contain}
+#detail .detail-images figcaption{font-size:11px;margin-top:8px;color:var(--muted)}
+.detail-preview-empty{padding:40px 16px;text-align:center;color:var(--muted);font-size:13px}
+#detail .gm-preview{margin:0;border:0}
+#detail .gm-preview-heading{flex-wrap:wrap;gap:5px}
+#detail .gm-message{max-height:calc(100dvh - 380px);overflow:auto}
+#detail .detail-overview-status{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.detail-event-meta{font-size:13px;color:var(--muted);line-height:1.7;margin:0 0 16px;overflow-wrap:anywhere}
+#detail .detail-info-pane h3{font:22px/1.2 var(--font-display);margin:0 0 10px}
+#detail .detail-posting .steps{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;background:var(--ice);border:0;border-radius:8px;padding:12px;margin:0 0 16px}
+#detail .detail-posting .step-row{grid-template-columns:18px minmax(0,1fr);gap:6px;min-width:0}
+#detail .detail-posting .step-row+.step-row{border-left:1px solid var(--line);padding-left:10px}
+#detail .detail-posting .step-status{display:block;font-size:10px;margin-top:2px}
+#detail .detail-posting .step-time,#detail .detail-posting time{font-size:10px;overflow-wrap:anywhere}
+#detail .detail-insights{padding:0 0 14px}
+#detail .detail-insights .field-help{font-size:11px;margin:0 0 8px}
+#detail .detail-insights .caption{padding:12px;font-size:12px;margin:0}
+#detail .insights-summary dl{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+#detail .insights-summary dl>div{flex:1 0 72px;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--ice)}
+#detail .insights-summary dt{font-size:10px}
+#detail .insights-summary dd{font-size:19px;font-weight:650;margin:1px 0 0;color:var(--navy)}
+.detail-info-pane>details{border-top:1px solid var(--line)}
+.detail-info-pane summary{min-height:44px;padding:12px 0;font-size:12px;cursor:pointer;color:var(--navy);font-weight:600;overflow-wrap:anywhere}
+#detail .detail-warning-details{border:1px solid color-mix(in srgb,#d58a19 35%,var(--paper));border-radius:6px;padding:0 12px;margin-bottom:16px;background:color-mix(in srgb,#d58a19 8%,var(--paper))}
+#detail .detail-warning-details summary{color:var(--ink)}
+#detail .detail-warning-details .schedule-warning{font-size:12px;margin:0 0 10px;padding:10px}
+.detail-description-copy{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.7}
+#detail .detail-history .timeline{margin:6px 0 16px}
+#detail .detail-history .timeline li{padding-bottom:16px;font-size:12px}
+#detail .detail-notes .caption{font-size:12px;padding:12px}
+#detail .campaign-management{padding-top:14px;margin-top:4px}
+#detail .campaign-management h3{font-size:18px}
+#detail .campaign-management>p{margin-bottom:8px;font-size:11px}
+#detail .campaign-management-actions{margin-top:0;gap:12px}
+#detail .campaign-management-actions>div{border:0;padding:0}
+#detail .campaign-management-actions .field-help{font-size:10px;line-height:1.5;margin:6px 0 0}
+#detail .dialog-footer{position:static;flex:none;display:flex;align-items:center;gap:8px;padding:12px 24px}
+#detail .dialog-footer>span{width:auto;margin:0 auto 0 0;font-size:11px}
+#detail .dialog-footer button{min-height:44px;padding:8px 12px;font-size:12px}
+@media(max-width:899px){
+ #detail{width:calc(100vw - 24px);max-width:calc(100vw - 24px);height:calc(100dvh - 24px);max-height:calc(100dvh - 24px);border-radius:12px}
+ #detail-content{grid-template-columns:minmax(0,1fr);gap:20px;padding:16px}
+ .detail-preview-pane{position:static;order:1}
+ .detail-info-pane{order:0}
+ #detail .dialog-heading{padding:14px 16px;align-items:flex-start;gap:8px}
+ #detail .dialog-heading h2{font-size:23px}
+ #detail .detail-heading-actions{flex-direction:column-reverse;align-items:flex-end;gap:4px}
+ #detail .event-page-action{font-size:10px;white-space:normal;max-width:105px;padding:6px 8px;text-align:center}
+ #detail .dialog-footer{padding:10px 16px;gap:6px}
+ #detail .dialog-footer>span{width:100%}
+ #detail .dialog-footer button{flex:1;padding:8px;font-size:11px}
+ #detail .ig-detail-image img{max-height:52dvh}
+ #detail .detail-images .detail-artwork-trigger img{max-height:60dvh}
+}
+@media(prefers-reduced-motion:reduce){#detail{animation:none}}
+@media(max-width:699px){
+ #detail .event-page-action{width:44px;min-width:44px;max-width:44px;height:44px;padding:0;font-size:0}
+ #detail .event-page-action span{font-size:18px}
+}
+
+/* A little more chapter color without competing with the event artwork. */
+.campaign-card{border-color:color-mix(in srgb,var(--navy) 18%,var(--paper));box-shadow:0 3px 12px #10284008}
+.campaign-card .card-art{background-color:color-mix(in srgb,var(--navy) 10%,var(--paper));box-shadow:inset 0 3px 0 var(--scarlet)}
+.campaign-card .card-art>img{opacity:.3;filter:saturate(.85)}
+.campaign-card .card-art::after{background:linear-gradient(90deg,color-mix(in srgb,var(--navy) 10%,var(--paper)) 5%,transparent 95%)}
+.campaign-card .art-date{background:var(--paper);border:1px solid color-mix(in srgb,var(--scarlet) 18%,var(--paper));box-shadow:0 2px 5px #10284008}
+.campaign-card .card-engagement{background:color-mix(in srgb,var(--scarlet) 5%,var(--paper))}
+.campaign-card .steps{background:color-mix(in srgb,var(--navy) 7%,var(--paper))}
+.campaign-card .card-title-row>.badge.pending{background:color-mix(in srgb,var(--navy) 6%,var(--paper));color:var(--navy);border-color:color-mix(in srgb,var(--navy) 35%,var(--paper))}
+.campaign-card .card-title-row>.badge.done{background:color-mix(in srgb,var(--navy) 9%,var(--paper))}
+.campaign-card .food-chip{color:var(--scarlet);border-color:color-mix(in srgb,var(--scarlet) 25%,var(--paper));background:var(--scarlet-tint)}
+.campaign-card .card-footer button{color:var(--scarlet)}
+#detail .insights-summary{padding:12px;margin-bottom:8px;border-radius:8px}
+#detail .insights-summary dl{margin-bottom:0}
+#detail .snapshot-details{margin-bottom:0}

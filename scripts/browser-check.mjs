@@ -1,3 +1,5 @@
+import {checkAcademicYears} from './check-academic-years.mjs';
+import {checkCampaignModal} from './check-campaign-modal.mjs';
 import {checkCampaignCards} from './check-campaign-cards.mjs';
 import {checkUiRefinements} from './check-ui-refinements.mjs';
 import {checkStoryEmptyMedia} from './check-story-empty-media.mjs';
@@ -29,6 +31,8 @@ try {
  await checkMemberEvent(browser,base);
  await checkDashboardDesign(browser,base);
  await checkCampaignCards(browser,base);
+ await checkCampaignModal(browser,base);
+ await checkAcademicYears(browser,base);
  await checkPreviewPane(browser,base);
  await checkCampaignControls(browser,base);
  await checkGroupMePreview(browser,base);

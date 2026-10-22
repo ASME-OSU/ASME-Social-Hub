@@ -1,7 +1,8 @@
 name: Insights
 on:
   schedule:
-    - cron: '37 * * * *'
+    # Stagger the catch-up opportunity from dispatch's 7/22/37/52 schedule.
+    - cron: '19 * * * *'
   workflow_dispatch:
 permissions:
   contents: write

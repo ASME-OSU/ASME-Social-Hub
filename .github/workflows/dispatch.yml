@@ -2,6 +2,8 @@ name: Dispatch campaigns
 on:
   schedule:
     - cron: '7,22,37,52 * * * *'
+  repository_dispatch:
+    types: [campaign-dispatch]
   workflow_dispatch:
     inputs:
       dry_run:
@@ -18,5 +20,6 @@ jobs:
     uses: ./.github/workflows/run.yml
     with:
       task: dispatch
-      dry_run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
+      # External triggers preview unless the authenticated caller opts into live.
+      dry_run: ${{ (github.event_name == 'workflow_dispatch' && inputs.dry_run) || (github.event_name == 'repository_dispatch' && github.event.client_payload.mode != 'live') }}
     secrets: inherit

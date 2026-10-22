@@ -97,6 +97,7 @@ export async function checkCampaignControls(browser,base) {
   assert.ok(modalBounds.x>1||modalBounds.y>1,'Enlarged artwork has a surrounding backdrop');
   await page.mouse.click(modalBounds.x>1?modalBounds.x-1:modalBounds.x+modalBounds.width/2,modalBounds.x>1?modalBounds.y+modalBounds.height/2:modalBounds.y-1);
   await enlarged.waitFor({state:'hidden'});
+  await page.locator('[data-detail-preview=story]').click();
   const storyTrigger=page.locator('#detail .detail-images .detail-artwork-trigger');await storyTrigger.click();
   await enlarged.waitFor({state:'visible'});assert.match(await enlarged.locator('h2').textContent(),/Instagram story/);
   assert.equal(await enlarged.locator('.detail-artwork-story img').getAttribute('src'),await storyTrigger.locator('img').evaluate(image=>image.src));
@@ -104,6 +105,7 @@ export async function checkCampaignControls(browser,base) {
   await page.screenshot({path:'test-results/campaign-controls/enlarged-story-desktop.png'});
   await page.keyboard.press('Escape');await enlarged.waitFor({state:'hidden'});
   await page.waitForFunction(()=>document.activeElement?.getAttribute('aria-label')==='Enlarge Instagram story preview');
+  await page.locator('[data-detail-preview=feed]').click();
   await detailPost.locator('.ig-previous').click();
   assert.equal(await detailPost.locator('.ig-caption').evaluate(element=>element.scrollHeight>element.clientHeight),true,'Long captions are scrollable');
   await detailPost.locator('.ig-caption').focus();await page.keyboard.press('End');await page.waitForFunction(()=>document.querySelector('#detail-instagram-preview .ig-caption').scrollTop>0);
@@ -118,6 +120,7 @@ export async function checkCampaignControls(browser,base) {
   await enlarged.locator('.ig-detail-image img').evaluate(image=>image.decode());
   await page.screenshot({path:'test-results/campaign-controls/enlarged-feed-mobile.png'});
   await page.keyboard.press('Escape');await enlarged.waitFor({state:'hidden'});
+  await page.locator('[data-detail-preview=story]').click();
   await storyTrigger.click();await enlarged.waitFor({state:'visible'});
   assert.equal(await enlarged.evaluate(element=>element.scrollWidth<=element.clientWidth),true,'Enlarged story fits a phone');
   await enlarged.locator('.detail-artwork-story img').evaluate(image=>image.decode());
@@ -207,6 +210,7 @@ export async function checkCampaignControls(browser,base) {
   // A missing Story asset keeps its fallback visible after the image gains an enlarge button.
   await page.route('**/media/2026-27/browser-controls-fixture-story.jpg',route=>route.fulfill({status:404,body:'Fixture story unavailable'}));
   await page.locator('[data-close=detail]').click();await page.locator(`#archive-list [data-detail="${campaign.id}"]`).click();
+  await page.locator('[data-detail-preview=story]').click();
   await page.locator('#detail .detail-images').scrollIntoViewIfNeeded();
   await page.locator('#detail .detail-images .image-unavailable').waitFor({state:'visible'});
   assert.equal(await page.locator('#detail .detail-images .detail-artwork-trigger').isVisible(),false,'Unavailable artwork does not expose an empty enlarge button');

@@ -28,6 +28,7 @@ export async function checkGroupMePreview(browser,base) {
   const image=await readFile('docs/assets/logos/social-hub-512.png');
   await page.route('**/media/2026-27/groupme-delivered-fixture-*.jpg',route=>route.fulfill({contentType:'image/png',body:image}));
   await page.goto(base);await page.locator(`#campaign-list [data-detail="${fixture.id}"]`).click();
+  await page.locator('[data-detail-preview=groupme]').click();
   const detail=page.locator('#detail-groupme-preview .gm-preview');
   assert.equal(await detail.locator('.gm-bot-name').textContent(),'Gearley');
   assert.equal(await detail.locator('.gm-message-text').textContent(),recordedText,'Detail preserves exact delivered copy');
@@ -38,8 +39,10 @@ export async function checkGroupMePreview(browser,base) {
   assert.equal(await detail.locator('.gm-avatar img').evaluate(img=>getComputedStyle(img).filter),'none');
   assert.equal(await page.locator('[data-preview-format=groupme] svg.groupme-mark').count(),2,'Both preview tabs use the monochrome GroupMe brand mark');
   for(const button of await page.locator('[data-preview-format=groupme]').all())assert.equal((await button.textContent()).trim(),'GroupMe');
-  assert.ok(await detail.locator('.gm-message').evaluate(element=>element.scrollHeight>element.clientHeight));
-  await detail.locator('.gm-message').focus();await page.keyboard.press('End');await page.waitForFunction(()=>document.querySelector('#detail-groupme-preview .gm-message').scrollTop>0);
+  const message=detail.locator('.gm-message');
+  if(await message.evaluate(element=>element.scrollHeight>element.clientHeight)){
+   await message.focus();await page.keyboard.press('End');await page.waitForFunction(()=>document.querySelector('#detail-groupme-preview .gm-message').scrollTop>0);
+  }else assert.equal(await message.evaluate(element=>element.getBoundingClientRect().height>0),true,'A message that fits the wider popup needs no scrolling');
   await mkdir('test-results/groupme-preview',{recursive:true});
   await detail.scrollIntoViewIfNeeded();await detail.screenshot({path:'test-results/groupme-preview/detail-desktop.png'});
   await page.setViewportSize({width:390,height:844});await detail.scrollIntoViewIfNeeded();
