@@ -101,6 +101,16 @@
           "likes": 17,
           "saved": 0
         }
+      },
+      {
+        "channel": "story",
+        "day": 0,
+        "mediaId": "17962746963229062",
+        "recordedAt": "2026-10-22T21:43:18.666Z",
+        "metrics": {
+          "reach": 171,
+          "replies": 0
+        }
       }
     ]
   },
