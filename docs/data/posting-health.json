@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-22T17:04:48.158Z",
+  "generatedAt": "2026-10-22T17:26:50.839Z",
   "activeYear": "2026-27",
   "config": {
     "timezone": "America/New_York",
@@ -23,7 +23,7 @@
     "status": "unknown",
     "warning": false,
     "configured": true,
-    "checkedAt": "2026-10-22T17:04:47.927Z",
+    "checkedAt": "2026-10-22T17:26:50.592Z",
     "expiresAt": null,
     "daysRemaining": null
   },
@@ -1084,7 +1084,7 @@
         "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-10-22T21:30:00.000Z",
         "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
       },
-      "revision": 2,
+      "revision": 3,
       "channels": {
         "feed": {
           "enabled": true,
@@ -1108,12 +1108,12 @@
         },
         "story": {
           "enabled": true,
-          "dueAt": "2026-10-23T03:30:00.000Z",
+          "dueAt": "2026-10-22T18:30:00.000Z",
           "scheduleInvalid": false,
           "immediate": false,
           "schedule": {
             "daysBefore": 0,
-            "time": "23:30"
+            "time": "14:30"
           },
           "status": "pending",
           "mediaId": null,
