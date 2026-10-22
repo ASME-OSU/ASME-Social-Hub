@@ -17,7 +17,7 @@ export async function checkUiRefinements(browser,base){
    await page.goto(base);await page.locator('.campaign-card').waitFor();
    const art=page.locator('.card-art>img');await art.evaluate(image=>image.decode());
    assert.equal(await art.isVisible(),true);assert.ok(await art.evaluate(image=>{const s=getComputedStyle(image);return +s.opacity>=.15&&+s.opacity<=.3;}),'Flyer is softly faded behind header');
-   assert.equal(await page.locator('#timezone-label').textContent(),'Columbus time');
+   assert.equal(await page.locator('#timezone-label').textContent(),'Columbus time — Eastern time');
    await page.screenshot({path:`test-results/ui-refinement/after-dashboard-${theme}.png`});
    await page.locator('[data-detail]').first().click();assert.equal(await page.locator('#detail a[href*="event.html"]').count(),1,'One member-page shortcut in drawer');assert.equal(await page.locator('#detail-event-page').isVisible(),true);assert.equal(await page.locator('#detail').textContent().then(text=>text.includes('America/New_York')),false);
    await page.locator('[data-close=detail]').click();await page.locator('#new-campaign').click();
