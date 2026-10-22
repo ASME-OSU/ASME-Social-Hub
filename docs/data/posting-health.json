@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-22T03:46:46.387Z",
+  "generatedAt": "2026-10-22T17:35:59.268Z",
   "activeYear": "2026-27",
   "config": {
     "timezone": "America/New_York",
@@ -23,13 +23,13 @@
     "status": "unknown",
     "warning": false,
     "configured": true,
-    "checkedAt": "2026-10-22T03:46:46.134Z",
+    "checkedAt": "2026-10-22T17:35:59.010Z",
     "expiresAt": null,
     "daysRemaining": null
   },
   "calendar": {
     "feedUrl": "https://calendar.google.com/calendar/ical/c93730cdacb567b0f010d1367080e3028ec5c7657d9713b675ac9e5c437b9fba%40group.calendar.google.com/public/basic.ics",
-    "generatedAt": "2026-10-21T12:21:52.660Z",
+    "generatedAt": "2026-10-22T12:22:43.210Z",
     "candidates": [
       {
         "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-10-29T21:30:00.000Z",
@@ -1084,7 +1084,7 @@
         "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-10-22T21:30:00.000Z",
         "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
       },
-      "revision": 2,
+      "revision": 3,
       "channels": {
         "feed": {
           "enabled": true,
@@ -1108,12 +1108,12 @@
         },
         "story": {
           "enabled": true,
-          "dueAt": "2026-10-23T03:30:00.000Z",
+          "dueAt": "2026-10-22T18:30:00.000Z",
           "scheduleInvalid": false,
           "immediate": false,
           "schedule": {
             "daysBefore": 0,
-            "time": "23:30"
+            "time": "14:30"
           },
           "status": "pending",
           "mediaId": null,
@@ -1192,14 +1192,14 @@
             "daysBefore": 1,
             "time": "12:00"
           },
-          "status": "pending",
-          "mediaId": null,
-          "postedAt": null,
+          "status": "done",
+          "mediaId": "17962746963229062",
+          "postedAt": "2026-10-22T17:04:33.671Z",
           "eventId": null,
           "syncedRevision": null,
           "botSentAt": null,
           "deletedAt": null,
-          "publishAttemptedAt": null,
+          "publishAttemptedAt": "2026-10-22T17:04:33.671Z",
           "createAttemptedAt": null,
           "botAttemptedAt": null
         },
