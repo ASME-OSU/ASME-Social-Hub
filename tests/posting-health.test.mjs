@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtemp,mkdir,writeFile,readFile,rm} from 'node:fs/promises';
+import {cp,mkdtemp,mkdir,writeFile,readFile,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {postingHealth} from '../scripts/posting-health.mjs';
@@ -58,6 +58,7 @@ test('only allowlisted status, receipts, attempt timestamps and revision cross t
 test('every build reads current campaign receipts even when archive-index is stale',async()=>{
  const root=await mkdtemp(join(tmpdir(),'posting-health-'));
  try {
+  await cp(new URL('../docs/',import.meta.url),join(root,'docs'),{recursive:true});
   for(const dir of ['config','data/campaigns/2026-27','templates'])await mkdir(join(root,dir),{recursive:true});
   await writeFile(join(root,'config/chapter.json'),JSON.stringify(config));
   await writeFile(join(root,'data/candidates.json'),JSON.stringify({generatedAt:'2026-10-19T11:00:00Z',events:[]}));
