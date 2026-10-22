@@ -28,6 +28,11 @@ async function waitForPaintedArtwork(page,title) {
  assert.ok(nonwhite>200,'Instagram media must contain painted artwork, not a blank frame');
 }
 
+async function exposeCampaignManagement(page){
+ await page.locator('#detail [data-detail-info=details]').click();
+ if(!await page.locator('#detail .detail-management').evaluate(element=>element.open))await page.locator('#detail .detail-management>summary').click();
+}
+
 // Every record and GitHub response in these checks is synthetic; writes never leave Playwright.
 export async function checkCampaignControls(browser,base) {
  const config=JSON.parse(await readFile('config/chapter.json','utf8'));
@@ -36,7 +41,7 @@ export async function checkCampaignControls(browser,base) {
  const campaign={id:'browser-controls-fixture',year:'2026-27',type:'social',title:'Campaign controls fixture',description:Array.from({length:26},(_,i)=>`Caption line ${i+1}: meet ASME students and build something together.`).join('\n'),start:'2026-10-23T22:00:00Z',end:'2026-10-23T23:30:00Z',food:false,location:{name:'Fixture room'},template:'refined-blueprint',flyerUrl:'https://preview.example/fixture-one.png',flyerUrls:['https://preview.example/fixture-one.png','https://preview.example/fixture-two.png'],revision:1,campaign:{feed:{enabled:true,daysBefore:7,time:'12:00'},story:{enabled:true,daysBefore:3,time:'12:00'},groupme:{enabled:true,announce:true}},status:{feed:'pending',story:'pending',groupme:'pending'},results:{feed:{},story:{},groupme:{}},log:[]};
  let archive=[structuredClone(campaign)],remote=structuredClone(campaign),writeConflict=false;
  const writes=[],errors=[];const fixtureImage=await readFile('docs/assets/logos/social-hub-512.png');
- const context=await browser.newContext({viewport:{width:1440,height:1000},timezoneId:'America/Los_Angeles'});
+ const context=await browser.newContext({serviceWorkers:'block',viewport:{width:1440,height:1000},timezoneId:'America/Los_Angeles'});
  try {
   const page=await context.newPage();await page.clock.install({time:new Date('2026-10-20T16:00:00Z')});
   page.on('pageerror',error=>errors.push(error.message));
@@ -61,6 +66,7 @@ export async function checkCampaignControls(browser,base) {
   });
   await mkdir('test-results/campaign-controls',{recursive:true});
   await page.goto(base);await page.locator(`#campaign-list [data-detail="${campaign.id}"]`).click();
+  await exposeCampaignManagement(page);
   assert.equal(await page.locator('[data-delete]').isVisible(),true,'Campaign detail exposes Delete from hub');
   assert.equal(await page.locator('.campaign-management-actions [data-cancel]').count(),1,'Cancel and delete share one management group');
   assert.equal(await page.locator('.campaign-management-actions [data-delete]').count(),1);
@@ -129,9 +135,9 @@ export async function checkCampaignControls(browser,base) {
   await page.locator('.campaign-management').screenshot({path:'test-results/campaign-controls/campaign-management-mobile.png'});
   await page.setViewportSize({width:1440,height:1000});
   await page.locator('.campaign-management').screenshot({path:'test-results/campaign-controls/campaign-management-desktop.png'});
-  await page.locator('[data-delete]').click();
+  await exposeCampaignManagement(page);await page.locator('[data-delete]').click();
   assert.equal(writes.length,0,'Preview mode cannot delete repository campaigns');
-  await page.locator('[data-cancel]').click();
+  await exposeCampaignManagement(page);await page.locator('[data-cancel]').click();
   assert.equal(writes.length,0,'Preview mode cannot cancel repository campaigns');
   assert.match(await page.locator('#detail-error').textContent(),/No campaign was cancelled/);
   assert.equal(await page.locator('#detail').evaluate(element=>element.open),true);
@@ -176,17 +182,17 @@ export async function checkCampaignControls(browser,base) {
   await page.locator('[data-view=settings]').click();await page.locator('[name=token]').fill('mock-fixture-token-not-a-credential');await page.locator('#settings-form button.primary').click();
   await page.waitForFunction(()=>document.querySelector('#connection-label').textContent==='Connected');
   await page.locator('[data-view=dashboard]').click();await page.locator(`#campaign-list [data-detail="${campaign.id}"]`).click();
-  page.once('dialog',dialog=>dialog.dismiss());await page.locator('[data-delete]').click();assert.equal(writes.length,0,'Dismissed deletion cannot write');
+  page.once('dialog',dialog=>dialog.dismiss());await exposeCampaignManagement(page);await page.locator('[data-delete]').click();assert.equal(writes.length,0,'Dismissed deletion cannot write');
   remote={...remote,title:'Another officer changed this event'};
-  page.once('dialog',dialog=>dialog.accept());await page.locator('[data-delete]').click();await page.waitForSelector('#detail-error:not([hidden])');
+  page.once('dialog',dialog=>dialog.accept());await exposeCampaignManagement(page);await page.locator('[data-delete]').click();await page.waitForSelector('#detail-error:not([hidden])');
   assert.match(await page.locator('#detail-error').textContent(),/edited since|changed/i);assert.equal(writes.length,0,'Concurrent content edits prevent deletion');
   remote={...structuredClone(campaign),revision:9,status:{...campaign.status,feed:'done'},results:{...campaign.results,feed:{mediaId:'fixture-receipt',publishAttemptedAt:'2026-10-18T16:00:00Z',postedAt:'2026-10-18T16:00:01Z',caption:'Already published caption'}},log:[{channel:'feed',message:'Published',at:'2026-10-18T16:00:01Z'}]};
   writeConflict=true;
-  page.once('dialog',dialog=>dialog.accept());await page.locator('[data-delete]').click();await page.waitForFunction(()=>document.querySelector('#detail-error').textContent.includes('409'));
+  page.once('dialog',dialog=>dialog.accept());await exposeCampaignManagement(page);await page.locator('[data-delete]').click();await page.waitForFunction(()=>document.querySelector('#detail-error').textContent.includes('409'));
   assert.equal(await page.locator('#detail').evaluate(element=>element.open),true,'Rejected SHA write keeps campaign details open');
   assert.equal(await page.locator(`#campaign-list [data-detail="${campaign.id}"]`).count(),1,'Rejected deletion keeps campaign visible');
   writeConflict=false;
-  page.once('dialog',dialog=>dialog.accept());await page.locator('[data-delete]').click();await page.waitForFunction(()=>!document.querySelector('#detail').open);
+  page.once('dialog',dialog=>dialog.accept());await exposeCampaignManagement(page);await page.locator('[data-delete]').click();await page.waitForFunction(()=>!document.querySelector('#detail').open);
   const deleted=remote;assert.ok(deleted.deletedAt);assert.equal(deleted.cancelled,true);assert.equal(deleted.revision,10);assert.equal(deleted.results.feed.mediaId,'fixture-receipt');assert.equal(deleted.status.feed,'done');assert.equal(deleted.log[0].message,'Published');assert.equal(writes.at(-1).sha,'latest-fixture-sha');assert.equal(writes.at(-1).branch,'main');
   assert.equal(await page.locator(`#campaign-list [data-detail="${campaign.id}"]`).count(),0);
   await page.locator('[data-view=archive]').click();assert.equal(await page.locator(`#archive-list [data-detail="${campaign.id}"]`).count(),0);
@@ -198,8 +204,8 @@ export async function checkCampaignControls(browser,base) {
   await page.locator(`#campaign-list [data-detail="${campaign.id}"]`).click();
   const beforeCancellation=writes.length;
   page.once('dialog',dialog=>{assert.match(dialog.message(),/stay in the archive marked cancelled/);dialog.dismiss();});
-  await page.locator('[data-cancel]').click();assert.equal(writes.length,beforeCancellation,'Dismissed cancellation cannot write');
-  page.once('dialog',dialog=>dialog.accept());await page.locator('[data-cancel]').click();
+  await exposeCampaignManagement(page);await page.locator('[data-cancel]').click();assert.equal(writes.length,beforeCancellation,'Dismissed cancellation cannot write');
+  page.once('dialog',dialog=>dialog.accept());await exposeCampaignManagement(page);await page.locator('[data-cancel]').click();
   await page.waitForFunction(()=>!document.querySelector('#detail').open);
   assert.equal(remote.cancelled,true);assert.equal(remote.deletedAt,undefined);
   assert.equal(await page.locator(`#campaign-list [data-detail="${campaign.id}"]`).count(),0);

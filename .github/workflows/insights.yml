@@ -4,6 +4,11 @@ on:
     # Stagger the catch-up opportunity from dispatch's 7/37 schedule.
     - cron: '19 * * * *'
   workflow_dispatch:
+    inputs:
+      analytics_only:
+        description: Refresh metrics without publishing or sending alerts
+        type: boolean
+        default: true
 permissions:
   contents: write
   issues: write
@@ -14,4 +19,5 @@ jobs:
     uses: ./.github/workflows/run.yml
     with:
       task: insights
+      analytics_only: ${{ github.event_name == 'workflow_dispatch' && inputs.analytics_only || false }}
     secrets: inherit

@@ -14,6 +14,7 @@ jobs:
     concurrency:
       group: campaign-repository
       cancel-in-progress: false
+      queue: max
     steps:
       - uses: actions/checkout@v4
         with:

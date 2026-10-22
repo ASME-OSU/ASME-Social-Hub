@@ -8,6 +8,9 @@ on:
       dry_run:
         default: false
         type: boolean
+      analytics_only:
+        default: false
+        type: boolean
 permissions:
   contents: write
   issues: write
@@ -16,6 +19,7 @@ permissions:
 concurrency:
   group: campaign-repository
   cancel-in-progress: false
+  queue: max
 jobs:
   task:
     runs-on: ubuntu-latest
@@ -61,14 +65,14 @@ jobs:
           npx playwright install --with-deps chromium
           npm run render
       - name: Dispatch
-        if: inputs.task == 'dispatch'
+        if: inputs.task == 'dispatch' && !inputs.analytics_only
         env:
           CAMPAIGN_GIT_CHECKPOINT: ${{ !inputs.dry_run && '1' || '0' }}
           DRY_RUN: ${{ inputs.dry_run }}
         run: |
           if [ "$DRY_RUN" = true ]; then npm run dry-run; else node scripts/dispatch.mjs; fi
       - name: Catch up due campaigns during scheduled insights
-        if: inputs.task == 'insights' && github.event_name == 'schedule' && !inputs.dry_run
+        if: inputs.task == 'insights' && github.event_name == 'schedule' && !inputs.dry_run && !inputs.analytics_only
         env:
           CAMPAIGN_GIT_CHECKPOINT: '1'
         run: node scripts/dispatch.mjs
@@ -85,7 +89,7 @@ jobs:
         if: inputs.task == 'keepalive'
         run: node scripts/tasks.mjs keepalive
       - name: Check token expiry
-        if: inputs.task != 'refresh'
+        if: inputs.task != 'refresh' && !inputs.analytics_only
         run: node scripts/tasks.mjs expiry
       - name: Prepare Pages data
         if: inputs.task != 'refresh' && !inputs.dry_run
@@ -101,7 +105,7 @@ jobs:
             git push origin HEAD:main
           fi
       - name: Report actionable failures
-        if: always() && !inputs.dry_run
+        if: always() && !inputs.dry_run && !inputs.analytics_only
         env:
           RUN_FAILED: ${{ job.status == 'failure' && '1' || '0' }}
         run: node scripts/tasks.mjs alert

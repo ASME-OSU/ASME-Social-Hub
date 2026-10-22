@@ -23,6 +23,7 @@ test('only scheduled live insights gets a durable catch-up before insights colle
     for(const event_name of ['schedule','workflow_dispatch','repository_dispatch','push']) {
       for(const dry_run of [true,false]) {
         assert.equal(evaluate(guard,{inputs:{task,dry_run},github:{event_name}}),task==='insights'&&event_name==='schedule'&&!dry_run,`${task}/${event_name}/${dry_run}`);
+        assert.equal(evaluate(guard,{inputs:{task,dry_run,analytics_only:true},github:{event_name}}),false,'analytics-only must never catch up posts');
       }
     }
   }
@@ -30,10 +31,26 @@ test('only scheduled live insights gets a durable catch-up before insights colle
   assert.match(catchup,/run: node scripts\/dispatch\.mjs/);
   assert.ok(runner.indexOf('name: Catch up due campaigns')<runner.indexOf('name: Insights'));
   assert.match(runner,/group: campaign-repository\n  cancel-in-progress: false/);
+  assert.match(runner,/group: campaign-repository\n  cancel-in-progress: false\n  queue: max/);
   const fallbackMinute=Number(insightsWorkflow.match(/cron: '(\d+) \* \* \* \*'/)[1]);
   const primaryMinutes=workflow.match(/cron: '([\d,]+) \* \* \* \*'/)[1].split(',').map(Number);
   assert.deepEqual(primaryMinutes,[7,37],'primary dispatch runs every 30 minutes away from the top of the hour');
   assert.equal(primaryMinutes.includes(fallbackMinute),false,'fallback should have a separate scheduling minute');
+});
+
+test('manual analytics-only refresh cannot publish or send alerts, and still persists metrics',()=>{
+  const analytics=insightsWorkflow.match(/analytics_only: \$\{\{ (.+) \}\}/)[1];
+  assert.match(insightsWorkflow,/analytics_only:\n[\s\S]*?default: true/);
+  assert.equal(evaluate(analytics,{inputs:{analytics_only:true},github:{event_name:'workflow_dispatch'}}),true);
+  assert.equal(evaluate(analytics,{inputs:{},github:{event_name:'schedule'}}),false);
+  for(const name of ['Dispatch','Check token expiry','Report actionable failures']) {
+    const condition=runner.match(new RegExp(`- name: ${name}\\n        if: (.+)`))[1];
+    assert.equal(evaluate(condition,{inputs:{task:'dispatch',dry_run:false,analytics_only:true},always:()=>true}),false,name);
+  }
+  for(const name of ['Insights','Prepare Pages data','Persist campaign state and site data']) {
+    const condition=runner.match(new RegExp(`- name: ${name}\\n        if: (.+)`))[1];
+    assert.equal(evaluate(condition,{inputs:{task:'insights',dry_run:false,analytics_only:true},always:()=>true}),true,name);
+  }
 });
 
 test('external dispatch defaults to preview and requires an explicit live mode',()=>{

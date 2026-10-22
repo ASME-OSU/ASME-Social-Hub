@@ -286,3 +286,66 @@ button.primary{border-radius:2px;box-shadow:0 3px 0 #00000012}
 .campaign-card .card-title-row>.badge.done,.detail-overview-status>.badge.done,.archive-row .badge.done{background:var(--status-done-bg);color:var(--status-done-ink);border-color:var(--status-done-line)}
 .campaign-card .card-title-row>.badge.pending,.detail-overview-status>.badge.pending,.archive-row .badge.pending{background:var(--status-pending-bg);color:var(--status-pending-ink);border-color:var(--status-pending-line)}
 .campaign-card .card-title-row>.badge.failed,.detail-overview-status>.badge.failed,.archive-row .badge.failed,.campaign-card .card-title-row>.badge.cancelled,.detail-overview-status>.badge.cancelled,.archive-row .badge.cancelled{background:var(--status-failed-bg);color:var(--status-failed-ink);border-color:var(--status-failed-line)}
+
+/* Desktop campaigns form one horizontal rail; the archive keeps the full history. */
+.campaign-heading-actions{display:flex;align-items:center;gap:12px;flex:none}
+.campaign-rail-controls{display:flex;gap:6px}
+.campaign-rail-controls button{width:44px;height:44px;min-width:44px;padding:0;font-size:20px;border-color:var(--line);background:var(--paper)}
+.campaign-rail-controls button:disabled{cursor:default;opacity:.35}
+@media(min-width:1000px){
+ #campaign-list.campaign-grid{display:grid;grid-auto-flow:column;grid-auto-columns:clamp(340px,39%,420px);grid-template-columns:none;justify-content:start;gap:20px;overflow-x:auto;overflow-y:hidden;max-width:100%;padding:0 0 12px;scroll-snap-type:x proximity;overscroll-behavior-x:contain;scroll-padding-inline:2px;scrollbar-width:thin;scrollbar-color:var(--steel) transparent}
+ #campaign-list>.campaign-card{width:100%;scroll-snap-align:start}
+ #campaign-list>.empty{grid-column:auto;width:min(100%,600px)}
+ #campaign-list:not(:has(.campaign-card)){display:block}
+}
+@media(max-width:999px){.campaign-rail-controls{display:none}.campaign-heading-actions{display:block}}
+
+/* Fit the initial desktop overview to the viewport without shrinking touch controls. */
+@media(min-width:900px){
+ #detail{width:min(1320px,calc(100vw - 32px));max-width:calc(100vw - 32px);height:min(920px,calc(100dvh - 24px));max-height:calc(100dvh - 24px)}
+ #detail .dialog-heading{padding:12px 20px}
+ #detail .dialog-heading h2{font-size:24px}
+ #detail-content{gap:20px;padding:12px 20px}
+ #detail .dialog-footer{padding:8px 20px}
+ #detail .detail-preview-pane{height:var(--detail-pane-height,calc(100dvh - 190px));max-height:var(--detail-pane-height,calc(100dvh - 190px));display:flex;flex-direction:column}
+ #detail .detail-preview-tabs{flex:none;padding:4px}
+ #detail .detail-preview-panel{flex:1;min-height:0;overflow:auto;padding:10px}
+ #detail #detail-instagram-preview:not([hidden]){display:flex;flex-direction:column;overflow:hidden}
+ #detail .ig-detail-post{display:flex;flex-direction:column;flex:1;min-height:0;height:100%}
+ #detail .ig-detail-post>.ig-header{flex:none;height:48px;min-height:48px;padding-block:8px}
+ #detail .ig-detail-post>.ig-media{flex:1;min-height:0;display:flex;flex-direction:column}
+ #detail .ig-detail-image{height:100%;min-height:0;display:flex;flex-direction:column}
+ #detail .ig-detail-image .detail-artwork-trigger{height:100%;min-height:0;display:block}
+ #detail .ig-detail-image img{height:100%;width:100%;max-height:none;object-fit:contain}
+ #detail .ig-detail-post>.ig-body{flex:none;padding:8px 12px}
+ #detail .ig-detail-post .ig-caption{max-height:66px;font-size:12px}
+ #detail .ig-detail-post .ig-actions{margin-bottom:5px}
+ #detail .ig-preview-note{margin-top:6px}
+ #detail .detail-images .detail-artwork-trigger img{max-height:calc(var(--detail-pane-height) - 100px)}
+ #detail .detail-info-pane h3{font-size:19px;margin-bottom:8px}
+ #detail .detail-event-meta{font-size:12px;line-height:1.6;margin-bottom:10px}
+ #detail .detail-overview-status{margin-bottom:7px}
+ #detail .detail-posting .steps{padding:10px;margin-bottom:12px}
+ #detail .detail-insights{padding-bottom:4px}
+}
+#detail .detail-insights .card-engagement{margin:0;padding:10px 12px;border:0;border-radius:8px;background:var(--ice)}
+#detail .detail-insights .card-engagement-values{display:flex;align-items:center;gap:20px;font-size:12px}
+#detail .detail-insights .card-engagement-values>span{justify-content:start;flex-wrap:nowrap}
+#detail .detail-insights .card-engagement-values strong{font-size:18px}
+#detail .detail-insights .reach-icon{width:23px;height:23px;color:var(--navy)}
+#detail .detail-insights .card-engagement p,#detail .detail-insights .card-engagement small{font-size:10px;margin:4px 0 0;line-height:1.4}
+#detail .detail-all-insights{margin-top:4px}
+#detail .detail-management{padding:0;margin:0}
+#detail .detail-management>summary{min-height:44px}
+#detail .detail-management .campaign-management-actions{padding-bottom:12px}
+.detail-info-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:12px}
+.detail-info-tabs button{flex:1;min-width:0;border:0;border-bottom:2px solid transparent;background:transparent;border-radius:0;padding:8px 4px;font-size:12px;min-height:44px}
+.detail-info-tabs button[aria-selected=true]{border-bottom-color:var(--scarlet);color:var(--scarlet)}
+#detail [data-detail-info-panel]>details{border-top:1px solid var(--line)}
+#detail .detail-warning-details{margin-bottom:12px}
+@media(min-width:900px){
+ #detail .ig-detail-post>.ig-media{position:relative;display:block}
+ #detail .ig-detail-image{position:absolute;inset:0;height:100%;display:block}
+ #detail .ig-detail-image .detail-artwork-trigger{width:100%;height:100%;position:relative}
+ #detail .ig-detail-image img{position:absolute;inset:0;width:100%;height:100%;max-height:100%;object-fit:contain}
+}

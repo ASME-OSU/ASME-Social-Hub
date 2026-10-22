@@ -1,3 +1,4 @@
+import {checkHomeRail} from './check-home-rail.mjs';
 import {checkAcademicYears} from './check-academic-years.mjs';
 import {checkCampaignModal} from './check-campaign-modal.mjs';
 import {checkCampaignCards} from './check-campaign-cards.mjs';
@@ -32,6 +33,7 @@ try {
  await checkDashboardDesign(browser,base);
  await checkCampaignCards(browser,base);
  await checkCampaignModal(browser,base);
+ await checkHomeRail(browser,base);
  await checkAcademicYears(browser,base);
  await checkPreviewPane(browser,base);
  await checkCampaignControls(browser,base);

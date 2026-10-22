@@ -1,0 +1,7 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {homeCampaigns,HOME_EVENT_RETENTION_MS} from '../docs/home-campaigns.mjs';
+const now=Date.parse('2026-10-23T22:30:00Z'),event=(id,end,extra={})=>({id,start:new Date(end-3600000).toISOString(),end:new Date(end).toISOString(),...extra});
+test('home retains events for 24 hours after ending without deleting archive records',()=>{const campaigns=[event('future',now+3600000),event('just-ended',now-1),event('23-hours',now-23*3600000),event('24-hours',now-HOME_EVENT_RETENTION_MS),event('older',now-25*3600000)];const before=structuredClone(campaigns);assert.deepEqual(homeCampaigns(campaigns,now).map(c=>c.id),['future','just-ended','23-hours']);assert.deepEqual(campaigns,before);});
+test('cancelled, deleted, explicitly archived and invalid events stay off home',()=>{const end=now+3600000;assert.deepEqual(homeCampaigns([event('cancelled',end,{cancelled:true}),event('deleted',end,{deletedAt:'2026-10-01'}),event('archived',end,{archived:true}),{id:'invalid',start:'bad'}],now),[]);});
+test('start is used only when end is absent, and upcoming events precede recent events',()=>{const list=[event('recent-older',now-7200000),event('future-later',now+7200000),{id:'start-only',start:new Date(now-3600000).toISOString()},event('future-first',now+3600000)];assert.deepEqual(homeCampaigns(list,now).map(c=>c.id),['future-first','future-later','start-only','recent-older']);});

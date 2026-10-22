@@ -1,0 +1,39 @@
+name: Dispatcher watchdog
+on:
+  schedule:
+    - cron: '49 * * * *'
+  workflow_run:
+    workflows: [Render and publish dashboard, Calendar]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Inspect dispatcher health without requesting a live run
+        type: boolean
+        default: true
+permissions:
+  contents: read
+  actions: write
+concurrency:
+  group: campaign-dispatch-watchdog
+  cancel-in-progress: false
+  queue: max
+jobs:
+  check:
+    # Manual render/calendar/analytics operations must not gain publishing side effects.
+    if: github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_repository.full_name == github.repository && (github.event.workflow_run.event == 'push' || github.event.workflow_run.event == 'schedule'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+          sparse-checkout: scripts/dispatch-watchdog.mjs
+          sparse-checkout-cone-mode: false
+      - name: Request a dispatcher run only when its heartbeat is overdue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          WATCHDOG_DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
+        run: node scripts/dispatch-watchdog.mjs
