@@ -1,7 +1,7 @@
 name: Dispatch campaigns
 on:
   schedule:
-    - cron: '7,22,37,52 * * * *'
+    - cron: '7,37 * * * *'
   repository_dispatch:
     types: [campaign-dispatch]
   workflow_dispatch:

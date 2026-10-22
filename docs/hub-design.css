@@ -265,7 +265,7 @@ button.primary{border-radius:2px;box-shadow:0 3px 0 #00000012}
 
 /* A little more chapter color without competing with the event artwork. */
 .campaign-card{border-color:color-mix(in srgb,var(--navy) 18%,var(--paper));box-shadow:0 3px 12px #10284008}
-.campaign-card .card-art{background-color:color-mix(in srgb,var(--navy) 10%,var(--paper));box-shadow:inset 0 3px 0 var(--scarlet)}
+.campaign-card .card-art{background-color:color-mix(in srgb,var(--navy) 10%,var(--paper));box-shadow:none}
 .campaign-card .card-art>img{opacity:.3;filter:saturate(.85)}
 .campaign-card .card-art::after{background:linear-gradient(90deg,color-mix(in srgb,var(--navy) 10%,var(--paper)) 5%,transparent 95%)}
 .campaign-card .art-date{background:var(--paper);border:1px solid color-mix(in srgb,var(--scarlet) 18%,var(--paper));box-shadow:0 2px 5px #10284008}
@@ -278,3 +278,11 @@ button.primary{border-radius:2px;box-shadow:0 3px 0 #00000012}
 #detail .insights-summary{padding:12px;margin-bottom:8px;border-radius:8px}
 #detail .insights-summary dl{margin-bottom:0}
 #detail .snapshot-details{margin-bottom:0}
+
+/* Semantic status colors keep the written state visible in every theme. */
+:root{--status-done-bg:#e4f4e8;--status-done-ink:#21663a;--status-done-line:#85b795;--status-pending-bg:#fff3c4;--status-pending-ink:#77530b;--status-pending-line:#d1ad45;--status-failed-bg:#fde6e8;--status-failed-ink:#a91c32;--status-failed-line:#d99aa3}
+:root[data-theme=dark]{--status-done-bg:#183f2b;--status-done-ink:#9be4b0;--status-done-line:#3c8154;--status-pending-bg:#493c15;--status-pending-ink:#ffe28a;--status-pending-line:#a88b36;--status-failed-bg:#4b2229;--status-failed-ink:#ffb2ba;--status-failed-line:#ab5665}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--status-done-bg:#183f2b;--status-done-ink:#9be4b0;--status-done-line:#3c8154;--status-pending-bg:#493c15;--status-pending-ink:#ffe28a;--status-pending-line:#a88b36;--status-failed-bg:#4b2229;--status-failed-ink:#ffb2ba;--status-failed-line:#ab5665}}
+.campaign-card .card-title-row>.badge.done,.detail-overview-status>.badge.done,.archive-row .badge.done{background:var(--status-done-bg);color:var(--status-done-ink);border-color:var(--status-done-line)}
+.campaign-card .card-title-row>.badge.pending,.detail-overview-status>.badge.pending,.archive-row .badge.pending{background:var(--status-pending-bg);color:var(--status-pending-ink);border-color:var(--status-pending-line)}
+.campaign-card .card-title-row>.badge.failed,.detail-overview-status>.badge.failed,.archive-row .badge.failed,.campaign-card .card-title-row>.badge.cancelled,.detail-overview-status>.badge.cancelled,.archive-row .badge.cancelled{background:var(--status-failed-bg);color:var(--status-failed-ink);border-color:var(--status-failed-line)}

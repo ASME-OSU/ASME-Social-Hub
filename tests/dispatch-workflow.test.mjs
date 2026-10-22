@@ -32,6 +32,7 @@ test('only scheduled live insights gets a durable catch-up before insights colle
   assert.match(runner,/group: campaign-repository\n  cancel-in-progress: false/);
   const fallbackMinute=Number(insightsWorkflow.match(/cron: '(\d+) \* \* \* \*'/)[1]);
   const primaryMinutes=workflow.match(/cron: '([\d,]+) \* \* \* \*'/)[1].split(',').map(Number);
+  assert.deepEqual(primaryMinutes,[7,37],'primary dispatch runs every 30 minutes away from the top of the hour');
   assert.equal(primaryMinutes.includes(fallbackMinute),false,'fallback should have a separate scheduling minute');
 });
 
