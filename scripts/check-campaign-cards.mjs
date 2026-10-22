@@ -19,7 +19,7 @@ export async function checkCampaignCards(browser,base){
  const noReceipt=make('card-fixture-no-receipt','Completed without recorded timestamps');noReceipt.status={feed:'done',story:'done',groupme:'done'};noReceipt.results.insights=[{channel:'feed',recordedAt:'2026-10-21T15:00:00Z',metrics:{likes:0,reach:0}}];
  const campaigns=[normal,failed,missed,long,noReceipt],output='test-results/campaign-cards',metrics=[];await mkdir(output,{recursive:true});
  for(const width of [1440,768,390,320])for(const theme of ['light','dark']){
-  const context=await browser.newContext({viewport:{width,height:1000},colorScheme:theme,timezoneId:'America/Los_Angeles',reducedMotion:'reduce'});
+  const context=await browser.newContext({serviceWorkers:'block',viewport:{width,height:1000},colorScheme:theme,timezoneId:'America/Los_Angeles',reducedMotion:'reduce'});
   try{
    const page=await context.newPage(),errors=[],writes=[];page.on('pageerror',e=>errors.push(e.message));await page.clock.install({time:new Date('2026-10-21T16:00:00Z')});
    await page.route('**/config/chapter.json',r=>r.fulfill({json:config}));
