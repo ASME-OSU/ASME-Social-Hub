@@ -410,14 +410,6 @@ input::placeholder,textarea::placeholder{color:var(--muted);opacity:1}
 .header-sidebar-toggle,.theme-toggle,.header-connection-pill,.mobile-social-menu>summary{min-height:44px}
 .header-sidebar-toggle,.theme-toggle{min-width:44px}
 .sidebar-disconnected-badge .connect-shortcut-link{display:inline-flex;align-items:center;min-height:44px}
-@media(min-width:1000px){
- .campaign-grid.few-campaigns{grid-template-columns:repeat(2,minmax(0,1fr))}
- .campaign-grid.few-campaigns:has(> :only-child){grid-template-columns:minmax(0,820px);justify-content:center}
- .campaign-grid.few-campaigns>.campaign-card:only-child{display:grid;grid-template-columns:200px minmax(0,1fr)}
- .campaign-grid.few-campaigns>.campaign-card:only-child .card-art{height:100%;min-height:280px;grid-row:1/3}
- .campaign-grid.few-campaigns>.campaign-card:only-child .card-body{padding:22px 24px}
- .campaign-grid.few-campaigns>.campaign-card:only-child .card-footer{grid-column:2;padding:12px 24px}
-}
 @media(max-width:699px){
  #view-dashboard .page-heading{margin-bottom:20px}
  #view-dashboard .stats{grid-template-columns:1fr 1fr;margin:16px 0 24px}
