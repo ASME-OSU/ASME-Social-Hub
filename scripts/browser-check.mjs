@@ -1,5 +1,6 @@
 import {checkUiRefinements} from './check-ui-refinements.mjs';
 import {checkStoryEmptyMedia} from './check-story-empty-media.mjs';
+import {checkPostingStatus} from './check-posting-status.mjs';
 import {checkDispatcherAccess} from './check-dispatcher-access.mjs';
 import {checkMemberEvent} from './check-member-event.mjs';
 import {checkDashboardDesign} from './check-dashboard-design.mjs';
@@ -23,6 +24,7 @@ try {
  for(let i=0;i<50;i++){try{if((await fetch(base)).ok)break;}catch{}await new Promise(r=>setTimeout(r,100));}
  browser=await chromium.launch({headless:true});
  await checkDispatcherAccess(browser,base);
+ await checkPostingStatus(browser,base);
  await checkMemberEvent(browser,base);
  await checkDashboardDesign(browser,base);
  await checkPreviewPane(browser,base);
@@ -47,7 +49,7 @@ try {
  healthRecord={lastSuccessfulLiveRunAt:'2026-10-15T02:00:00Z'};await page.clock.fastForward(60000);await page.waitForFunction(()=>document.querySelector('#dispatcher-warning').dataset.state==='stale');assert.match(await page.locator('#dispatcher-warning').textContent(),/more than 12 hours/);
  healthRecord={lastSuccessfulLiveRunAt:'2026-10-15T16:00:00Z',lastLiveRunAt:'2026-10-15T16:01:00Z',lastLiveRunStatus:'failed'};await page.clock.fastForward(60000);await page.waitForFunction(()=>document.querySelector('#dispatcher-warning').dataset.state==='failed');assert.match(await page.locator('#dispatcher-warning').textContent(),/publishing failure/);
  healthRecord={lastSuccessfulLiveRunAt:'2026-10-15T16:00:00Z'};await page.clock.fastForward(60000);await page.waitForFunction(()=>document.querySelector('#dispatcher-warning').hidden);
- healthRecord=null;await page.clock.fastForward(60000);await page.waitForFunction(()=>!document.querySelector('#dispatcher-warning').hidden);assert.match(await page.locator('#dispatcher-warning').textContent(),/unknown/);
+ healthRecord=null;await page.clock.fastForward(60000);await page.waitForFunction(()=>document.querySelector('.dispatcher-health').dataset.state==='unknown');assert.equal(await page.locator('#dispatcher-warning').isVisible(),false);assert.match(await page.locator('#dispatcher-health-title').textContent(),/unavailable/);
  assert.equal(await page.locator('.campaign-card').count(),0);
  assert.ok(await page.locator('#suggestions .suggestion').count()>0);
  await page.locator('#new-campaign').click();assert.equal(await page.locator('[name=groupmeAnnounce]').isDisabled(),false);assert.equal(await page.locator('[name=groupmeAnnounce]').isChecked(),false);
