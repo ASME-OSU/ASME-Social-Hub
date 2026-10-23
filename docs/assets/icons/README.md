@@ -7,3 +7,5 @@ Brand assets were retrieved October 18, 2026 and are bundled locally so the quic
 - **Linktree:** `linktree.svg` uses the exact filled mark path published in Linktree's own newsroom footer at https://linktr.ee/newsroom . The viewport is fitted to the standalone mark; the path geometry is unchanged. The inline copy in `docs/social-links.mjs` inherits the interface foreground color. Brand rights remain with Linktree.
 - **Instagram:** the existing recognizable camera glyph is retained.
 - **Navigation:** Campaigns uses Lucide `megaphone`, Archive uses Lucide `archive`, and Settings uses Lucide `settings-2`. Original SVG geometry: https://github.com/lucide-icons/lucide/tree/main/icons . These are inlined in `docs/index.html` at 22px (20px on mobile), with a consistent 1.8px stroke. Lucide's ISC license is included in `LICENSE-lucide.txt`.
+
+- **ASME Hub shortcut:** `../logos/asme-hub-mark.svg` is the unchanged Officer Hub navigation mark from ASME-OSU/ASME-HUB, `assets/hub-mark.svg`. It links to the chapter’s Officer Hub, configured by `hubUrl` in `config/chapter.json`.

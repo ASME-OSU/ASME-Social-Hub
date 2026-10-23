@@ -24,6 +24,15 @@ const profiles=[
 export function renderSocialLinks(config){
  for(const group of document.querySelectorAll('[data-social-links]')){
   group.replaceChildren();
+  try{
+   const hubUrl=new URL(config.hubUrl);
+   if(hubUrl.protocol==='https:'&&!hubUrl.username&&!hubUrl.password){
+    const shortcut=document.createElement('a');shortcut.className='asme-hub-shortcut';shortcut.href=hubUrl.href;shortcut.setAttribute('aria-label','Go to ASME Hub');shortcut.title='Go to ASME Hub';
+    const logo=document.createElement('img');logo.src='./assets/logos/asme-hub-mark.svg';logo.alt='';logo.width=32;logo.height=32;
+    const label=document.createElement('span');label.className='asme-hub-shortcut-copy';label.textContent='ASME Hub';shortcut.append(logo,label);group.append(shortcut);
+   }
+  }catch{/* A chapter without a configured Hub keeps its usual social links. */}
+
   for(const [key,label,markup] of profiles){
    let url;try{url=new URL(config.socialLinks?.[key]);if(url.protocol!=='https:'||url.username||url.password)continue;}catch{continue;}
    const link=document.createElement('a');link.className='social-link';link.href=url.href;link.target='_blank';link.rel='noopener noreferrer';link.setAttribute('aria-label',`${label} (opens in a new tab)`);link.title=`${label} · opens in a new tab`;

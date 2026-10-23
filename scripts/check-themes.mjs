@@ -16,10 +16,11 @@ export async function checkThemes(browser,base){
   try{
    const page=await context.newPage();await page.route('**/config/chapter.json',async route=>{const response=await route.fetch(),config=await response.json();await route.fulfill({json:{...config,showExamples:true,socialLinks:{...config.socialLinks,facebook:'https://www.facebook.com/chapter-test-fixture/',linktree:'https://linktr.ee/chapter-test-fixture'}}});});
    await page.goto(base);await page.locator('.campaign-card').first().waitFor();
-   assert.equal(await page.locator('#connection-label').textContent(),'Not connected');assert.equal(await page.locator('#header-connection-text').textContent(),'Not connected');assert.equal(await page.locator('.sidebar-foot').textContent().then(text=>/Plan once|Ohio State University/.test(text)),false);assert.equal(await page.locator('.workspace>footer').textContent().then(text=>text.trim()),'');
+   assert.equal(await page.locator('#connection-label').textContent(),'Not connected');assert.equal(await page.locator('#header-connection-text').textContent(),'Not connected');assert.equal(await page.locator('.sidebar-foot').textContent().then(text=>/Plan once|Ohio State University/.test(text)),false);assert.equal(await page.locator('.workspace>footer').textContent().then(text=>text.trim()),'ASME Hub');
    assert.equal(await page.locator('.social-brand-facebook').first().getAttribute('fill'),'currentColor');
    assert.equal(await page.locator('nav .nav-icon svg').count(),3);
-   assert.equal(await page.locator('.sidebar-social a').count(),4);
+   assert.equal(await page.locator('.sidebar-social a').count(),5);
+   const hub=page.locator('.sidebar-social .asme-hub-shortcut');assert.equal(await hub.getAttribute('href'),'https://asme-osu.github.io/ASME-HUB/');assert.equal(await hub.getAttribute('target'),null,'Hub shortcut navigates directly');assert.equal(await page.locator('.sidebar-social').evaluate(e=>e.firstElementChild.classList.contains('asme-hub-shortcut')),true,'Hub shortcut precedes every social profile');await hub.locator('img').evaluate(image=>image.decode());
    for(const label of ['Instagram','LinkedIn','Facebook','Linktree']){const link=page.locator('.sidebar-social').getByRole('link',{name:label+' (opens in a new tab)',exact:true});assert.equal(await link.getAttribute('target'),'_blank');assert.match(await link.getAttribute('rel'),/noopener/);assert.ok(await link.locator('svg,img').count()>0);for(const image of await link.locator('img').all())assert.ok(await image.evaluate(async img=>{await img.decode();return img.naturalWidth>0;}),'Brand image must load');}
    assert.equal(await page.evaluate(()=>getComputedStyle(document.documentElement).colorScheme),theme,'System theme should control native fields');
    // Device appearance must update live; users can explicitly return to automatic mode.
@@ -41,7 +42,7 @@ export async function checkThemes(browser,base){
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'Expanded tablet layout must fit');
    await page.setViewportSize({width:700,height:1000});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'Expanded narrow tablet layout must fit');
    await page.setViewportSize({width:390,height:844});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
-   await page.locator('.mobile-social-menu summary').click();assert.equal(await page.locator('.header-social a').count(),4);assert.equal(await page.locator('.header-social').isVisible(),true);await page.locator('.mobile-social-menu summary').click();
+   await page.locator('.mobile-social-menu summary').click();assert.equal(await page.locator('.header-social a').count(),5);assert.equal(await page.locator('.header-social').isVisible(),true);await page.locator('.mobile-social-menu summary').click();
    for(const width of [320,344,360,390,690]){
     await page.setViewportSize({width,height:900});
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,`Header must fit ${width}px`);
@@ -66,7 +67,7 @@ export async function checkThemes(browser,base){
    await page.emulateMedia({colorScheme:'light'});await page.emulateMedia({colorScheme:'dark'});
    assert.equal(await page.evaluate(()=>document.documentElement.dataset.theme),'light');
    await page.locator('[data-view=dashboard]').click();
-   assert.equal(await page.locator('.footer-social a').count(),4);assert.equal(await page.locator('.footer-social').isVisible(),true);assert.equal(await page.locator('.sidebar-social').isVisible(),false);
+   assert.equal(await page.locator('.footer-social a').count(),5);assert.equal(await page.locator('.footer-social').isVisible(),true);assert.equal(await page.locator('.sidebar-social').isVisible(),false);
    assert.equal(await page.locator('.sidebar-header').isVisible(),false);assert.equal(await page.locator('#header-sidebar-toggle').isVisible(),false);
    for(const button of await page.locator('nav button').all()){assert.ok(await button.evaluate(e=>{const r=e.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight;}),'Every mobile navigation button must stay inside the visible bottom bar');}
   }finally{await context.close();}

@@ -407,3 +407,22 @@ details[open]:not(.mobile-social-menu):not(.dispatcher-controls):not(.artwork-pr
  #detail .detail-info-pane h3{font-size:18px;margin-bottom:6px}
  #detail .detail-posting .steps{margin-bottom:10px}
 }
+
+/* A direct route to the Officer Hub sits above the chapter's social profiles. */
+.asme-hub-shortcut{display:flex;align-items:center;justify-content:flex-start;gap:10px;flex:0 0 100%;width:100%;min-height:52px;padding:8px 10px;margin-bottom:6px;border:1px solid #ffffff40;border-radius:6px;color:#fff;background:#ffffff0c;text-decoration:none;font-size:13px;font-weight:650}
+.asme-hub-shortcut img{display:block;width:32px;height:32px;flex:none}
+.asme-hub-shortcut:hover{background:#ffffff1c;border-color:#ffffff80}
+@media(min-width:700px){
+ html.sidebar-collapsed .asme-hub-shortcut{flex:none;width:44px;height:44px;min-height:44px;justify-content:center;padding:5px}
+ html.sidebar-collapsed .asme-hub-shortcut-copy{display:none}
+}
+@media(min-width:700px) and (max-width:1099px){
+ html:not(.sidebar-expanded) .asme-hub-shortcut{flex:none;width:44px;height:44px;min-height:44px;justify-content:center;padding:5px}
+ html:not(.sidebar-expanded) .asme-hub-shortcut-copy{display:none}
+}
+@media(max-width:699px){
+ .header-social{display:grid;grid-template-columns:repeat(4,44px)}
+ .header-social .asme-hub-shortcut{grid-column:1/-1}
+ .header-social .asme-hub-shortcut,.footer-social .asme-hub-shortcut{color:var(--ink);border-color:var(--line);background:var(--ice)}
+ .header-social .asme-hub-shortcut:hover,.footer-social .asme-hub-shortcut:hover{border-color:var(--navy)}
+}

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">ASME Officer Hub</title>
+  <circle cx="32" cy="32" r="30" fill="#07182d" stroke="#ba0c2f" stroke-width="3"/>
+  <path d="M13 50 29 13h7l16 37h-9L32.5 24 22 50h-9Z" fill="#fff"/>
+  <path d="M7 37c10-4 20-5 30-2 10 2 17 6 19 11 2 6-3 10-10 13 5-4 7-8 4-12-3-4-9-7-16-8-9-2-18-1-27 1v-3Z" fill="#ba0c2f"/>
+</svg>
