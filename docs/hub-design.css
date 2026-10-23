@@ -1,7 +1,7 @@
 /* Chapter desk: warm paper, quiet rules, and scarlet wayfinding. */
 :root,:root[data-theme="light"]{--canvas:#f6f4ef;--paper:#fffefa;--ice:#eeece6;--ink:#202c35;--muted:#59646c;--line:#d9d8d1;--navy:#263c49;--scarlet:#ba0c2f;--scarlet-tint:#f9e9e9;--sidebar-bg:#192a33}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--canvas:#171c20;--paper:#20272b;--ice:#2a3237;--ink:#f4f1e9;--muted:#b5bec3;--line:#3d484e;--navy:#b9cfda;--scarlet:#ff8a9b;--scarlet-tint:#3b272e;--sidebar-bg:#111b21}}
-:root[data-theme="dark"]{--canvas:#171c20;--paper:#20272b;--ice:#2a3237;--ink:#f4f1e9;--muted:#b5bec3;--line:#3d484e;--navy:#b9cfda;--scarlet:#ff8a9b;--scarlet-tint:#3b272e;--sidebar-bg:#111b21}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--canvas:#171c20;--paper:#20272b;--ice:#2a3237;--ink:#faf9f6;--muted:#ced5da;--line:#3d484e;--navy:#b9cfda;--scarlet:#ff8a9b;--scarlet-tint:#3b272e;--sidebar-bg:#111b21}}
+:root[data-theme="dark"]{--canvas:#171c20;--paper:#20272b;--ice:#2a3237;--ink:#faf9f6;--muted:#ced5da;--line:#3d484e;--navy:#b9cfda;--scarlet:#ff8a9b;--scarlet-tint:#3b272e;--sidebar-bg:#111b21}
 #sidebar{background-image:none}header{background:var(--canvas)}
 .page-heading{border-bottom:1px solid var(--line)}
 .page-heading h1{letter-spacing:-.04em}
@@ -348,4 +348,21 @@ button.primary{border-radius:2px;box-shadow:0 3px 0 #00000012}
  #detail .ig-detail-image{position:absolute;inset:0;height:100%;display:block}
  #detail .ig-detail-image .detail-artwork-trigger{width:100%;height:100%;position:relative}
  #detail .ig-detail-image img{position:absolute;inset:0;width:100%;height:100%;max-height:100%;object-fit:contain}
+}
+
+/* Keep header controls and their vector icons intact on narrow and folding phones. */
+#theme-toggle-icon{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;flex:none;line-height:1}
+#theme-toggle-icon svg,.mobile-social-menu>summary>svg{display:block;width:20px;height:20px;flex:none}
+.linkedin-mark{display:block;position:relative;width:24px;height:24px;flex:none;overflow:visible}
+.linkedin-mark .social-brand-image{position:absolute;left:0;top:0;width:28.2222px;height:24px;max-width:none}
+.linkedin-mark .linkedin-white{width:25.8793px}
+@media(max-width:699px){
+ header{padding-inline:12px;gap:8px}
+ .header-left{flex:none}
+ .header-actions{flex:1;min-width:0;justify-content:flex-end;gap:4px}
+ .header-actions>.hub-guide-button,.header-actions>.theme-toggle,.mobile-social-menu,.mobile-social-menu>summary{flex:none}
+ .header-actions>.hub-guide-button,.header-actions>.theme-toggle,.mobile-social-menu>summary{display:grid;place-items:center;box-sizing:border-box;width:44px;height:44px;min-width:44px;padding:0}
+ .header-connection-pill{flex:0 1 auto;min-width:44px}
+ .header-connection-pill #header-connection-text{min-width:0}
+ .header-social{flex-wrap:wrap}
 }
