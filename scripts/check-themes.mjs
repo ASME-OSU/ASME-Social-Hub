@@ -22,11 +22,18 @@ export async function checkThemes(browser,base){
    assert.equal(await page.locator('.sidebar-social a').count(),4);
    for(const label of ['Instagram','LinkedIn','Facebook','Linktree']){const link=page.locator('.sidebar-social').getByRole('link',{name:label+' (opens in a new tab)',exact:true});assert.equal(await link.getAttribute('target'),'_blank');assert.match(await link.getAttribute('rel'),/noopener/);assert.ok(await link.locator('svg,img').count()>0);for(const image of await link.locator('img').all())assert.ok(await image.evaluate(async img=>{await img.decode();return img.naturalWidth>0;}),'Brand image must load');}
    assert.equal(await page.evaluate(()=>getComputedStyle(document.documentElement).colorScheme),theme,'System theme should control native fields');
+   // Device appearance must update live; users can explicitly return to automatic mode.
+   assert.equal(await page.locator('#appearance-theme').inputValue(),'system');
+   await page.emulateMedia({colorScheme:theme==='dark'?'light':'dark'});
+   await page.waitForFunction(dark=>document.querySelector('#theme-toggle').getAttribute('aria-label')===(dark?'Switch to light theme':'Switch to dark theme'),theme==='light');
+   assert.equal(await page.locator('#theme-toggle-icon svg').count(),1);
+   await page.emulateMedia({colorScheme:theme});
+   await page.waitForFunction(dark=>document.querySelector('#theme-toggle').getAttribute('aria-label')===(dark?'Switch to light theme':'Switch to dark theme'),theme==='dark');
    assert.equal(await page.locator('#sidebar').evaluate(e=>e.getBoundingClientRect().width),240);
    await checkContrast(page,['h1','.subtle','.stat-label','.stat small','.campaign-card h3','.campaign-card .card-info','.card-footer button','#new-campaign','nav button.active']);
    await page.locator('#header-sidebar-toggle').click();await page.waitForFunction(()=>document.querySelector('aside').getBoundingClientRect().width===72);await page.reload();await page.locator('.campaign-card').first().waitFor();assert.equal(await page.locator('#header-sidebar-toggle').getAttribute('aria-expanded'),'false');assert.equal(await page.locator('.sidebar-social').isVisible(),true);
    await page.locator('#header-sidebar-toggle').click();await page.waitForFunction(()=>document.querySelector('aside').getBoundingClientRect().width===240);
-   await page.locator('[data-view=settings]').click();await checkContrast(page,['#settings-form h2','#settings-form label','#settings-connection-state','#settings-form input[name=owner]','#channel-defaults-form .subtle','#channel-defaults-form button.primary']);
+   await page.locator('[data-view=settings]').click();await checkContrast(page,['#appearance-heading','#appearance-theme','#appearance-theme+.field-help','#settings-form h2','#settings-form label','#settings-connection-state','#settings-form input[name=owner]','#channel-defaults-form .subtle','#channel-defaults-form button.primary']);
    await page.locator('[data-view=dashboard]').click();await page.locator('#new-campaign').click();await checkContrast(page,['#editor-title','#editor .field-help','#editor input[name=title]','#editor .food-segments .yes','#editor .channel-switch .switch-on','#save-button']);await page.locator('[data-close=editor]').first().click();
    // Explicit overrides must win even when the system requests the opposite palette.
    await page.locator('#theme-toggle').click();assert.equal(await page.evaluate(()=>getComputedStyle(document.documentElement).colorScheme),theme==='dark'?'light':'dark');await page.reload();await page.locator('.campaign-card').first().waitFor();assert.equal(await page.evaluate(()=>getComputedStyle(document.documentElement).colorScheme),theme==='dark'?'light':'dark');
@@ -35,6 +42,30 @@ export async function checkThemes(browser,base){
    await page.setViewportSize({width:700,height:1000});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'Expanded narrow tablet layout must fit');
    await page.setViewportSize({width:390,height:844});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
    await page.locator('.mobile-social-menu summary').click();assert.equal(await page.locator('.header-social a').count(),4);assert.equal(await page.locator('.header-social').isVisible(),true);await page.locator('.mobile-social-menu summary').click();
+   for(const width of [320,344,360,390,690]){
+    await page.setViewportSize({width,height:900});
+    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,`Header must fit ${width}px`);
+    for(const selector of ['#theme-toggle','.mobile-social-menu summary']){
+     const rect=await page.locator(selector).boundingBox();assert.equal(rect.width,44);assert.equal(rect.height,44);assert.ok(rect.x>=0&&rect.x+rect.width<=width);
+    }
+    for(const selector of ['#theme-toggle-icon svg','.mobile-social-menu summary svg']){
+     const box=await page.locator(selector).boundingBox();assert.equal(box.width,20);assert.equal(box.height,20);
+     assert.ok(await page.locator(selector).evaluate(svg=>{const b=svg.getBBox();return b.x>=1&&b.y>=1&&b.x+b.width<=23&&b.y+b.height<=23;}),'Icon strokes must fit the view box');
+    }
+    await page.locator('.mobile-social-menu summary').click();
+    const menu=await page.locator('.header-social').boundingBox();assert.ok(menu.x>=0&&menu.x+menu.width<=width,'Social menu must fit phone viewport');
+    await page.locator('.mobile-social-menu summary').click();
+   }
+   await page.setViewportSize({width:390,height:844});
+   await page.locator('[data-view=settings]').click();
+   await page.locator('#appearance-theme').selectOption('system');
+   await page.emulateMedia({colorScheme:'dark'});
+   await page.waitForFunction(()=>document.querySelector('#theme-toggle').getAttribute('aria-label')==='Switch to light theme');
+   assert.equal(await page.evaluate(()=>localStorage.getItem('social-hub-theme')),null);
+   await page.locator('#appearance-theme').selectOption('light');
+   await page.emulateMedia({colorScheme:'light'});await page.emulateMedia({colorScheme:'dark'});
+   assert.equal(await page.evaluate(()=>document.documentElement.dataset.theme),'light');
+   await page.locator('[data-view=dashboard]').click();
    assert.equal(await page.locator('.footer-social a').count(),4);assert.equal(await page.locator('.footer-social').isVisible(),true);assert.equal(await page.locator('.sidebar-social').isVisible(),false);
    assert.equal(await page.locator('.sidebar-header').isVisible(),false);assert.equal(await page.locator('#header-sidebar-toggle').isVisible(),false);
    for(const button of await page.locator('nav button').all()){assert.ok(await button.evaluate(e=>{const r=e.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight;}),'Every mobile navigation button must stay inside the visible bottom bar');}

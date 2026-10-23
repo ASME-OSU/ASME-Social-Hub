@@ -8,7 +8,7 @@ const profiles=[
   [
     "linkedin",
     "LinkedIn",
-    "<img class=\"social-brand-image linkedin-blue\" src=\"./assets/icons/linkedin-blue.png\" width=\"28\" height=\"24\" alt=\"\"><img class=\"social-brand-image linkedin-white\" src=\"./assets/icons/linkedin-white.png\" width=\"28\" height=\"24\" alt=\"\">"
+    "<span class=\"linkedin-mark\" aria-hidden=\"true\"><img class=\"social-brand-image linkedin-blue\" src=\"./assets/icons/linkedin-blue.png\" width=\"28\" height=\"24\" alt=\"\"><img class=\"social-brand-image linkedin-white\" src=\"./assets/icons/linkedin-white.png\" width=\"28\" height=\"24\" alt=\"\"></span>"
   ],
   [
     "facebook",
