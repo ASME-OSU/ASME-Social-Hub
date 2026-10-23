@@ -6,7 +6,7 @@ import {flyerHtml,fitFlyer,loadFlyerAssets,renderFlyers} from './render-flyers.m
 import {validateCampaign} from './core.mjs';
 
 export async function checkStoryDesigns(browser,base){
- const context=await browser.newContext({viewport:{width:1440,height:1080},reducedMotion:'reduce'});
+ const context=await browser.newContext({viewport:{width:1440,height:1080},reducedMotion:'reduce',serviceWorkers:'block'});
  const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));let saved;const files=new Map(),writes=[];
  try{
   await page.clock.install({time:new Date('2026-10-18T16:00:00Z')});
@@ -22,13 +22,20 @@ export async function checkStoryDesigns(browser,base){
   await page.goto(base);await page.locator('#new-campaign:not([disabled])').waitFor();
   const image=async (colors,width=320,height=400)=>Buffer.from((await page.evaluate(({colors,width,height})=>{const canvas=document.createElement('canvas');canvas.width=width;canvas.height=height;const ctx=canvas.getContext('2d');colors.forEach((color,i)=>{ctx.fillStyle=color;ctx.fillRect(0,i*height/colors.length,width,height/colors.length);});return canvas.toDataURL('image/png').split(',')[1];},{colors,width,height})),'base64');
   const first=await image(['#123d44','#ffb44b','#f2eee5']),second=await image(['#7043a0','#f7a7c6','#d7efff']),neutral=await image(['#ffffff','#000000','#999999']),transparent=await image(['rgba(0,0,0,0)','#123d44','#ffb44b']),wide=await image(['#7043a0','#f7a7c6'],800,200);
-  await page.locator('#new-campaign').click();await page.locator('[name=storyBackground][value=color-wash]').check();
+  await page.locator('#new-campaign').click();
+  assert.equal(await page.locator('#story-color-settings').isVisible(),false,'Chapter template hides unrelated palette controls');
+  assert.equal(await page.locator('#story-template-settings').isVisible(),true,'Template style appears beneath the selected chapter option');
+  assert.equal(await page.locator('#template-label').textContent(),'Chapter template style');
+  await page.locator('[name=storyBackground][value=color-wash]').check();
+  assert.equal(await page.locator('#story-color-settings').isVisible(),true,'Custom backgrounds reveal color controls');
+  assert.equal(await page.locator('#template-label').textContent(),'Generated feed style');
   await page.waitForFunction(()=>{const f=document.querySelector('#artwork-preview-frame');return f.style.visibility==='visible'&&f.contentDocument?.querySelector('.page.color-wash');});
   assert.match(await page.frameLocator('#artwork-preview-frame').locator('.block').textContent(),/Choose a date/);
   await page.locator('[name=flyer]').setInputFiles({name:'transparent.png',mimeType:'image/png',buffer:transparent});await page.waitForFunction(()=>document.querySelector('#story-palette-note').textContent.startsWith('Colors sampled'));assert.match(await page.locator('#story-palette').getAttribute('data-palette'),/#123d44/);
   await page.locator('#clear-flyer').click();await page.locator('[name=flyer]').setInputFiles({name:'colors.png',mimeType:'image/png',buffer:first});
   await page.waitForFunction(()=>document.querySelector('#story-palette-note').textContent.startsWith('Colors sampled'));
   assert.match(await page.locator('#story-palette').getAttribute('data-palette'),/#123d44/);
+  assert.equal(await page.locator('#story-template-settings').isVisible(),false,'Uploaded flyers need no generated feed style');
   for(const [name,value]of Object.entries({title:'Story background fixture',start:'2026-11-20T18:30',end:'2026-11-20T20:00',location:'Scott E100',description:'Private fixture used only for local verification.'}))await page.locator(`[name=${name}]`).fill(value);
   for(const background of ['color-wash','blueprint-rings','folded-paper']){
    await page.locator(`[name=storyBackground][value=${background}]`).check();
@@ -36,7 +43,7 @@ export async function checkStoryDesigns(browser,base){
    assert.equal(await page.frameLocator('#artwork-preview-frame').locator('img.story-flyer').evaluate(img=>getComputedStyle(img).objectFit),'contain');
   }
   await page.locator('#story-design-controls').screenshot({path:'test-results/story-design-controls.png'});
-  await page.locator('[name=storyFlyerColors]').uncheck();await page.waitForFunction(()=>document.querySelector('#story-palette-note').textContent==='Using chapter colors.');assert.match(await page.locator('#story-palette').getAttribute('data-palette'),/#102840/);await page.locator('[name=storyFlyerColors]').check();
+  await page.locator('[name=storyFlyerColors]').uncheck();assert.equal(await page.locator('#story-custom-palette').isVisible(),false,'Chapter colors hide custom swatches');await page.waitForFunction(()=>document.querySelector('#story-palette-note').textContent==='Using chapter colors.');assert.match(await page.locator('#story-palette').getAttribute('data-palette'),/#102840/);await page.locator('[name=storyFlyerColors]').check();
   await page.locator('[data-close=editor]').first().click();await page.locator('[data-view=settings]').click();await page.locator('[name=token]').fill('mock-story-credential');await page.locator('#settings-form button.primary').click();await page.waitForFunction(()=>document.querySelector('#connection-label').textContent==='Connected');
   await page.locator('[data-view=dashboard]').click();await page.locator('#new-campaign').click();
   for(const [name,value]of Object.entries({title:'Story background fixture',start:'2026-11-20T18:30',end:'2026-11-20T20:00',location:'Scott E100'}))await page.locator(`[name=${name}]`).fill(value);

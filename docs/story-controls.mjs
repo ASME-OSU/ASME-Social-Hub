@@ -10,12 +10,19 @@ async function sampleImage(url,fallback){
 }
 export function createStoryControls({form,getConfig,getExisting,getUpload,onChange}){
  const panel=document.querySelector('#story-design-controls'),note=document.querySelector('#story-palette-note'),swatches=document.querySelector('#story-palette'),choices=document.querySelector('#story-background-options'),refreshButton=document.querySelector('#story-reset-colors');
+ const colorSettings=document.querySelector('#story-color-settings'),customPalette=document.querySelector('#story-custom-palette'),templateSettings=document.querySelector('#story-template-settings'),templateLabel=document.querySelector('#template-label'),templateHelp=document.querySelector('#template-help'),overrideNote=document.querySelector('#story-override-note');
  const samples=new Map();
  let custom=false,palette=null,sampleKey='',pendingKey='',generation=0,sampleNote='';
  const source=()=>getUpload()||getExisting()?.flyerUrl||'';
  const fallback=()=>resolveStoryPalette(undefined,getConfig());
  function paint(){
   const colors=form.elements.storyFlyerColors.checked&&palette?palette:fallback(),disabled=!!form.elements.storyImage.value.trim()||!form.elements.storyFlyerColors.checked||form.elements.storyBackground.value==='template';
+  const override=!!form.elements.storyImage.value.trim(),useTemplate=form.elements.storyBackground.value==='template';
+  colorSettings.hidden=override||useTemplate;customPalette.hidden=!form.elements.storyFlyerColors.checked;
+  templateSettings.hidden=!(useTemplate&&!override)&&!!(source()||form.elements.feedImage.value.trim());
+  templateLabel.textContent=useTemplate&&!override?'Chapter template style':'Generated feed style';
+  templateHelp.textContent=useTemplate&&!override?'Used for this Story. Also used for generated feed posts.':override?'Used to generate the feed post when no flyer is uploaded. Your custom Story image is used as supplied.':'No flyer is uploaded, so this style is used to generate the feed post. Story colors above apply only to the Story.';
+  overrideNote.hidden=!override;
   colors.forEach((value,i)=>panel.style.setProperty('--story-color-'+(i+1),value));swatches.dataset.palette=colors.join(', ');
   if(!swatches.children.length)for(const [i,name]of ['Primary','Accent','Tint'].entries()){
    const label=document.createElement('label'),input=document.createElement('input');label.append(document.createTextNode(name));input.type='color';input.name='storyColor'+i;input.setAttribute('aria-label',name+' Story background color');label.append(input);swatches.append(label);
@@ -30,6 +37,7 @@ export function createStoryControls({form,getConfig,getExisting,getUpload,onChan
   const override=Boolean(form.elements.storyImage.value.trim());choices.disabled=override;form.elements.storyFlyerColors.disabled=override;
   refreshButton.disabled=override||!source()||!form.elements.storyFlyerColors.checked||form.elements.storyBackground.value==='template'||!!pendingKey;
   if(override){note.textContent='A custom Story image overrides these backgrounds. Clear its URL to use a generated Story.';paint();return;}
+  if(form.elements.storyBackground.value==='template'){note.textContent='';paint();return;}
   if(!form.elements.storyFlyerColors.checked){note.textContent='Using chapter colors.';paint();return;}
   const url=source();
   if(!url&&custom){note.textContent=sampleNote;paint();return;}
@@ -49,8 +57,8 @@ export function createStoryControls({form,getConfig,getExisting,getUpload,onChan
   if(forSave&&pendingKey&&form.elements.storyFlyerColors.checked&&form.elements.storyBackground.value!=='template'&&!form.elements.storyImage.value.trim())throw Error('Wait for flyer colors to finish sampling, then review the Story preview and save.');
   const useFlyer=form.elements.storyFlyerColors.checked;const design={background:form.elements.storyBackground.value||'template',paletteSource:useFlyer?(custom?'custom':'flyer'):'chapter',...(useFlyer&&palette?{palette:[...palette]}:{})};validateStoryDesign(design);return design;
  }
- form.addEventListener('change',e=>{if(['flyer','storyFlyerColors','storyImage','storyBackground'].includes(e.target.name)){refresh();onChange(e.target.name==='storyBackground');}});
- form.elements.storyImage.addEventListener('input',()=>{refresh();onChange();});
+ form.addEventListener('change',e=>{if(['flyer','feedImage','storyFlyerColors','storyImage','storyBackground'].includes(e.target.name)){refresh();onChange(e.target.name==='storyBackground');}});
+ for(const name of ['storyImage','feedImage'])form.elements[name].addEventListener('input',()=>{refresh();onChange();});
  refreshButton.addEventListener('click',()=>{++generation;custom=false;samples.delete(source());sampleKey=pendingKey='';refresh();});
  document.querySelector('#editor').addEventListener('close',()=>{++generation;pendingKey='';});
  return {reset,refresh,getDesign};
