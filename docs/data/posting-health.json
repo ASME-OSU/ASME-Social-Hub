@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-23T11:47:56.513Z",
+  "generatedAt": "2026-10-23T12:04:23.201Z",
   "activeYear": "2026-27",
   "config": {
     "timezone": "America/New_York",
@@ -23,34 +23,14 @@
     "status": "unknown",
     "warning": false,
     "configured": true,
-    "checkedAt": "2026-10-23T11:47:56.327Z",
+    "checkedAt": "2026-10-23T12:04:23.043Z",
     "expiresAt": null,
     "daysRemaining": null
   },
   "calendar": {
     "feedUrl": "https://calendar.google.com/calendar/ical/c93730cdacb567b0f010d1367080e3028ec5c7657d9713b675ac9e5c437b9fba%40group.calendar.google.com/public/basic.ics",
-    "generatedAt": "2026-10-22T12:22:43.210Z",
+    "generatedAt": "2026-10-23T12:04:22.572Z",
     "candidates": [
-      {
-        "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-10-29T21:30:00.000Z",
-        "title": "ASME MATLAB Info Session",
-        "start": "2026-10-29T21:30:00.000Z",
-        "end": "2026-10-29T22:30:00.000Z",
-        "allDay": false,
-        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-10-29T21:30:00.000Z",
-        "source": {
-          "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-10-29T21:30:00.000Z",
-          "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
-        },
-        "dueAt": {
-          "feed": "2026-10-22T16:00:00.000Z",
-          "story": "2026-10-26T16:00:00.000Z"
-        },
-        "scheduleInvalid": {
-          "feed": false,
-          "story": false
-        }
-      },
       {
         "id": "4o94ugad0fu7c42nu4j2huli1j@google.com::2026-11-02T00:00:00.000Z",
         "title": "Enrollment Census Date (second-session)",
