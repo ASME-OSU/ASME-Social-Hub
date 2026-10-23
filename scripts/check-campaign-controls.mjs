@@ -148,9 +148,10 @@ export async function checkCampaignControls(browser,base) {
   for(const [name,value]of Object.entries({title:'Schedule warning fixture',start:'2026-10-25T18:00',end:'2026-10-25T19:00',location:'Fixture room'}))await page.locator(`[name=${name}]`).fill(value);
   await page.locator('[name=description]').fill(campaign.description);
   await page.waitForFunction(()=>document.querySelector('.inline-preview-canvas>.ig-post .ig-caption-text')?.textContent.includes('Caption line 26')&&document.querySelector('#artwork-preview-frame').style.visibility==='visible');
-  await page.locator('#toggle-preview-caption').click();
+  if(await page.locator('#toggle-preview-caption').getAttribute('aria-pressed')!=='true')await page.locator('#toggle-preview-caption').click();
   const inlinePost=page.locator('.inline-preview-canvas>.ig-post');
   assert.equal(await inlinePost.locator('.ig-account strong').textContent(),config.instagramHandle.replace(/^@/,''));
+  await page.waitForFunction(()=>{const caption=document.querySelector('.inline-preview-canvas>.ig-post .ig-caption');return caption&&caption.scrollHeight>caption.clientHeight;});
   assert.ok(await inlinePost.locator('.ig-caption').evaluate(element=>element.scrollHeight>element.clientHeight));
   await page.locator('#enlarge-preview').click();await page.waitForFunction(()=>document.querySelector('#preview-dialog').open&&document.querySelector('#artwork-preview-frame').style.visibility==='visible');
   const expandedPost=page.locator('#preview-dialog-canvas>.ig-post');assert.match(await expandedPost.locator('.ig-caption-text').textContent(),/Schedule warning fixture/);
@@ -166,7 +167,7 @@ export async function checkCampaignControls(browser,base) {
   await page.screenshot({path:'test-results/campaign-controls/instagram-editor-mobile.png'});
   await page.locator('#close-preview').click();await page.setViewportSize({width:1440,height:1000});
   await page.locator('[name=groupmeAnnounce]').check();
-  await page.locator('[name=feedDays]').fill('7');await page.locator('[name=feedTime]').fill('12:00');
+  await page.locator('[name=feedDays]').fill('7');await page.locator('[name=feedTime]').fill('12:00');await page.locator('[name=groupmeDays]').fill('7');await page.locator('[name=groupmeTime]').fill('12:00');
   await page.waitForSelector('#schedule-preview .schedule-warning[data-channel=feed][data-state=missed]');
   assert.match(await page.locator('#schedule-preview .schedule-warning[data-channel=feed]').textContent(),/will not be posted/i);
   assert.equal(await page.locator('#schedule-preview .schedule-warning[data-channel=groupme][data-state=missed]').count(),1);
@@ -195,7 +196,7 @@ export async function checkCampaignControls(browser,base) {
   page.once('dialog',dialog=>dialog.accept());await exposeCampaignManagement(page);await page.locator('[data-delete]').click();await page.waitForFunction(()=>!document.querySelector('#detail').open);
   const deleted=remote;assert.ok(deleted.deletedAt);assert.equal(deleted.cancelled,true);assert.equal(deleted.revision,10);assert.equal(deleted.results.feed.mediaId,'fixture-receipt');assert.equal(deleted.status.feed,'done');assert.equal(deleted.log[0].message,'Published');assert.equal(writes.at(-1).sha,'latest-fixture-sha');assert.equal(writes.at(-1).branch,'main');
   assert.equal(await page.locator(`#campaign-list [data-detail="${campaign.id}"]`).count(),0);
-  await page.locator('[data-view=archive]').click();assert.equal(await page.locator(`#archive-list [data-detail="${campaign.id}"]`).count(),0);
+  await page.locator('nav [data-view=archive]').click();assert.equal(await page.locator(`#archive-list [data-detail="${campaign.id}"]`).count(),0);
   await page.reload();await page.waitForSelector('#campaign-list .empty');assert.equal(await page.locator('[data-detail]').count(),0,'Deleted tombstone stays hidden after reload');
   // Cancellation stops posts but keeps an officer-visible archive record.
   remote=structuredClone(campaign);archive=[structuredClone(remote)];await page.reload();
@@ -209,7 +210,7 @@ export async function checkCampaignControls(browser,base) {
   await page.waitForFunction(()=>!document.querySelector('#detail').open);
   assert.equal(remote.cancelled,true);assert.equal(remote.deletedAt,undefined);
   assert.equal(await page.locator(`#campaign-list [data-detail="${campaign.id}"]`).count(),0);
-  await page.locator('[data-view=archive]').click();await page.locator(`#archive-list [data-detail="${campaign.id}"]`).click();
+  await page.locator('nav [data-view=archive]').click();await page.locator(`#archive-list [data-detail="${campaign.id}"]`).click();
   assert.equal(await page.locator('[data-cancel]').count(),0,'Cancelled campaigns cannot be cancelled twice');
   assert.equal(await page.locator('[data-delete]').count(),1,'A cancelled record can still be removed from the hub');
   assert.match(await page.locator('#campaign-cancel-help').textContent(),/stays in the archive/);

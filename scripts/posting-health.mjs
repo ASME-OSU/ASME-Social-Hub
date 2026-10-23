@@ -1,3 +1,4 @@
+import {groupMeDue,groupMeCadence} from '../docs/groupme-schedule.mjs';
 import {readFile} from 'node:fs/promises';
 import {resolve} from 'node:path';
 import {fireAt, readCampaigns, writeJson} from './core.mjs';
@@ -10,7 +11,7 @@ function cadence(value) {
   return {daysBefore:integer(value?.daysBefore),time:text(value?.time)};
 }
 function deadline(campaign, channel, config) {
-  try { return {dueAt:fireAt(campaign,channel,config).toISOString(),scheduleInvalid:false}; }
+  try { return {dueAt:channel==='groupme'?groupMeDue(campaign,config):fireAt(campaign,channel,config).toISOString(),scheduleInvalid:false}; }
   catch { return {dueAt:null,scheduleInvalid:true}; }
 }
 function channelHealth(campaign, channel, config) {
@@ -19,10 +20,11 @@ function channelHealth(campaign, channel, config) {
   const enabled=groupme
     ? config.integrations?.groupme?.enabled!==false && (bot ? schedule?.enabled===true && schedule?.announce===true : schedule?.enabled!==false)
     : schedule?.enabled!==false;
-  const timing=groupme && !bot ? {dueAt:null,scheduleInvalid:false} : deadline(campaign,groupme?'feed':channel,config);
+  const timing=groupme && !bot ? {dueAt:null,scheduleInvalid:false} : deadline(campaign,channel,config);
   return {
     enabled,...timing,immediate:groupme && !bot,
-    schedule:groupme ? {createAt:text(schedule?.createAt),announce:schedule?.announce===true} : cadence({...config.defaultCadence?.[channel],...schedule}),
+    ...(bot?{followUp:{enabled:enabled&&schedule?.followUp?.enabled===true,...(schedule?.followUp?.enabled?deadline({...campaign,campaign:{...campaign.campaign,groupme:groupMeCadence(campaign,config,'followUp')}},'groupme',config):{dueAt:null,scheduleInvalid:false}),status:text(result?.followUp?.status),botSentAt:timestamp(result?.followUp?.botSentAt),botAttemptedAt:timestamp(result?.followUp?.botAttemptedAt)}}:{}),
+    schedule:groupme ? {createAt:text(schedule?.createAt),announce:schedule?.announce===true,...(bot?cadence(groupMeCadence(campaign,config)):{})} : cadence({...config.defaultCadence?.[channel],...schedule}),
     status:text(campaign.status?.[channel]),
     mediaId:text(result?.mediaId),postedAt:timestamp(result?.postedAt),
     eventId:text(result?.eventId),syncedRevision:integer(result?.syncedRevision),

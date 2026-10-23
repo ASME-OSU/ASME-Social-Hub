@@ -1,3 +1,4 @@
+import {groupMeDue} from './groupme-schedule.mjs';
 import {fireTime} from './time.mjs';
 
 // Only explicit missed-window skips may reopen. All recorded progress is retained.
@@ -14,12 +15,16 @@ function reopenCampaign(c, previous, config, now=new Date()) {
     const bot=channel==='groupme' && config.integrations?.groupme?.mode==='bot';
     if(channel==='groupme' && (config.integrations?.groupme?.enabled===false || !bot)) continue;
     if(channel==='groupme' ? !(c.campaign?.groupme?.enabled===true && c.campaign?.groupme?.announce===true && previous.campaign?.groupme?.enabled===true && previous.campaign?.groupme?.announce===true) : c.campaign?.[channel]?.enabled!==true || previous.campaign?.[channel]?.enabled===false) continue;
-    const schedule=x=>fireTime(bot?{...x,campaign:{...x.campaign,feed:{...x.campaign?.feed,enabled:true}}}:x,bot?'feed':channel,config.timezone);
+    const schedule=x=>bot?groupMeDue(x,config):fireTime(x,channel,config.timezone);
     try {
       const due=schedule(c),before=schedule(previous);
       if(due===before || !(Date.parse(due)>+now)) continue;
       c.status[channel]='pending';c.results??={};c.results[channel]??={};delete c.results[channel].skipReason;
     } catch { /* Invalid schedules remain skipped for validation. */ }
+  }
+  const gm=c.campaign?.groupme,receipt=c.results?.groupme?.followUp;
+  if(config.integrations?.groupme?.enabled!==false&&config.integrations?.groupme?.mode==='bot'&&gm?.enabled&&gm.announce&&gm.followUp?.enabled&&c.results?.groupme?.botSentAt&&receipt?.status==='skipped'&&!receipt.botAttemptedAt&&receipt.skipReason==='announcement-window-missed'){
+    try{const due=groupMeDue(c,config,'followUp');if(due!==groupMeDue(previous,config,'followUp')&&Date.parse(due)>now){receipt.status='pending';delete receipt.skipReason;c.status.groupme='pending';}}catch{}
   }
   return c;
 }

@@ -614,3 +614,8 @@ input::placeholder,textarea::placeholder{color:var(--muted);opacity:1}
  #detail .dialog-footer{padding:10px 16px max(10px,env(safe-area-inset-bottom));gap:8px}
  #detail .dialog-footer button{min-height:44px}
 }
+
+/* GroupMe shares Schedule with Instagram; formats stay with each message. */
+#groupme-announcement-control{margin-top:20px;padding-top:20px;border-top:1px solid var(--line)}
+.groupme-format-row{display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap;margin:16px 0 20px}#editor .groupme-format-row label{flex:1 1 180px;margin:0}.groupme-format-row button{margin-bottom:0}.groupme-follow-up-label{align-self:center;font-size:13px;font-weight:600}#groupme-follow-up-settings{padding:14px;border-left:2px solid var(--line);margin:12px 0 18px}
+.gm-message-tabs{display:flex;gap:8px;margin-bottom:12px}.gm-message-tabs button[aria-pressed=true]{background:var(--navy);color:var(--paper)}

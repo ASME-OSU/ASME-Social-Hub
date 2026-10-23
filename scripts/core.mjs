@@ -1,3 +1,4 @@
+import {GROUPME_FORMATS} from '../docs/groupme-message.mjs';
 import {validateAdvertising} from '../docs/caption.mjs';
 export {validateAdvertising,advertisingLines,captionFor} from '../docs/caption.mjs';
 import {validateFlyerSources} from '../docs/carousel.mjs';
@@ -27,6 +28,17 @@ export function validateCampaign(c) {
   validateAdvertising(c.advertising);
   validateStoryDesign(c.storyDesign);
   for (const ch of ['feed','story']) if (c.campaign?.[ch]) assert(cadenceValid(c.campaign[ch]), `Invalid ${ch} cadence`);
+  const gm=c.campaign?.groupme;
+  if(gm){
+    if(gm.announce!==undefined)assert(typeof gm.announce==='boolean','Invalid GroupMe announce flag');
+    if(gm.daysBefore!==undefined||gm.time!==undefined)assert(cadenceValid(gm),'Invalid GroupMe cadence');
+    if(gm.format!==undefined)assert(Object.hasOwn(GROUPME_FORMATS,gm.format),'Invalid GroupMe message format');
+    if(gm.followUp!==undefined){
+      assert(gm.followUp&&typeof gm.followUp==='object'&&!Array.isArray(gm.followUp)&&typeof gm.followUp.enabled==='boolean','Invalid GroupMe follow-up');
+      assert(cadenceValid(gm.followUp),'Invalid GroupMe follow-up cadence');
+      if(gm.followUp.format!==undefined)assert(Object.hasOwn(GROUPME_FORMATS,gm.followUp.format),'Invalid GroupMe follow-up format');
+    }
+  }
   assert(!c.campaign?.groupme?.createAt || c.campaign.groupme.createAt === 'immediately', 'GroupMe createAt supports immediately only');
   if(c.revision!==undefined) assert(Number.isInteger(c.revision) && c.revision>=0, 'Invalid revision');
   for(const channel of ['feed','story','groupme']) {

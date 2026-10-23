@@ -166,3 +166,40 @@ test('missed feed and bot can be rescheduled, publish once, and keep receipts on
  assert.equal(saved.results.feed.mediaId,'fixture-media');assert.ok(saved.results.groupme.botSentAt);await writeJson(file,saved);
  await dispatch({root,now:'2026-10-16T18:00:00Z',services});assert.equal(posts,1);assert.equal(bots,1);
 });
+
+async function followUpFixture(t){
+ const f=await botFixture(t),c=JSON.parse(await readFile(f.file));
+ c.campaign.groupme={enabled:true,announce:true,daysBefore:5,time:'12:00',format:'invite',followUp:{enabled:true,daysBefore:1,time:'12:00',format:'bulletin'}};
+ await writeJson(f.file,c);return f;
+}
+test('independent initial and day-before follow-up each send once, with separate durable receipts',async t=>{
+ const {root,file}=await followUpFixture(t),texts=[];
+ const services={postBotMessage:async text=>{const c=JSON.parse(await readFile(file));assert.ok((texts.length?c.results.groupme.followUp:c.results.groupme).botAttemptedAt);texts.push(text);}};
+ await dispatch({root,now:'2026-10-14T17:00:00Z',services});assert.equal(texts.length,0,'Feed schedule does not send GroupMe early');
+ await dispatch({root,now:'2026-10-16T16:00:00Z',services});
+ const first=JSON.parse(await readFile(file));assert.equal(first.status.groupme,'pending');assert.match(texts[0],/You’re invited/);
+ await dispatch({root,now:'2026-10-16T17:00:00Z',services});assert.equal(texts.length,1);
+ await dispatch({root,now:'2026-10-20T15:59:00Z',services});assert.equal(texts.length,1);
+ const before=await readFile(file,'utf8'),actions=await dispatch({root,now:'2026-10-20T16:00:00Z',dryRun:true});
+ assert.equal(actions.find(a=>a.action==='follow-up').text.startsWith('EVENT REMINDER'),true);assert.equal(await readFile(file,'utf8'),before);
+ await dispatch({root,now:'2026-10-20T16:00:00Z',services});await dispatch({root,now:'2026-10-20T17:00:00Z',services});
+ assert.equal(texts.length,2);assert.match(texts[1],/EVENT REMINDER/);
+ const saved=JSON.parse(await readFile(file));assert.equal(saved.status.groupme,'done');assert.equal(saved.results.groupme.followUp.botText,texts[1]);assert.equal(saved.results.groupme.botText,first.results.groupme.botText);assert.equal(saved.results.groupme.botSentAt,first.results.groupme.botSentAt);
+});
+test('follow-up checkpoint failures prevent sending and ambiguous follow-up delivery never retries',async t=>{
+ const {root,file}=await followUpFixture(t);let calls=0;
+ await dispatch({root,now:'2026-10-16T16:00:00Z',services:{postBotMessage:async()=>{}}});
+ const services={postBotMessage:async()=>{calls++;throw Error('private-token');}};
+ await assert.rejects(dispatch({root,now:'2026-10-20T16:00:00Z',services,checkpoint:async({campaign})=>{if(campaign.results.groupme.followUp?.botAttemptedAt)throw Error('checkpoint');}}),/checkpoint/);assert.equal(calls,0);
+ let c=JSON.parse(await readFile(file));delete c.results.groupme.followUp.botAttemptedAt;await writeJson(file,c);
+ await dispatch({root,now:'2026-10-20T16:00:00Z',services});await dispatch({root,now:'2026-10-20T17:00:00Z',services});assert.equal(calls,1);
+ c=JSON.parse(await readFile(file));assert.ok(c.results.groupme.botSentAt);assert.equal(c.results.groupme.followUp.status,'failed');assert.equal(c.status.groupme,'failed');assert.doesNotMatch(await readFile(file,'utf8'),/private-token/);
+});
+test('follow-ups respect opt-out, cancellation, event expiry, and an unresolved initial send',async t=>{
+ for(const change of ['off','cancelled','expired','unresolved']){
+  const {root,file}=await followUpFixture(t);
+  await dispatch({root,now:'2026-10-16T16:00:00Z',services:{postBotMessage:async()=>{}}});
+  const c=JSON.parse(await readFile(file));if(change==='off')c.campaign.groupme.followUp.enabled=false;if(change==='cancelled')c.cancelled=true;if(change==='unresolved')delete c.results.groupme.botSentAt;await writeJson(file,c);
+  let calls=0;await dispatch({root,now:change==='expired'?'2026-10-21T17:00:00Z':'2026-10-20T16:00:00Z',services:{postBotMessage:async()=>{calls++;}}});assert.equal(calls,0,change);
+ }
+});

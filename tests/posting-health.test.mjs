@@ -73,3 +73,9 @@ test('every build reads current campaign receipts even when archive-index is sta
   assert.equal(feed.campaigns[0].channels.feed.status,'failed');assert.equal(feed.campaigns[0].channels.feed.mediaId,null);
  } finally {await rm(root,{recursive:true,force:true});}
 });
+
+test('public health reports independent GroupMe timing and follow-up receipts without message copy',()=>{
+ const c={...campaign,campaign:{groupme:{enabled:true,announce:true,daysBefore:5,time:'09:30',followUp:{enabled:true,daysBefore:1,time:'17:00'}}},results:{groupme:{botSentAt:'2026-11-03T14:30:00Z',followUp:{status:'failed',botAttemptedAt:'2026-11-07T22:00:00Z',botText:'PRIVATE_SENTINEL'}}}};
+ const record=health({campaigns:[c]}).campaigns[0].channels.groupme;
+ assert.equal(record.dueAt,'2026-11-03T14:30:00.000Z');assert.equal(record.followUp.dueAt,'2026-11-07T22:00:00.000Z');assert.equal(record.followUp.status,'failed');assert.equal(record.followUp.enabled,true);assert.equal(JSON.stringify(record).includes('PRIVATE_SENTINEL'),false);
+});

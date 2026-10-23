@@ -1,3 +1,4 @@
+import {checkGroupMeSchedule} from './check-groupme-schedule.mjs';
 import {checkHomeRail} from './check-home-rail.mjs';
 import {checkAcademicYears} from './check-academic-years.mjs';
 import {checkCampaignModal} from './check-campaign-modal.mjs';
@@ -38,6 +39,7 @@ try {
  await checkPreviewPane(browser,base);
  await checkCampaignControls(browser,base);
  await checkGroupMePreview(browser,base);
+ await checkGroupMeSchedule(browser,base);
  await checkThemes(browser,base);
  await checkUiRefinements(browser,base);
  await checkEditorLayout(browser,base);

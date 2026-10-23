@@ -41,7 +41,7 @@ export async function checkEditorLayout(browser,base){
    await page.screenshot({path:`test-results/editor-review/${theme}-${width}-${height}-story.png`,animations:'disabled'});
    await page.locator('#enlarge-preview').click();await page.waitForFunction(()=>document.querySelector('#preview-dialog').open&&document.querySelector('#preview-dialog .expanded-preview-stage iframe')?.style.visibility==='visible');
    await page.locator('#preview-zoom').selectOption('1');assert.equal(Math.round((await page.locator('.expanded-preview-stage').boundingBox()).width),1080,'100% zoom exposes the native artwork width');
-   await page.locator('#preview-dialog-canvas').focus();await page.keyboard.press('PageDown');await page.waitForTimeout(100);assert.ok(await page.locator('#preview-dialog-canvas').evaluate(e=>e.scrollTop)>0,'Enlarged canvas scrolls from keyboard');
+   await page.locator('#preview-dialog-canvas').focus();await page.keyboard.press('PageDown');await page.waitForFunction(()=>document.querySelector('#preview-dialog-canvas').scrollTop>0);assert.ok(await page.locator('#preview-dialog-canvas').evaluate(e=>e.scrollTop)>0,'Enlarged canvas scrolls from keyboard');
    await page.locator('#preview-zoom').selectOption('fit');
    await page.screenshot({path:`test-results/editor-review/${theme}-${width}-${height}-enlarged.png`,animations:'disabled'});
    await page.keyboard.press('Escape');assert.equal(await page.locator('#preview-dialog').evaluate(e=>e.open),false);assert.equal(await page.evaluate(()=>document.activeElement.id),'enlarge-preview','Escape returns focus to opener');
