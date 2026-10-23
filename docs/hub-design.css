@@ -1,7 +1,7 @@
 /* Chapter desk: warm paper, quiet rules, and scarlet wayfinding. */
 :root,:root[data-theme="light"]{--canvas:#f6f4ef;--paper:#fffefa;--ice:#eeece6;--ink:#202c35;--muted:#59646c;--line:#d9d8d1;--navy:#263c49;--scarlet:#ba0c2f;--scarlet-tint:#f9e9e9;--sidebar-bg:#192a33}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--canvas:#171c20;--paper:#20272b;--ice:#2a3237;--ink:#faf9f6;--muted:#ced5da;--line:#3d484e;--navy:#b9cfda;--scarlet:#ff8a9b;--scarlet-tint:#3b272e;--sidebar-bg:#111b21}}
-:root[data-theme="dark"]{--canvas:#171c20;--paper:#20272b;--ice:#2a3237;--ink:#faf9f6;--muted:#ced5da;--line:#3d484e;--navy:#b9cfda;--scarlet:#ff8a9b;--scarlet-tint:#3b272e;--sidebar-bg:#111b21}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--canvas:#171c20;--paper:#20272b;--ice:#2a3237;--ink:#faf9f6;--muted:#ced5da;--line:#3d484e;--navy:#b9cfda;--scarlet:#ff8a9b;--scarlet-tint:#3b272e;--sidebar-bg:#223b4b;--sidebar-edge:#526c7b;--sidebar-shadow:8px 0 24px #0003}}
+:root[data-theme="dark"]{--canvas:#171c20;--paper:#20272b;--ice:#2a3237;--ink:#faf9f6;--muted:#ced5da;--line:#3d484e;--navy:#b9cfda;--scarlet:#ff8a9b;--scarlet-tint:#3b272e;--sidebar-bg:#223b4b;--sidebar-edge:#526c7b;--sidebar-shadow:8px 0 24px #0003}
 #sidebar{background-image:none}header{background:var(--canvas)}
 .page-heading{border-bottom:1px solid var(--line)}
 .page-heading h1{letter-spacing:-.04em}
@@ -426,3 +426,14 @@ details[open]:not(.mobile-social-menu):not(.dispatcher-controls):not(.artwork-pr
  .header-social .asme-hub-shortcut,.footer-social .asme-hub-shortcut{color:var(--ink);border-color:var(--line);background:var(--ice)}
  .header-social .asme-hub-shortcut:hover,.footer-social .asme-hub-shortcut:hover{border-color:var(--navy)}
 }
+
+/* Give dark navigation its own blue surface and a visible edge. */
+@media(min-width:700px){#sidebar{border-right:1px solid var(--sidebar-edge,transparent);box-shadow:var(--sidebar-shadow,none)}}
+.hub-shortcut-divider{display:block;flex:0 0 100%;width:100%;height:1px;align-self:center;background:#ffffff40;margin:0 0 8px}
+@media(min-width:700px){
+ html.sidebar-collapsed .hub-shortcut-divider{flex:none;width:1px;height:12px;margin:0 0 4px}
+}
+@media(min-width:700px) and (max-width:1099px){
+ html:not(.sidebar-expanded) .hub-shortcut-divider{flex:none;width:1px;height:12px;margin:0 0 4px}
+}
+@media(max-width:699px){.header-social .hub-shortcut-divider{grid-column:1/-1}.header-social .hub-shortcut-divider,.footer-social .hub-shortcut-divider{background:var(--line)}}

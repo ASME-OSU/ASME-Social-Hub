@@ -29,7 +29,7 @@ export function renderSocialLinks(config){
    if(hubUrl.protocol==='https:'&&!hubUrl.username&&!hubUrl.password){
     const shortcut=document.createElement('a');shortcut.className='asme-hub-shortcut';shortcut.href=hubUrl.href;shortcut.setAttribute('aria-label','Go to ASME Hub');shortcut.title='Go to ASME Hub';
     const logo=document.createElement('img');logo.src='./assets/logos/asme-hub-mark.svg';logo.alt='';logo.width=32;logo.height=32;
-    const label=document.createElement('span');label.className='asme-hub-shortcut-copy';label.textContent='ASME Hub';shortcut.append(logo,label);group.append(shortcut);
+    const label=document.createElement('span');label.className='asme-hub-shortcut-copy';label.textContent='ASME Hub';shortcut.append(logo,label);const divider=document.createElement('span');divider.className='hub-shortcut-divider';divider.setAttribute('aria-hidden','true');group.append(shortcut,divider);
    }
   }catch{/* A chapter without a configured Hub keeps its usual social links. */}
 
