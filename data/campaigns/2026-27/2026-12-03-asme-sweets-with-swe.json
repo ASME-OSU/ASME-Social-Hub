@@ -1,0 +1,81 @@
+{
+  "id": "2026-12-03-asme-sweets-with-swe",
+  "year": "2026-27",
+  "type": "gbm",
+  "title": "ASME Sweets with SWE",
+  "start": "2026-12-03T22:30:00.000Z",
+  "end": "2026-12-03T23:30:00.000Z",
+  "location": {
+    "name": "Scott Laboratory E141"
+  },
+  "description": "Sweets with SWE! See flyer.",
+  "food": true,
+  "template": "refined-blueprint",
+  "storyDesign": {
+    "background": "template",
+    "paletteSource": "flyer"
+  },
+  "advertising": {},
+  "source": {
+    "kind": "ical",
+    "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-12-03T22:30:00.000Z",
+    "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com",
+    "snapshot": {
+      "title": "ASME Sweets with SWE",
+      "start": "2026-12-03T22:30:00.000Z",
+      "end": "2026-12-03T23:30:00.000Z",
+      "location": "Scott Laboratory E141",
+      "description": "Sweets with SWE"
+    }
+  },
+  "campaign": {
+    "groupme": {
+      "createAt": "immediately",
+      "reminders": [
+        604800,
+        86400
+      ],
+      "enabled": true,
+      "announce": true,
+      "daysBefore": 7,
+      "time": "12:00",
+      "format": "standard",
+      "followUp": {
+        "enabled": true,
+        "daysBefore": 1,
+        "time": "12:00",
+        "format": "invite"
+      }
+    },
+    "feed": {
+      "daysBefore": 7,
+      "time": "12:00",
+      "enabled": true
+    },
+    "story": {
+      "daysBefore": 3,
+      "time": "12:00",
+      "enabled": true
+    }
+  },
+  "notes": "Yeah I’ll probably change this. Or SWE will make one (ideal) -Maggie",
+  "images": {
+    "feed": "",
+    "story": ""
+  },
+  "revision": 1,
+  "cancelled": false,
+  "status": {
+    "feed": "pending",
+    "story": "pending",
+    "groupme": "pending"
+  },
+  "results": {
+    "feed": {},
+    "story": {},
+    "groupme": {},
+    "insights": []
+  },
+  "log": [],
+  "flyerUrl": "https://raw.githubusercontent.com/ASME-OSU/ASME-Social-Hub/main/assets/uploads/2026-12-03-asme-sweets-with-swe-1793068515835-1.png"
+}
