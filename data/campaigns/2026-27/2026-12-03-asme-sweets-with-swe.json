@@ -1,15 +1,15 @@
 {
   "id": "2026-12-03-asme-sweets-with-swe",
   "year": "2026-27",
-  "type": "gbm",
+  "type": "social",
   "title": "ASME Sweets with SWE",
   "start": "2026-12-03T22:30:00.000Z",
   "end": "2026-12-03T23:30:00.000Z",
   "location": {
-    "name": "Scott Laboratory E141"
+    "name": "Scott Lab E141"
   },
   "description": "Sweets with SWE! See flyer.",
-  "food": true,
+  "food": false,
   "template": "refined-blueprint",
   "storyDesign": {
     "background": "template",
@@ -63,7 +63,7 @@
     "feed": "",
     "story": ""
   },
-  "revision": 1,
+  "revision": 2,
   "cancelled": false,
   "status": {
     "feed": "pending",
