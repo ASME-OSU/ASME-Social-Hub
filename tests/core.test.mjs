@@ -13,6 +13,11 @@ test('food line only appears when enabled',()=>{
 });
 test('rejects unsafe identifiers and offsetless dates',()=>assert.throws(()=>validateCampaign({id:'../bad'}),/id/));
 const baseCampaign={id:'event',year:'2026-27',title:'Meeting',description:'Meet fellow engineers.',start:'2026-10-21T18:30:00-04:00',end:'2026-10-21T20:00:00-04:00',food:true};
+test('imported campaigns reject impossible dates and nonpositive event duration',()=>{
+ for(const key of ['start','end'])for(const value of ['2026-02-30T12:00:00Z','2026-10-21T24:00:00Z','October 21, 2026 12:00Z'])assert.throws(()=>validateCampaign({...baseCampaign,[key]:value}),/Invalid/);
+ for(const end of [baseCampaign.start,'2026-10-21T18:29:00-04:00'])assert.throws(()=>validateCampaign({...baseCampaign,end}),/End must follow start/);
+ assert.doesNotThrow(()=>validateCampaign({...baseCampaign,end:'2026-10-22T00:30:00-04:00'}));
+});
 test('advertising is optional but provided fields reject invalid types, lengths and URLs',()=>{
  assert.doesNotThrow(()=>validateCampaign(baseCampaign));
  for(const advertising of [null,[],{cost:42},{audience:'x'.repeat(201)},{foodDetails:'x'.repeat(161)},{rsvpUrl:'http://example.org'},{rsvpUrl:'https://officer:secret@example.org'},{rsvpDeadline:'2026-10-20T12:00'},{rsvpDeadline:'2026-02-30T12:00:00Z'},{unknown:'typo'}]) assert.throws(()=>validateCampaign({...baseCampaign,advertising}),/Advertising|advertising/);

@@ -7,6 +7,7 @@ export function localInput(instant, zone) {
 export function fromLocal(value, zone) {
   if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(value)) throw Error('Enter a complete date and time.');
   const nominal = Date.parse(value+'Z');
+  if (!Number.isFinite(nominal) || new Date(nominal).toISOString().slice(0,16)!==value) throw Error('Enter a valid date and time.');
   const offsets = new Set();
   for (let h=-36; h<=36; h+=6) {
     const t=nominal+h*3600000;

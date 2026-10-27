@@ -21,7 +21,13 @@ export function validateCampaign(c) {
   assert(c && /^[a-zA-Z0-9][a-zA-Z0-9_-]*$/.test(c.id), 'Invalid campaign id');
   assert(/^\d{4}-\d{2}$/.test(c.year), 'Invalid campaign year');
   assert(typeof c.title === 'string' && c.title.trim(), 'Campaign title is required');
-  for (const key of ['start','end']) assert(typeof c[key] === 'string' && /(Z|[+-]\d\d:\d\d)$/.test(c[key]) && Number.isFinite(Date.parse(c[key])), `Invalid ${key}; include timezone offset`);
+  for (const key of ['start','end']) {
+    const match=typeof c[key]==='string'&&/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2})(?::\d{2}(?:\.\d{1,3})?)?(Z|[+-]\d{2}:\d{2})$/.exec(c[key]);
+    assert(match && Number.isFinite(Date.parse(c[key])), `Invalid ${key}; include timezone offset`);
+    // Date.parse normalizes February 30 and 24:00; reject those in imported records too.
+    const wall=Date.parse(match[1]+'Z');
+    assert(Number.isFinite(wall)&&new Date(wall).toISOString().slice(0,16)===match[1], `Invalid ${key}; enter a valid calendar date and time`);
+  }
   assert(Date.parse(c.end) > Date.parse(c.start), 'End must follow start');
   assert(typeof c.food === 'boolean', 'Food must be a boolean');
   if (c.template !== undefined) assert(['blueprint','editorial','refined-blueprint','editorial-poster','assembly-card'].includes(c.template), 'Invalid campaign template');

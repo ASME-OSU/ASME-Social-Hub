@@ -1,4 +1,5 @@
 import {checkGroupMeSchedule} from './check-groupme-schedule.mjs';
+import {checkEventTiming} from './check-event-timing.mjs';
 import {checkHomeRail} from './check-home-rail.mjs';
 import {checkAcademicYears} from './check-academic-years.mjs';
 import {checkCampaignModal} from './check-campaign-modal.mjs';
@@ -28,6 +29,7 @@ let browser;
 try {
  for(let i=0;i<50;i++){try{if((await fetch(base)).ok)break;}catch{}await new Promise(r=>setTimeout(r,100));}
  browser=await chromium.launch({headless:true});
+ await checkEventTiming(browser,base);
  await checkDispatcherAccess(browser,base);
  await checkPostingStatus(browser,base);
  await checkMemberEvent(browser,base);
