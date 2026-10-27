@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-27T02:44:02.660Z",
+  "generatedAt": "2026-10-27T02:44:51.347Z",
   "campaigns": [
     {
       "id": "2026-12-10-asme-study-tables",
@@ -586,7 +586,7 @@
         "feed": "",
         "story": ""
       },
-      "revision": 3,
+      "revision": 4,
       "cancelled": false,
       "status": {
         "feed": "pending",
@@ -599,7 +599,8 @@
         "groupme": {},
         "insights": []
       },
-      "log": []
+      "log": [],
+      "flyerUrl": "https://raw.githubusercontent.com/ASME-OSU/ASME-Social-Hub/main/assets/uploads/2026-10-29-bridge-building-competition-1793069055400-1.png"
     },
     {
       "id": "2026-10-28-industry-night",
