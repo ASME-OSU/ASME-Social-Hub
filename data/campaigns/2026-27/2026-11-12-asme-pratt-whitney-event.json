@@ -9,7 +9,7 @@
     "name": "Scott Lab E141"
   },
   "description": "Come to an event with Pratt and Whitney! See the flyer for more details.",
-  "food": true,
+  "food": false,
   "template": "refined-blueprint",
   "storyDesign": {
     "background": "color-wash",
@@ -68,7 +68,7 @@
     "feed": "",
     "story": ""
   },
-  "revision": 2,
+  "revision": 3,
   "cancelled": false,
   "status": {
     "feed": "pending",
