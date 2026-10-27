@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-27T00:32:45.081Z",
+  "generatedAt": "2026-10-27T02:32:46.326Z",
   "activeYear": "2026-27",
   "config": {
     "timezone": "America/New_York",
@@ -23,7 +23,7 @@
     "status": "unknown",
     "warning": false,
     "configured": true,
-    "checkedAt": "2026-10-27T00:32:44.915Z",
+    "checkedAt": "2026-10-27T02:32:46.151Z",
     "expiresAt": null,
     "daysRemaining": null
   },
@@ -1393,6 +1393,93 @@
           "schedule": {
             "createAt": "immediately",
             "announce": false,
+            "daysBefore": 7,
+            "time": "12:00"
+          },
+          "status": "pending",
+          "mediaId": null,
+          "postedAt": null,
+          "eventId": null,
+          "syncedRevision": null,
+          "botSentAt": null,
+          "deletedAt": null,
+          "publishAttemptedAt": null,
+          "createAttemptedAt": null,
+          "botAttemptedAt": null
+        }
+      }
+    },
+    {
+      "id": "2026-11-12-asme-pratt-whitney-event",
+      "year": "2026-27",
+      "title": "ASME Pratt & Whitney Event",
+      "start": "2026-11-12T22:30:00.000Z",
+      "end": "2026-11-12T23:30:00.000Z",
+      "demo": false,
+      "cancelled": false,
+      "archived": false,
+      "source": {
+        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-11-12T22:30:00.000Z",
+        "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+      },
+      "revision": 1,
+      "channels": {
+        "feed": {
+          "enabled": true,
+          "dueAt": "2026-11-05T17:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "daysBefore": 7,
+            "time": "12:00"
+          },
+          "status": "pending",
+          "mediaId": null,
+          "postedAt": null,
+          "eventId": null,
+          "syncedRevision": null,
+          "botSentAt": null,
+          "deletedAt": null,
+          "publishAttemptedAt": null,
+          "createAttemptedAt": null,
+          "botAttemptedAt": null
+        },
+        "story": {
+          "enabled": true,
+          "dueAt": "2026-11-09T17:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "daysBefore": 3,
+            "time": "12:00"
+          },
+          "status": "pending",
+          "mediaId": null,
+          "postedAt": null,
+          "eventId": null,
+          "syncedRevision": null,
+          "botSentAt": null,
+          "deletedAt": null,
+          "publishAttemptedAt": null,
+          "createAttemptedAt": null,
+          "botAttemptedAt": null
+        },
+        "groupme": {
+          "enabled": true,
+          "dueAt": "2026-11-05T17:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "followUp": {
+            "enabled": true,
+            "dueAt": "2026-11-11T17:00:00.000Z",
+            "scheduleInvalid": false,
+            "status": null,
+            "botSentAt": null,
+            "botAttemptedAt": null
+          },
+          "schedule": {
+            "createAt": "immediately",
+            "announce": true,
             "daysBefore": 7,
             "time": "12:00"
           },
