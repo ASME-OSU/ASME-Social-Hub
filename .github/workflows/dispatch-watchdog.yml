@@ -1,7 +1,9 @@
 name: Dispatcher watchdog
 on:
   schedule:
-    - cron: '49 * * * *'
+    # Lightweight recovery checks between the primary dispatch slots. This is
+    # still best-effort; an independent timer can run the same watchdog script.
+    - cron: '2,12,22,32,42,52 * * * *'
   workflow_run:
     workflows: [Render and publish dashboard, Calendar]
     types: [completed]

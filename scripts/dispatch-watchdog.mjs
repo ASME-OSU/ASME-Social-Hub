@@ -1,19 +1,22 @@
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
-export const WATCHDOG_INTERVAL_MS=30*60*1000;
+// Allow the normal 30-minute primary cadence plus scheduling jitter.
+export const WATCHDOG_STALE_MS=40*60*1000;
+// Throttle accepted requests independently while their heartbeat is pending.
+export const WATCHDOG_COOLDOWN_MS=20*60*1000;
 const time=value=>typeof value==='string'?Date.parse(value):NaN;
 const active=run=>['queued','requested','waiting','pending','in_progress'].includes(run.status);
 export function watchdogDecision({health,dispatchRuns=[],insightsRuns=[],now=Date.now()}) {
   const current=+now;
   if(!Number.isFinite(current))throw Error('Invalid watchdog time');
   const success=time(health?.lastSuccessfulLiveRunAt);
-  if(Number.isFinite(success)&&success<=current&&current-success<WATCHDOG_INTERVAL_MS)return {request:false,reason:'recent-success'};
+  if(Number.isFinite(success)&&success<=current&&current-success<WATCHDOG_STALE_MS)return {request:false,reason:'recent-success'};
   const liveInsights=insightsRuns.filter(run=>run.event==='schedule');
   if([...dispatchRuns,...liveInsights].some(active))return {request:false,reason:'dispatcher-already-active'};
   // Includes previews and failures: avoid repeatedly requesting jobs when a run
   // was just accepted, even before its heartbeat has reached the repository.
-  if(dispatchRuns.some(run=>{const at=time(run.created_at);return Number.isFinite(at)&&at<=current&&current-at<WATCHDOG_INTERVAL_MS;}))return {request:false,reason:'recent-dispatch-request'};
+  if(dispatchRuns.some(run=>{const at=time(run.created_at);return Number.isFinite(at)&&at<=current&&current-at<WATCHDOG_COOLDOWN_MS;}))return {request:false,reason:'recent-dispatch-request'};
   return {request:true,reason:'heartbeat-overdue'};
 }
 

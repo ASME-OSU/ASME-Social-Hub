@@ -43,6 +43,20 @@ When a campaign reports an ambiguous publish/create outcome, inspect Instagram/G
 
 GitHub cron is best-effort and can be late or disabled after prolonged inactivity. Keepalive writes a monthly maintenance record; check Actions schedules manually at handoff and after quiet periods. Do not rely on this app for time-critical announcements. The insights workflow runs hourly to capture short-lived story metrics and snapshots feed metrics after 1 and 7 days; unsupported metrics stay unavailable rather than becoming fabricated zeros.
 
+### Independent dispatcher timer
+
+The built-in watchdog checks every 10 minutes and considers the successful live heartbeat stale after 40 minutes. It suppresses requests while a dispatcher or scheduled Insights run is active, or a dispatch was requested within the last 20 minutes. This reduces ordinary recovery latency but cannot fix GitHub delaying both scheduled workflows.
+
+For independence from GitHub's scheduled-event delivery, run `node scripts/dispatch-watchdog.mjs` every 5 minutes on an always-on external scheduler with Node 22 or newer. Use a reviewed copy of the script; it has no npm dependencies. Provide these variables through the scheduler's secret store:
+
+- `GITHUB_REPOSITORY=ASME-OSU/ASME-Social-Hub`
+- `GH_TOKEN`: a repository-scoped GitHub token with Contents read and Actions write, with organization approval if required.
+- `WATCHDOG_DRY_RUN=true` for initial validation. Change to `false` to enable recovery requests after checking the preview output.
+
+The external process reads the current main-branch heartbeat and workflow runs, then requests the existing `dispatch.yml` workflow with `dry_run: false` only when overdue. It does not need Instagram or GroupMe credentials. The GitHub runner keeps the existing repository lock and durable publishing receipts. Failed GitHub reads stop without requesting a run; monitor nonzero exits on the external scheduler. Keep token expiry and rotation with the chapter's other integration credentials.
+
+No external timer is provisioned by this repository. An external timer bypasses delayed GitHub cron delivery; runner availability, API outages, and repository queueing can still delay completion.
+
 ## Current chapter integrations
 
 GroupMe bot announcements are enabled (`integrations.groupme.enabled: true`, `mode: "bot"` in `config/chapter.json`). Each campaign must opt in; browser defaults can preselect that choice for new campaigns. Existing calendar suggestions and demo data do not send announcements. Set `enabled: false` to pause every GroupMe call. Instagram and newsletter calendar suggestions remain enabled.
