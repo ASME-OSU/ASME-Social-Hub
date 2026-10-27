@@ -2,7 +2,7 @@
   "id": "2026-10-29-bridge-building-competition",
   "year": "2026-27",
   "type": "gbm",
-  "title": "Bridge Building Competition",
+  "title": "ASME Bridge Building Competition",
   "start": "2026-10-29T21:30:00.000Z",
   "end": "2026-10-29T22:30:00.000Z",
   "location": {
@@ -54,7 +54,7 @@
     "feed": "",
     "story": ""
   },
-  "revision": 2,
+  "revision": 3,
   "cancelled": false,
   "status": {
     "feed": "pending",
