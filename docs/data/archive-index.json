@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-27T02:44:51.347Z",
+  "generatedAt": "2026-10-27T16:53:14.343Z",
   "campaigns": [
     {
       "id": "2026-12-10-asme-study-tables",
@@ -589,17 +589,44 @@
       "revision": 4,
       "cancelled": false,
       "status": {
-        "feed": "pending",
+        "feed": "done",
         "story": "pending",
         "groupme": "pending"
       },
       "results": {
-        "feed": {},
+        "feed": {
+          "preparedRevision": 4,
+          "image": "https://asme-osu.github.io/ASME-Social-Hub/media/2026-27/2026-10-29-bridge-building-competition-feed.jpg",
+          "images": [
+            "https://asme-osu.github.io/ASME-Social-Hub/media/2026-27/2026-10-29-bridge-building-competition-feed.jpg"
+          ],
+          "caption": "ASME Bridge Building Competition\n\nSeek friendly competition and a chance to win prizes? Come to our bridge building competition! See the flyer for more details. ⚙️\n\nThursday, October 29, 2026 at 5:30 PM\nScott Lab E141\n\n#ASME #Engineering #OhioState",
+          "containerId": "18432578161198294",
+          "publishAttemptedAt": "2026-10-27T16:52:58.078Z",
+          "mediaId": "18121195540950736",
+          "postedAt": "2026-10-27T16:52:58.078Z",
+          "permalink": "https://www.instagram.com/p/DfAVLkcCVJE/"
+        },
         "story": {},
-        "groupme": {},
+        "groupme": {
+          "botText": "ASME Bridge Building Competition\nThursday, October 29, 2026 at 5:30 PM EDT\nScott Lab E141\nSeek friendly competition and a chance to win prizes? Come to our bridge building competition! See the flyer for more details. ⚙️\nEvent details: https://asme-osu.github.io/ASME-Social-Hub/event.html?year=2026-27&id=2026-10-29-bridge-building-competition",
+          "botAttemptedAt": "2026-10-27T16:52:58.078Z",
+          "botSentAt": "2026-10-27T16:52:58.078Z"
+        },
         "insights": []
       },
-      "log": [],
+      "log": [
+        {
+          "at": "2026-10-27T16:52:58.078Z",
+          "channel": "feed",
+          "message": "Published"
+        },
+        {
+          "at": "2026-10-27T16:52:58.078Z",
+          "channel": "groupme",
+          "message": "Bot announcement sent"
+        }
+      ],
       "flyerUrl": "https://raw.githubusercontent.com/ASME-OSU/ASME-Social-Hub/main/assets/uploads/2026-10-29-bridge-building-competition-1793069055400-1.png"
     },
     {
