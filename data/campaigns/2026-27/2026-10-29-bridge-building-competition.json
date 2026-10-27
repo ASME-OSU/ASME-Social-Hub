@@ -62,7 +62,15 @@
     "groupme": "pending"
   },
   "results": {
-    "feed": {},
+    "feed": {
+      "preparedRevision": 4,
+      "image": "https://asme-osu.github.io/ASME-Social-Hub/media/2026-27/2026-10-29-bridge-building-competition-feed.jpg",
+      "images": [
+        "https://asme-osu.github.io/ASME-Social-Hub/media/2026-27/2026-10-29-bridge-building-competition-feed.jpg"
+      ],
+      "caption": "ASME Bridge Building Competition\n\nSeek friendly competition and a chance to win prizes? Come to our bridge building competition! See the flyer for more details. ⚙️\n\nThursday, October 29, 2026 at 5:30 PM\nScott Lab E141\n\n#ASME #Engineering #OhioState",
+      "containerId": "18432578161198294"
+    },
     "story": {},
     "groupme": {},
     "insights": []
