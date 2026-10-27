@@ -59,11 +59,12 @@ jobs:
           key: flyer-markers-${{ runner.os }}-v2-${{ hashFiles('scripts/render-flyers.mjs', 'docs/flyer-render.mjs', 'docs/story-design.mjs', 'docs/image-policy.mjs', 'docs/carousel.mjs', 'config/**', 'templates/**', 'docs/assets/fonts/**', 'docs/assets/logos/**') }}-${{ hashFiles('data/campaigns/**') }}
           restore-keys: |
             flyer-markers-${{ runner.os }}-v2-${{ hashFiles('scripts/render-flyers.mjs', 'docs/flyer-render.mjs', 'docs/story-design.mjs', 'docs/image-policy.mjs', 'docs/carousel.mjs', 'config/**', 'templates/**', 'docs/assets/fonts/**', 'docs/assets/logos/**') }}-
-      - name: Render pending campaign flyers
+      - name: Install flyer browser
         if: inputs.task == 'render'
-        run: |
-          npx playwright install --with-deps chromium
-          npm run render
+        run: npx playwright install --with-deps chromium
+      - name: Render and persist latest dashboard
+        if: inputs.task == 'render' && !inputs.dry_run
+        run: node scripts/render-site.mjs
       - name: Dispatch
         if: inputs.task == 'dispatch' && !inputs.analytics_only
         env:
@@ -89,13 +90,13 @@ jobs:
         if: inputs.task == 'keepalive'
         run: node scripts/tasks.mjs keepalive
       - name: Check token expiry
-        if: inputs.task != 'refresh' && !inputs.analytics_only
+        if: inputs.task != 'refresh' && inputs.task != 'render' && !inputs.analytics_only
         run: node scripts/tasks.mjs expiry
       - name: Prepare Pages data
-        if: inputs.task != 'refresh' && !inputs.dry_run
+        if: inputs.task != 'refresh' && inputs.task != 'render' && !inputs.dry_run
         run: npm run build
       - name: Persist campaign state and site data
-        if: always() && !inputs.dry_run
+        if: always() && inputs.task != 'render' && !inputs.dry_run
         env:
           TASK: ${{ inputs.task }}
         run: |

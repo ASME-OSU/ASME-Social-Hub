@@ -4,6 +4,11 @@ on:
     branches: [main]
     paths: ['config/**', 'data/campaigns/**', 'docs/**', 'templates/**', 'scripts/**', 'package*.json', '.github/workflows/**']
   workflow_dispatch:
+# Keep one running render and only the newest pending request. The reusable
+# workflow still takes the separate campaign-repository lock before checkout.
+concurrency:
+  group: dashboard-render-requests
+  cancel-in-progress: false
 permissions:
   contents: write
   issues: write
