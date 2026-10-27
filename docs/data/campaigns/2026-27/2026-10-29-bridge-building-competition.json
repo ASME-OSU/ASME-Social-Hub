@@ -1,0 +1,71 @@
+{
+  "id": "2026-10-29-bridge-building-competition",
+  "year": "2026-27",
+  "type": "gbm",
+  "title": "ASME Bridge Building Competition",
+  "start": "2026-10-29T21:30:00.000Z",
+  "end": "2026-10-29T22:30:00.000Z",
+  "location": {
+    "name": "Scott Lab E141"
+  },
+  "description": "Seek friendly competition and a chance to win prizes? Come to our bridge building competition! See the flyer for more details. ⚙️",
+  "food": false,
+  "template": "refined-blueprint",
+  "storyDesign": {
+    "background": "template",
+    "paletteSource": "flyer"
+  },
+  "advertising": {},
+  "source": {
+    "kind": "manual"
+  },
+  "campaign": {
+    "groupme": {
+      "createAt": "immediately",
+      "reminders": [
+        604800,
+        86400
+      ],
+      "enabled": true,
+      "announce": true,
+      "daysBefore": 2,
+      "time": "12:00",
+      "format": "standard",
+      "followUp": {
+        "enabled": true,
+        "daysBefore": 1,
+        "time": "12:00",
+        "format": "invite"
+      }
+    },
+    "feed": {
+      "daysBefore": 2,
+      "time": "12:00",
+      "enabled": true
+    },
+    "story": {
+      "daysBefore": 1,
+      "time": "12:00",
+      "enabled": true
+    }
+  },
+  "notes": "",
+  "images": {
+    "feed": "",
+    "story": ""
+  },
+  "revision": 3,
+  "cancelled": false,
+  "status": {
+    "feed": "pending",
+    "story": "pending",
+    "groupme": "pending"
+  },
+  "results": {
+    "feed": {},
+    "story": {},
+    "groupme": {},
+    "insights": []
+  },
+  "log": []
+}

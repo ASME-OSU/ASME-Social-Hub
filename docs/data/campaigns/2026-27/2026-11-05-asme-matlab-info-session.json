@@ -1,0 +1,86 @@
+{
+  "id": "2026-11-05-asme-matlab-info-session",
+  "year": "2026-27",
+  "type": "gbm",
+  "title": "ASME MATLAB Info Session",
+  "start": "2026-11-05T22:30:00.000Z",
+  "end": "2026-11-05T23:30:00.000Z",
+  "location": {
+    "name": "Scott Laboratory E141"
+  },
+  "description": "We’re having a MATLAB info session! Come join us if you want to learn more about MATLAB and how it works. See the flyer for details!",
+  "food": false,
+  "template": "refined-blueprint",
+  "storyDesign": {
+    "background": "color-wash",
+    "paletteSource": "flyer",
+    "palette": [
+      "#a6201e",
+      "#004073",
+      "#f3e0df"
+    ]
+  },
+  "advertising": {},
+  "source": {
+    "kind": "ical",
+    "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-11-05T22:30:00.000Z",
+    "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com",
+    "snapshot": {
+      "title": "ASME MATLAB Info Session",
+      "start": "2026-11-05T22:30:00.000Z",
+      "end": "2026-11-05T23:30:00.000Z",
+      "location": "Scott Laboratory E141",
+      "description": "Bridge Building + Lesson"
+    }
+  },
+  "campaign": {
+    "groupme": {
+      "createAt": "immediately",
+      "reminders": [
+        604800,
+        86400
+      ],
+      "enabled": true,
+      "announce": true,
+      "daysBefore": 7,
+      "time": "12:00",
+      "format": "standard",
+      "followUp": {
+        "enabled": true,
+        "daysBefore": 1,
+        "time": "12:00",
+        "format": "invite"
+      }
+    },
+    "feed": {
+      "daysBefore": 7,
+      "time": "12:00",
+      "enabled": true
+    },
+    "story": {
+      "daysBefore": 3,
+      "time": "12:00",
+      "enabled": true
+    }
+  },
+  "notes": "",
+  "images": {
+    "feed": "",
+    "story": ""
+  },
+  "revision": 1,
+  "cancelled": false,
+  "status": {
+    "feed": "pending",
+    "story": "pending",
+    "groupme": "pending"
+  },
+  "results": {
+    "feed": {},
+    "story": {},
+    "groupme": {},
+    "insights": []
+  },
+  "log": [],
+  "flyerUrl": "https://raw.githubusercontent.com/ASME-OSU/ASME-Social-Hub/main/assets/uploads/2026-11-05-asme-matlab-info-session-1793068613066-1.png"
+}

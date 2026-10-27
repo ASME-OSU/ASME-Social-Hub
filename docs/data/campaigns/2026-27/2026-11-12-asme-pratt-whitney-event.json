@@ -1,12 +1,12 @@
 {
   "id": "2026-11-12-asme-pratt-whitney-event",
   "year": "2026-27",
-  "type": "gbm",
+  "type": "industry-night",
   "title": "ASME Pratt & Whitney Event",
   "start": "2026-11-12T22:30:00.000Z",
   "end": "2026-11-12T23:30:00.000Z",
   "location": {
-    "name": "Scott Laboratory E141"
+    "name": "Scott Lab E141"
   },
   "description": "Come to an event with Pratt and Whitney! See the flyer for more details.",
   "food": false,
@@ -68,7 +68,7 @@
     "feed": "",
     "story": ""
   },
-  "revision": 1,
+  "revision": 3,
   "cancelled": false,
   "status": {
     "feed": "pending",

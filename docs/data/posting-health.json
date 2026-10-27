@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-27T02:34:25.163Z",
+  "generatedAt": "2026-10-27T02:44:02.735Z",
   "activeYear": "2026-27",
   "config": {
     "timezone": "America/New_York",
@@ -23,7 +23,7 @@
     "status": "unknown",
     "warning": false,
     "configured": true,
-    "checkedAt": "2026-10-27T02:34:24.947Z",
+    "checkedAt": "2026-10-27T02:44:02.546Z",
     "expiresAt": null,
     "daysRemaining": null
   },
@@ -1323,6 +1323,93 @@
       }
     },
     {
+      "id": "2026-10-29-bridge-building-competition",
+      "year": "2026-27",
+      "title": "ASME Bridge Building Competition",
+      "start": "2026-10-29T21:30:00.000Z",
+      "end": "2026-10-29T22:30:00.000Z",
+      "demo": false,
+      "cancelled": false,
+      "archived": false,
+      "source": {
+        "uid": null,
+        "calendarUid": null
+      },
+      "revision": 3,
+      "channels": {
+        "feed": {
+          "enabled": true,
+          "dueAt": "2026-10-27T16:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "daysBefore": 2,
+            "time": "12:00"
+          },
+          "status": "pending",
+          "mediaId": null,
+          "postedAt": null,
+          "eventId": null,
+          "syncedRevision": null,
+          "botSentAt": null,
+          "deletedAt": null,
+          "publishAttemptedAt": null,
+          "createAttemptedAt": null,
+          "botAttemptedAt": null
+        },
+        "story": {
+          "enabled": true,
+          "dueAt": "2026-10-28T16:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "daysBefore": 1,
+            "time": "12:00"
+          },
+          "status": "pending",
+          "mediaId": null,
+          "postedAt": null,
+          "eventId": null,
+          "syncedRevision": null,
+          "botSentAt": null,
+          "deletedAt": null,
+          "publishAttemptedAt": null,
+          "createAttemptedAt": null,
+          "botAttemptedAt": null
+        },
+        "groupme": {
+          "enabled": true,
+          "dueAt": "2026-10-27T16:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "followUp": {
+            "enabled": true,
+            "dueAt": "2026-10-28T16:00:00.000Z",
+            "scheduleInvalid": false,
+            "status": null,
+            "botSentAt": null,
+            "botAttemptedAt": null
+          },
+          "schedule": {
+            "createAt": "immediately",
+            "announce": true,
+            "daysBefore": 2,
+            "time": "12:00"
+          },
+          "status": "pending",
+          "mediaId": null,
+          "postedAt": null,
+          "eventId": null,
+          "syncedRevision": null,
+          "botSentAt": null,
+          "deletedAt": null,
+          "publishAttemptedAt": null,
+          "createAttemptedAt": null,
+          "botAttemptedAt": null
+        }
+      }
+    },
+    {
       "id": "2026-11-04-cad-workshop",
       "year": "2026-27",
       "title": "From sketch to solid",
@@ -1410,6 +1497,93 @@
       }
     },
     {
+      "id": "2026-11-05-asme-matlab-info-session",
+      "year": "2026-27",
+      "title": "ASME MATLAB Info Session",
+      "start": "2026-11-05T22:30:00.000Z",
+      "end": "2026-11-05T23:30:00.000Z",
+      "demo": false,
+      "cancelled": false,
+      "archived": false,
+      "source": {
+        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-11-05T22:30:00.000Z",
+        "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+      },
+      "revision": 1,
+      "channels": {
+        "feed": {
+          "enabled": true,
+          "dueAt": "2026-10-29T16:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "daysBefore": 7,
+            "time": "12:00"
+          },
+          "status": "pending",
+          "mediaId": null,
+          "postedAt": null,
+          "eventId": null,
+          "syncedRevision": null,
+          "botSentAt": null,
+          "deletedAt": null,
+          "publishAttemptedAt": null,
+          "createAttemptedAt": null,
+          "botAttemptedAt": null
+        },
+        "story": {
+          "enabled": true,
+          "dueAt": "2026-11-02T17:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "daysBefore": 3,
+            "time": "12:00"
+          },
+          "status": "pending",
+          "mediaId": null,
+          "postedAt": null,
+          "eventId": null,
+          "syncedRevision": null,
+          "botSentAt": null,
+          "deletedAt": null,
+          "publishAttemptedAt": null,
+          "createAttemptedAt": null,
+          "botAttemptedAt": null
+        },
+        "groupme": {
+          "enabled": true,
+          "dueAt": "2026-10-29T16:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "followUp": {
+            "enabled": true,
+            "dueAt": "2026-11-04T17:00:00.000Z",
+            "scheduleInvalid": false,
+            "status": null,
+            "botSentAt": null,
+            "botAttemptedAt": null
+          },
+          "schedule": {
+            "createAt": "immediately",
+            "announce": true,
+            "daysBefore": 7,
+            "time": "12:00"
+          },
+          "status": "pending",
+          "mediaId": null,
+          "postedAt": null,
+          "eventId": null,
+          "syncedRevision": null,
+          "botSentAt": null,
+          "deletedAt": null,
+          "publishAttemptedAt": null,
+          "createAttemptedAt": null,
+          "botAttemptedAt": null
+        }
+      }
+    },
+    {
       "id": "2026-11-12-asme-pratt-whitney-event",
       "year": "2026-27",
       "title": "ASME Pratt & Whitney Event",
@@ -1422,7 +1596,7 @@
         "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-11-12T22:30:00.000Z",
         "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
       },
-      "revision": 1,
+      "revision": 3,
       "channels": {
         "feed": {
           "enabled": true,
@@ -1596,7 +1770,7 @@
         "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-11-19T22:30:00.000Z",
         "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
       },
-      "revision": 1,
+      "revision": 3,
       "channels": {
         "feed": {
           "enabled": true,
@@ -1646,6 +1820,93 @@
           "followUp": {
             "enabled": true,
             "dueAt": "2026-11-18T17:00:00.000Z",
+            "scheduleInvalid": false,
+            "status": null,
+            "botSentAt": null,
+            "botAttemptedAt": null
+          },
+          "schedule": {
+            "createAt": "immediately",
+            "announce": true,
+            "daysBefore": 7,
+            "time": "12:00"
+          },
+          "status": "pending",
+          "mediaId": null,
+          "postedAt": null,
+          "eventId": null,
+          "syncedRevision": null,
+          "botSentAt": null,
+          "deletedAt": null,
+          "publishAttemptedAt": null,
+          "createAttemptedAt": null,
+          "botAttemptedAt": null
+        }
+      }
+    },
+    {
+      "id": "2026-12-03-asme-sweets-with-swe",
+      "year": "2026-27",
+      "title": "ASME Sweets with SWE",
+      "start": "2026-12-03T22:30:00.000Z",
+      "end": "2026-12-03T23:30:00.000Z",
+      "demo": false,
+      "cancelled": false,
+      "archived": false,
+      "source": {
+        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-12-03T22:30:00.000Z",
+        "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+      },
+      "revision": 3,
+      "channels": {
+        "feed": {
+          "enabled": true,
+          "dueAt": "2026-11-26T17:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "daysBefore": 7,
+            "time": "12:00"
+          },
+          "status": "pending",
+          "mediaId": null,
+          "postedAt": null,
+          "eventId": null,
+          "syncedRevision": null,
+          "botSentAt": null,
+          "deletedAt": null,
+          "publishAttemptedAt": null,
+          "createAttemptedAt": null,
+          "botAttemptedAt": null
+        },
+        "story": {
+          "enabled": true,
+          "dueAt": "2026-11-30T17:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "daysBefore": 3,
+            "time": "12:00"
+          },
+          "status": "pending",
+          "mediaId": null,
+          "postedAt": null,
+          "eventId": null,
+          "syncedRevision": null,
+          "botSentAt": null,
+          "deletedAt": null,
+          "publishAttemptedAt": null,
+          "createAttemptedAt": null,
+          "botAttemptedAt": null
+        },
+        "groupme": {
+          "enabled": true,
+          "dueAt": "2026-11-26T17:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "followUp": {
+            "enabled": true,
+            "dueAt": "2026-12-02T17:00:00.000Z",
             "scheduleInvalid": false,
             "status": null,
             "botSentAt": null,

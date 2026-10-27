@@ -1,0 +1,18 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Chapter Campaign Scheduler//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:2026-10-29-bridge-building-competition@chapter-campaigns
+DTSTAMP:20261029T213000Z
+DTSTART:20261029T213000Z
+DTEND:20261029T223000Z
+SUMMARY:ASME Bridge Building Competition
+DESCRIPTION:Seek friendly competition and a chance to win prizes? Come to 
+ our bridge building competition! See the flyer for more details. ⚙️
+LOCATION:Scott Lab E141
+STATUS:CONFIRMED
+SEQUENCE:3
+END:VEVENT
+END:VCALENDAR
