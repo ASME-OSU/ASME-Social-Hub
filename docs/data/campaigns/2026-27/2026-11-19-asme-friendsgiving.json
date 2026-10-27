@@ -1,0 +1,86 @@
+{
+  "id": "2026-11-19-asme-friendsgiving",
+  "year": "2026-27",
+  "type": "gbm",
+  "title": "ASME Friendsgiving",
+  "start": "2026-11-19T22:30:00.000Z",
+  "end": "2026-11-19T23:30:00.000Z",
+  "location": {
+    "name": "Scott Laboratory E141"
+  },
+  "description": "Join ASME for Friendsgiving! See flyer for all details.",
+  "food": true,
+  "template": "refined-blueprint",
+  "storyDesign": {
+    "background": "blueprint-rings",
+    "paletteSource": "flyer",
+    "palette": [
+      "#ffe7d7",
+      "#ffbf4d",
+      "#fffcf9"
+    ]
+  },
+  "advertising": {},
+  "source": {
+    "kind": "ical",
+    "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-11-19T22:30:00.000Z",
+    "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com",
+    "snapshot": {
+      "title": "ASME Friendsgiving",
+      "start": "2026-11-19T22:30:00.000Z",
+      "end": "2026-11-19T23:30:00.000Z",
+      "location": "Scott Laboratory E141",
+      "description": "Friendsgiving"
+    }
+  },
+  "campaign": {
+    "groupme": {
+      "createAt": "immediately",
+      "reminders": [
+        604800,
+        86400
+      ],
+      "enabled": true,
+      "announce": true,
+      "daysBefore": 7,
+      "time": "12:00",
+      "format": "standard",
+      "followUp": {
+        "enabled": true,
+        "daysBefore": 1,
+        "time": "12:00",
+        "format": "invite"
+      }
+    },
+    "feed": {
+      "daysBefore": 7,
+      "time": "12:00",
+      "enabled": true
+    },
+    "story": {
+      "daysBefore": 3,
+      "time": "12:00",
+      "enabled": true
+    }
+  },
+  "notes": "",
+  "images": {
+    "feed": "",
+    "story": ""
+  },
+  "revision": 1,
+  "cancelled": false,
+  "status": {
+    "feed": "pending",
+    "story": "pending",
+    "groupme": "pending"
+  },
+  "results": {
+    "feed": {},
+    "story": {},
+    "groupme": {},
+    "insights": []
+  },
+  "log": [],
+  "flyerUrl": "https://raw.githubusercontent.com/ASME-OSU/ASME-Social-Hub/main/assets/uploads/2026-11-19-asme-friendsgiving-1793068434379-1.png"
+}

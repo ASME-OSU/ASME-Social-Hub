@@ -1,0 +1,86 @@
+{
+  "id": "2026-12-10-asme-study-tables",
+  "year": "2026-27",
+  "type": "gbm",
+  "title": "ASME Study Tables",
+  "start": "2026-12-10T22:30:00.000Z",
+  "end": "2026-12-10T23:30:00.000Z",
+  "location": {
+    "name": "Scott Laboratory E141"
+  },
+  "description": "Study tables for upcoming finals! See flyer for more details.",
+  "food": false,
+  "template": "refined-blueprint",
+  "storyDesign": {
+    "background": "folded-paper",
+    "paletteSource": "flyer",
+    "palette": [
+      "#aa3429",
+      "#e9ca92",
+      "#f3e3e1"
+    ]
+  },
+  "advertising": {},
+  "source": {
+    "kind": "ical",
+    "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-12-10T22:30:00.000Z",
+    "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com",
+    "snapshot": {
+      "title": "ASME Study Tables",
+      "start": "2026-12-10T22:30:00.000Z",
+      "end": "2026-12-10T23:30:00.000Z",
+      "location": "Scott Laboratory E141",
+      "description": "Study tables for upcoming finals!"
+    }
+  },
+  "campaign": {
+    "groupme": {
+      "createAt": "immediately",
+      "reminders": [
+        604800,
+        86400
+      ],
+      "enabled": true,
+      "announce": true,
+      "daysBefore": 7,
+      "time": "12:00",
+      "format": "standard",
+      "followUp": {
+        "enabled": true,
+        "daysBefore": 1,
+        "time": "12:00",
+        "format": "invite"
+      }
+    },
+    "feed": {
+      "daysBefore": 7,
+      "time": "12:00",
+      "enabled": true
+    },
+    "story": {
+      "daysBefore": 3,
+      "time": "12:00",
+      "enabled": true
+    }
+  },
+  "notes": "",
+  "images": {
+    "feed": "",
+    "story": ""
+  },
+  "revision": 1,
+  "cancelled": false,
+  "status": {
+    "feed": "pending",
+    "story": "pending",
+    "groupme": "pending"
+  },
+  "results": {
+    "feed": {},
+    "story": {},
+    "groupme": {},
+    "insights": []
+  },
+  "log": [],
+  "flyerUrl": "https://raw.githubusercontent.com/ASME-OSU/ASME-Social-Hub/main/assets/uploads/2026-12-10-asme-study-tables-1793068368434-1.png"
+}
