@@ -9,7 +9,7 @@
     "name": "Scott Lab E141"
   },
   "description": "Join ASME for Friendsgiving! See flyer for all details.",
-  "food": false,
+  "food": true,
   "template": "refined-blueprint",
   "storyDesign": {
     "background": "blueprint-rings",
@@ -68,7 +68,7 @@
     "feed": "",
     "story": ""
   },
-  "revision": 2,
+  "revision": 3,
   "cancelled": false,
   "status": {
     "feed": "pending",
