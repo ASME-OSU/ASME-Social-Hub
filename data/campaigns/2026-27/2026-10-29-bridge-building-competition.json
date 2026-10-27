@@ -54,7 +54,7 @@
     "feed": "",
     "story": ""
   },
-  "revision": 3,
+  "revision": 4,
   "cancelled": false,
   "status": {
     "feed": "pending",
@@ -67,5 +67,6 @@
     "groupme": {},
     "insights": []
   },
-  "log": []
+  "log": [],
+  "flyerUrl": "https://raw.githubusercontent.com/ASME-OSU/ASME-Social-Hub/main/assets/uploads/2026-10-29-bridge-building-competition-1793069055400-1.png"
 }
