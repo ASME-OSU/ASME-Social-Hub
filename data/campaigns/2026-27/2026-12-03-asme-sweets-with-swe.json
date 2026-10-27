@@ -9,7 +9,7 @@
     "name": "Scott Lab E141"
   },
   "description": "Sweets with SWE! See flyer.",
-  "food": false,
+  "food": true,
   "template": "refined-blueprint",
   "storyDesign": {
     "background": "template",
@@ -63,7 +63,7 @@
     "feed": "",
     "story": ""
   },
-  "revision": 2,
+  "revision": 3,
   "cancelled": false,
   "status": {
     "feed": "pending",
