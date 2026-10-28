@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-27T12:39:39.935Z",
+  "generatedAt": "2026-10-28T13:31:32.765Z",
   "events": [
     {
       "id": "4o94ugad0fu7c42nu4j2huli1j@google.com::2026-11-02T00:00:00.000Z",
@@ -674,5 +674,24 @@
       }
     }
   ],
-  "changes": []
+  "changes": [
+    {
+      "source": {
+        "kind": "ical",
+        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2026-11-05T22:30:00.000Z",
+        "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+      },
+      "title": "ASME MATLAB Info Session",
+      "updated": "2026-10-28T02:48:15.000Z",
+      "comparison": "calendar-baseline",
+      "differences": [
+        {
+          "field": "description",
+          "previous": "Bridge Building + Lesson",
+          "current": "<p>Matlab info session</p>",
+          "campaign": "We’re having a MATLAB info session! Come join us if you want to learn more about MATLAB and how it works. See the flyer for details!"
+        }
+      ]
+    }
+  ]
 }
