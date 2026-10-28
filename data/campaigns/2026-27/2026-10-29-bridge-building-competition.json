@@ -88,7 +88,11 @@
     "groupme": {
       "botText": "ASME Bridge Building Competition\nThursday, October 29, 2026 at 5:30 PM EDT\nScott Lab E141\nSeek friendly competition and a chance to win prizes? Come to our bridge building competition! See the flyer for more details. ⚙️\nEvent details: https://asme-osu.github.io/ASME-Social-Hub/event.html?year=2026-27&id=2026-10-29-bridge-building-competition",
       "botAttemptedAt": "2026-10-27T16:52:58.078Z",
-      "botSentAt": "2026-10-27T16:52:58.078Z"
+      "botSentAt": "2026-10-27T16:52:58.078Z",
+      "followUp": {
+        "botText": "Coming up soon: ASME Bridge Building Competition\nThursday, October 29, 2026 at 5:30 PM EDT\nScott Lab E141\nSeek friendly competition and a chance to win prizes? Come to our bridge building competition! See the flyer for more details. ⚙️\nEvent details: https://asme-osu.github.io/ASME-Social-Hub/event.html?year=2026-27&id=2026-10-29-bridge-building-competition",
+        "botAttemptedAt": "2026-10-28T17:17:42.138Z"
+      }
     },
     "insights": []
   },
