@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-28T13:31:33.554Z",
+  "generatedAt": "2026-10-28T17:17:58.329Z",
   "activeYear": "2026-27",
   "config": {
     "timezone": "America/New_York",
@@ -23,7 +23,7 @@
     "status": "unknown",
     "warning": false,
     "configured": true,
-    "checkedAt": "2026-10-28T13:31:33.292Z",
+    "checkedAt": "2026-10-28T17:17:58.071Z",
     "expiresAt": null,
     "daysRemaining": null
   },
@@ -1266,14 +1266,14 @@
             "daysBefore": 1,
             "time": "12:00"
           },
-          "status": "pending",
-          "mediaId": null,
-          "postedAt": null,
+          "status": "done",
+          "mediaId": "17911047729593391",
+          "postedAt": "2026-10-28T17:17:42.138Z",
           "eventId": null,
           "syncedRevision": null,
           "botSentAt": null,
           "deletedAt": null,
-          "publishAttemptedAt": null,
+          "publishAttemptedAt": "2026-10-28T17:17:42.138Z",
           "createAttemptedAt": null,
           "botAttemptedAt": null
         },
@@ -1286,9 +1286,9 @@
             "enabled": true,
             "dueAt": "2026-10-28T16:00:00.000Z",
             "scheduleInvalid": false,
-            "status": null,
-            "botSentAt": null,
-            "botAttemptedAt": null
+            "status": "done",
+            "botSentAt": "2026-10-28T17:17:42.138Z",
+            "botAttemptedAt": "2026-10-28T17:17:42.138Z"
           },
           "schedule": {
             "createAt": "immediately",
@@ -1296,7 +1296,7 @@
             "daysBefore": 2,
             "time": "12:00"
           },
-          "status": "pending",
+          "status": "done",
           "mediaId": null,
           "postedAt": null,
           "eventId": null,

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-27T16:53:14.343Z",
+  "generatedAt": "2026-10-28T17:17:57.959Z",
   "campaigns": [
     {
       "id": "2026-12-10-asme-study-tables",
@@ -590,8 +590,8 @@
       "cancelled": false,
       "status": {
         "feed": "done",
-        "story": "pending",
-        "groupme": "pending"
+        "story": "done",
+        "groupme": "done"
       },
       "results": {
         "feed": {
@@ -607,11 +607,26 @@
           "postedAt": "2026-10-27T16:52:58.078Z",
           "permalink": "https://www.instagram.com/p/DfAVLkcCVJE/"
         },
-        "story": {},
+        "story": {
+          "preparedRevision": 4,
+          "image": "https://asme-osu.github.io/ASME-Social-Hub/media/2026-27/2026-10-29-bridge-building-competition-story.jpg",
+          "caption": "ASME Bridge Building Competition\n\nSeek friendly competition and a chance to win prizes? Come to our bridge building competition! See the flyer for more details. ⚙️\n\nThursday, October 29, 2026 at 5:30 PM\nScott Lab E141\n\n#ASME #Engineering #OhioState",
+          "containerId": "18432789340198294",
+          "publishAttemptedAt": "2026-10-28T17:17:42.138Z",
+          "mediaId": "17911047729593391",
+          "postedAt": "2026-10-28T17:17:42.138Z",
+          "permalink": "https://www.instagram.com/stories/asmeohiostate/4018041244697073686"
+        },
         "groupme": {
           "botText": "ASME Bridge Building Competition\nThursday, October 29, 2026 at 5:30 PM EDT\nScott Lab E141\nSeek friendly competition and a chance to win prizes? Come to our bridge building competition! See the flyer for more details. ⚙️\nEvent details: https://asme-osu.github.io/ASME-Social-Hub/event.html?year=2026-27&id=2026-10-29-bridge-building-competition",
           "botAttemptedAt": "2026-10-27T16:52:58.078Z",
-          "botSentAt": "2026-10-27T16:52:58.078Z"
+          "botSentAt": "2026-10-27T16:52:58.078Z",
+          "followUp": {
+            "botText": "Coming up soon: ASME Bridge Building Competition\nThursday, October 29, 2026 at 5:30 PM EDT\nScott Lab E141\nSeek friendly competition and a chance to win prizes? Come to our bridge building competition! See the flyer for more details. ⚙️\nEvent details: https://asme-osu.github.io/ASME-Social-Hub/event.html?year=2026-27&id=2026-10-29-bridge-building-competition",
+            "botAttemptedAt": "2026-10-28T17:17:42.138Z",
+            "botSentAt": "2026-10-28T17:17:42.138Z",
+            "status": "done"
+          }
         },
         "insights": []
       },
@@ -625,6 +640,16 @@
           "at": "2026-10-27T16:52:58.078Z",
           "channel": "groupme",
           "message": "Bot announcement sent"
+        },
+        {
+          "at": "2026-10-28T17:17:42.138Z",
+          "channel": "story",
+          "message": "Published"
+        },
+        {
+          "at": "2026-10-28T17:17:42.138Z",
+          "channel": "groupme",
+          "message": "Bot follow-up sent"
         }
       ],
       "flyerUrl": "https://raw.githubusercontent.com/ASME-OSU/ASME-Social-Hub/main/assets/uploads/2026-10-29-bridge-building-competition-1793069055400-1.png"
