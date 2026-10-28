@@ -93,6 +93,17 @@
           "likes": 3,
           "saved": 0
         }
+      },
+      {
+        "channel": "feed",
+        "day": 7,
+        "mediaId": "17907468615666355",
+        "recordedAt": "2026-10-28T18:55:10.424Z",
+        "metrics": {
+          "reach": 126,
+          "likes": 3,
+          "saved": 0
+        }
       }
     ]
   },
