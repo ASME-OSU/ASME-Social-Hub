@@ -90,7 +90,10 @@
       "permalink": "https://www.instagram.com/p/DfFfYY3FH3t/"
     },
     "story": {},
-    "groupme": {},
+    "groupme": {
+      "botText": "ASME MATLAB Info Session\nThursday, November 5, 2026 at 5:30 PM EST\nScott Laboratory E141\nWe’re having a MATLAB info session! Come join us if you want to learn more about MATLAB and how it works. See the flyer for details!\nEvent details: https://asme-osu.github.io/ASME-Social-Hub/event.html?year=2026-27&id=2026-11-05-asme-matlab-info-session",
+      "botAttemptedAt": "2026-10-29T16:58:18.620Z"
+    },
     "insights": []
   },
   "log": [
