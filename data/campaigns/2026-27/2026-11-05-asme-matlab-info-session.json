@@ -71,7 +71,7 @@
   "revision": 1,
   "cancelled": false,
   "status": {
-    "feed": "pending",
+    "feed": "done",
     "story": "pending",
     "groupme": "pending"
   },
@@ -84,12 +84,20 @@
       ],
       "caption": "ASME MATLAB Info Session\n\nWe’re having a MATLAB info session! Come join us if you want to learn more about MATLAB and how it works. See the flyer for details!\n\nThursday, November 5, 2026 at 5:30 PM\nScott Laboratory E141\n\n#ASME #Engineering #OhioState",
       "containerId": "18433013992198294",
-      "publishAttemptedAt": "2026-10-29T16:58:18.620Z"
+      "publishAttemptedAt": "2026-10-29T16:58:18.620Z",
+      "mediaId": "18115452980134920",
+      "postedAt": "2026-10-29T16:58:18.620Z"
     },
     "story": {},
     "groupme": {},
     "insights": []
   },
-  "log": [],
+  "log": [
+    {
+      "at": "2026-10-29T16:58:18.620Z",
+      "channel": "feed",
+      "message": "Published"
+    }
+  ],
   "flyerUrl": "https://raw.githubusercontent.com/ASME-OSU/ASME-Social-Hub/main/assets/uploads/2026-11-05-asme-matlab-info-session-1793068613066-1.png"
 }
