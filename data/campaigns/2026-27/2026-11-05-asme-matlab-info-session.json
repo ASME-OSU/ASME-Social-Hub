@@ -95,7 +95,19 @@
       "botAttemptedAt": "2026-10-29T16:58:18.620Z",
       "botSentAt": "2026-10-29T16:58:18.620Z"
     },
-    "insights": []
+    "insights": [
+      {
+        "channel": "feed",
+        "day": 1,
+        "mediaId": "18115452980134920",
+        "recordedAt": "2026-10-30T20:52:25.823Z",
+        "metrics": {
+          "reach": 158,
+          "likes": 6,
+          "saved": 0
+        }
+      }
+    ]
   },
   "log": [
     {
