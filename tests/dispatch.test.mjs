@@ -203,3 +203,49 @@ test('follow-ups respect opt-out, cancellation, event expiry, and an unresolved 
   let calls=0;await dispatch({root,now:change==='expired'?'2026-10-21T17:00:00Z':'2026-10-20T16:00:00Z',services:{postBotMessage:async()=>{calls++;}}});assert.equal(calls,0,change);
  }
 });
+
+test('linkedin channel publishes post, records durable intent, and ignores disabled channel', async t => {
+ const {root, file} = await fixture(t);
+ const configFile = path.join(root, 'config/chapter.json');
+ const config = JSON.parse(await readFile(configFile, 'utf8'));
+ config.integrations = { linkedin: { enabled: true, organizationId: '123456' } };
+ await writeJson(configFile, config);
+
+ const c = JSON.parse(await readFile(file, 'utf8'));
+ c.campaign = c.campaign || {};
+ c.campaign.linkedin = { enabled: true, daysBefore: 7, time: '12:00' };
+ c.campaign.feed = { enabled: false, daysBefore: 7, time: '12:00' };
+ c.campaign.story = { enabled: false, daysBefore: 3, time: '12:00' };
+ await writeJson(file, c);
+
+ let publishCalls = 0;
+ const services = {
+  linkedin: {
+   publishPost: async ({commentary, imageUrl, organizationId}) => {
+    publishCalls++;
+    assert.equal(organizationId, '123456');
+    assert.equal(imageUrl, 'https://example.org/feed.jpg');
+    assert.ok(commentary.includes('Meeting'));
+    return { postId: 'urn:li:share:112233', permalink: 'https://www.linkedin.com/feed/update/urn%3Ali%3Ashare%3A112233' };
+   }
+  },
+  ig: {},
+  groupme: {}
+ };
+
+ await dispatch({root, now: '2026-10-14T15:00:00Z', services});
+ assert.equal(publishCalls, 0);
+
+ await dispatch({root, now: '2026-10-14T17:00:00Z', services});
+ assert.equal(publishCalls, 1);
+
+ const saved = JSON.parse(await readFile(file, 'utf8'));
+ assert.equal(saved.status.linkedin, 'done');
+ assert.equal(saved.results.linkedin.postId, 'urn:li:share:112233');
+ assert.equal(saved.results.linkedin.permalink, 'https://www.linkedin.com/feed/update/urn%3Ali%3Ashare%3A112233');
+ assert.ok(saved.results.linkedin.postedAt);
+
+ await dispatch({root, now: '2026-10-14T18:00:00Z', services});
+ assert.equal(publishCalls, 1);
+});
+

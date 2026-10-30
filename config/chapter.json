@@ -73,6 +73,10 @@
       "mode": "bot",
       "botName": "Gearley",
       "botAvatar": "assets/logos/groupme-bot.png"
+    },
+    "linkedin": {
+      "enabled": false,
+      "organizationId": ""
     }
   },
   "hubUrl": "https://asme-osu.github.io/ASME-HUB/",

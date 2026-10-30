@@ -20,6 +20,27 @@ Primary references checked during implementation:
 - [Meta's official Instagram API collection, publishing material](https://www.postman.com/meta/instagram/documentation/6yqw8pt/instagram-api?entity=request-23987686-23eacf45-3728-4e41-bcc7-6d164959327c): container and media-publish flow. Some collection examples are for Facebook Login; this implementation deliberately uses the Instagram Login host/scopes.
 - [Meta Instagram Login content publishing documentation](https://developers.facebook.com/docs/instagram-platform/instagram-api-with-instagram-login/content-publishing), [business login/token documentation](https://developers.facebook.com/docs/instagram-platform/instagram-api-with-instagram-login/business-login), and [insights documentation](https://developers.facebook.com/docs/instagram-platform/instagram-api-with-instagram-login/insights): canonical pages to check during setup. Direct retrieval returned rate-limit/inaccessible responses during implementation; do not interpret those pages as fully verified evidence for account review or metric retention details.
 
+## LinkedIn
+
+Use the chapter's LinkedIn Page and a LinkedIn Developer application associated with the ASME OSU Organization Page.
+
+Request the following products in the LinkedIn Developer Portal:
+- **Community Management API**: Grants `w_organization_social` and `r_organization_social` required for publishing and reading posts as the Organization Page.
+- **Share on LinkedIn**: Self-serve product granting `w_member_social`.
+- **Sign In with LinkedIn using OpenID Connect**: Self-serve product granting `openid`, `profile`, and `email`.
+
+The implementation (`scripts/linkedin.mjs`) uses LinkedIn's versioned REST API gateway (`https://api.linkedin.com/rest`):
+1. **Initialize Media Upload**: `POST /rest/images?action=initializeUpload` with owner `urn:li:organization:<ID>` retrieves a dedicated upload URL and image asset URN (`urn:li:image:...`).
+2. **Binary Upload**: Sends the public flyer bytes via HTTP `PUT` to the pre-signed `uploadUrl`.
+3. **Publish Post**: `POST /rest/posts` targeting `author: urn:li:organization:<ID>` with public feed distribution, post commentary (caption), and media attachment.
+
+Like Instagram and GroupMe, durable publish intent (`publishAttemptedAt`) is written to disk before network requests; ambiguous network failures require reconciliation rather than blind re-posting. Successful posts record the returned post ID (`urn:li:share:...`) and generate a clickable permalink (`https://www.linkedin.com/feed/update/{urn}`).
+
+References:
+- [LinkedIn Community Management API Overview](https://learn.microsoft.com/en-us/linkedin/marketing/community-management/community-management-overview)
+- [LinkedIn Posts API Documentation](https://learn.microsoft.com/en-us/linkedin/marketing/community-management/shares/posts-api)
+- [LinkedIn Images API Documentation](https://learn.microsoft.com/en-us/linkedin/marketing/community-management/shares/images-api)
+
 ## GroupMe
 
 Native calendar events use a community-documented API rather than a supported official calendar contract. Use a chapter-owned user account that remains in the group. Only the creating user can update/delete its events. Credentials and group ID come from environment variables. Flyers upload to GroupMe's image service before being attached.

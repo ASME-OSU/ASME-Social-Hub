@@ -33,7 +33,7 @@ export function validateCampaign(c) {
   if (c.template !== undefined) assert(['blueprint','editorial','refined-blueprint','editorial-poster','assembly-card'].includes(c.template), 'Invalid campaign template');
   validateAdvertising(c.advertising);
   validateStoryDesign(c.storyDesign);
-  for (const ch of ['feed','story']) if (c.campaign?.[ch]) assert(cadenceValid(c.campaign[ch]), `Invalid ${ch} cadence`);
+  for (const ch of ['feed','story','linkedin']) if (c.campaign?.[ch]) assert(cadenceValid(c.campaign[ch]), `Invalid ${ch} cadence`);
   const gm=c.campaign?.groupme;
   if(gm){
     if(gm.announce!==undefined)assert(typeof gm.announce==='boolean','Invalid GroupMe announce flag');
@@ -47,7 +47,7 @@ export function validateCampaign(c) {
   }
   assert(!c.campaign?.groupme?.createAt || c.campaign.groupme.createAt === 'immediately', 'GroupMe createAt supports immediately only');
   if(c.revision!==undefined) assert(Number.isInteger(c.revision) && c.revision>=0, 'Invalid revision');
-  for(const channel of ['feed','story','groupme']) {
+  for(const channel of ['feed','story','groupme','linkedin']) {
     if(c.status?.[channel]!==undefined) assert(['pending','done','failed','skipped'].includes(c.status[channel]), `Invalid ${channel} status`);
     if(c.campaign?.[channel]?.enabled!==undefined) assert(typeof c.campaign[channel].enabled==='boolean', `Invalid ${channel} enabled flag`);
   }
@@ -60,7 +60,8 @@ function parts(date, timezone) {
   return Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: timezone, year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23' }).formatToParts(date).filter(p => p.type !== 'literal').map(p => [p.type, Number(p.value)]));
 }
 export function fireAt(campaign, channel, config) {
-  const cadence = { ...config.defaultCadence[channel], ...campaign.campaign?.[channel] };
+  const defaultCadence = config.defaultCadence?.[channel] || config.defaultCadence?.feed;
+  const cadence = { ...defaultCadence, ...campaign.campaign?.[channel] };
   assert(cadenceValid(cadence), `Invalid ${channel} cadence`);
   const p = parts(new Date(campaign.start), config.timezone);
   const day = new Date(Date.UTC(p.year,p.month-1,p.day-cadence.daysBefore));

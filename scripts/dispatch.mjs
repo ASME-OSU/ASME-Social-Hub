@@ -9,7 +9,7 @@ import { botAnnouncementText } from './groupme.mjs';
 
 function safeHint(error) {
   const message=String(error?.message || '');
-  if(/requires.*IG_USER_ID|requires.*IG_ACCESS_TOKEN|requires.*GROUPME_TOKEN|requires.*GROUPME_GROUP_ID|GROUPME_BOT_ID is required/.test(message)) return 'Configure the required Actions secrets, then retry after reconciling any recorded write intent.';
+  if(/requires.*IG_USER_ID|requires.*IG_ACCESS_TOKEN|requires.*GROUPME_TOKEN|requires.*GROUPME_GROUP_ID|GROUPME_BOT_ID is required|requires.*LINKEDIN/.test(message)) return 'Configure the required Actions secrets, then retry after reconciling any recorded write intent.';
   if(/quota exhausted/.test(message)) return 'Instagram publishing quota is exhausted; retry within the publishing window after quota resets.';
   if(/flyer|image\/jpeg|HTTPS/.test(message)) return 'Verify that the rendered JPEG is deployed and publicly reachable at the recorded image URL.';
   if(/reconcil|missing.*ID|Missing.*identifier/i.test(message)) return 'Inspect the remote account before clearing a recorded write intent.';
@@ -24,7 +24,7 @@ export async function dispatch({root=process.cwd(),now=new Date(),dryRun=false,s
   if(!dryRun) { await mkdir(path.dirname(lock),{recursive:true}); try { await mkdir(lock); } catch(e) { if(e.code==='EEXIST') throw new Error('Dispatcher lock exists; check for an active run before removing data/.dispatch-lock'); throw e; } }
   const actions=[];
   try {
-    if(!dryRun && !services) { const [ig,gm]=await Promise.all([import('./ig.mjs'),import('./groupme.mjs')]); services={ig:ig.createInstagramClient(),groupme:gm.createGroupMeClient(),postBotMessage:gm.postBotMessage}; }
+    if(!dryRun && !services) { const [ig,gm,li]=await Promise.all([import('./ig.mjs'),import('./groupme.mjs'),import('./linkedin.mjs')]); services={ig:ig.createInstagramClient(),groupme:gm.createGroupMeClient(),postBotMessage:gm.postBotMessage,linkedin:li.createLinkedInClient()}; }
     for(const c of await readCampaigns(root)) {
       if(c.demo || c.archived || c.year!==config.activeYear) continue;
       validateCampaign(c);
@@ -33,12 +33,51 @@ export async function dispatch({root=process.cwd(),now=new Date(),dryRun=false,s
       const save=async()=> { try { await writeJson(file,c); if(checkpoint) await checkpoint({root,file,campaign:c}); } catch(cause) { const error=new Error('Durable campaign checkpoint failed', {cause}); error.persistenceFailure=true; throw error; } };
       const log=(channel,message)=> { c.log.push({at:now.toISOString(),channel,message}); };
       if(!dryRun) { c.status??={}; c.results??={}; c.log??=[]; }
-      for(const channel of ['feed','story','groupme']) {
+      for(const channel of ['feed','story','groupme','linkedin']) {
         // Global integration switch also blocks updates, cancellations, and bot messages.
         if(channel==='groupme' && config.integrations?.groupme?.enabled===false) continue;
         const result=c.results?.[channel] || {};
         if(channel==='groupme' && config.integrations?.groupme?.mode==='bot') {
           await dispatchGroupMe({c,config,now,dryRun,services,save,log,actions});
+          continue;
+        }
+        if(channel==='linkedin') {
+          if(config.integrations?.linkedin?.enabled!==true) continue;
+          const disabled=c.campaign?.[channel]?.enabled===false;
+          if(disabled) {
+            if(!dryRun && !result.postId && c.status[channel]!=='skipped') { c.status[channel]='skipped'; c.results[channel]=result; result.skipReason='disabled'; log(channel,'Channel disabled'); await save(); }
+            continue;
+          }
+          if(c.campaign?.[channel]?.enabled!==true) continue;
+          if(!dryRun && result.skipReason==='disabled') { delete result.skipReason; c.status[channel]='pending'; await save(); }
+          if(result.postId || c.status?.[channel]==='done' || c.status?.[channel]==='skipped' || c.cancelled) continue;
+          const due=fireAt(c,channel,config);
+          if(now<due) continue;
+          if(now>=new Date(c.start) || +now-+due>86400000) { actions.push({id:c.id,channel,action:'skip',fireAt:due.toISOString()}); if(!dryRun) { c.status[channel]='skipped'; c.results[channel]=result; result.skipReason='publishing-window-missed'; log(channel,'Publishing window missed'); await save(); } continue; }
+          actions.push({id:c.id,channel,action:'publish',fireAt:due.toISOString()});
+          if(dryRun) continue;
+          c.results[channel]=result;
+          try {
+            if(result.publishAttemptedAt) throw new Error('Publication outcome requires reconciliation');
+            const imageUrl=result.image || c.flyers?.feed || c.images?.feed || (config.siteUrl ? `${config.siteUrl.replace(/\/$/,'')}/media/${c.year}/${c.id}-feed.jpg` : null);
+            result.image=imageUrl;
+            result.caption=captionFor(c,config);
+            result.publishAttemptedAt=now.toISOString(); await save();
+            try {
+              const published=await services.linkedin.publishPost({commentary:result.caption,imageUrl:result.image,organizationId:config.integrations?.linkedin?.organizationId});
+              result.postId=published.postId;
+              result.permalink=published.permalink;
+            } catch(e) { if(e.retrySafe) delete result.publishAttemptedAt; throw e; }
+            result.postedAt=now.toISOString(); delete result.error; c.status[channel]='done'; log(channel,'Published to LinkedIn'); await save();
+          } catch(error) {
+            if(error.persistenceFailure) throw error;
+            result.error={at:now.toISOString(),hint:safeHint(error),code:error.code && /^[A-Z_0-9]{1,40}$/.test(error.code)?error.code:'LINKEDIN_PUBLISH_FAILED',stage:result.publishAttemptedAt?'publish':'prepare'};
+            c.status[channel]='failed';
+            actions.at(-1).outcome='failed';
+            actions.at(-1).error=result.error;
+            log(channel,result.publishAttemptedAt?'LinkedIn publication outcome requires officer reconciliation before retry':'LinkedIn publishing failed');
+          }
+          await save();
           continue;
         }
         const disabled=c.campaign?.[channel]?.enabled===false;

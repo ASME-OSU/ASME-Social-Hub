@@ -73,6 +73,25 @@ At officer handoff, register a replacement bot with the same name/avatar under t
 
 For private delivery testing, create a separate bot in **ASME Bot Testing** and save its ID as `GROUPME_TEST_BOT_ID`. The **Test private GroupMe bot** workflow defaults to preview only. Selecting `send_test` sends one setup message with the separate test credential; this job never receives the production bot credential. Confirm the message appears in the private group. Production announcements remain disabled until explicitly enabled.
 
+## LinkedIn Setup
+
+1. In the **LinkedIn Developer Portal** (https://www.linkedin.com/developers/apps), create or select the app **ASME Ohio State Social Hub** associated with the **ASME OSU** organization page.
+2. Under the **Products** tab:
+   - Add **Share on LinkedIn** (instant, self-serve).
+   - Add **Sign In with LinkedIn using OpenID Connect** (instant, self-serve).
+   - Request access to **Community Management API** (provides `w_organization_social` for organization page posting).
+3. Under the **Settings** tab:
+   - Under **App settings / Company page**, click **Verify** to approve the association using an ASME OSU LinkedIn Page administrator account.
+4. Under the **Auth** tab:
+   - Configure Authorized Redirect URLs (e.g. `http://localhost:3000/callback`).
+   - Copy **Client ID** and **Client Secret**.
+5. In GitHub repository **Settings → Secrets and variables → Actions**:
+   - Add `LINKEDIN_ACCESS_TOKEN`: The OAuth 2.0 access token with `w_organization_social` scope.
+   - Add `LINKEDIN_ORGANIZATION_ID`: The numeric Organization ID for ASME OSU.
+6. In `config/chapter.json`:
+   - Set `"integrations.linkedin.enabled": true`.
+
+
 ## Optional advertising details
 
 Expand **Event extras** when creating or editing a campaign to add food details, RSVP link and deadline, audience, cost, preparation/dress, speaker/company, attendance benefit, and accessibility contact. Blank fields are omitted. RSVP deadlines use the chapter timezone, and links must use HTTPS without embedded credentials. Use an organizational contact appropriate for public advertising; these details are saved in the public repository.
