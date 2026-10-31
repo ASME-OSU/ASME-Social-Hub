@@ -18,7 +18,7 @@ export async function checkLinkedIn(browser,base){
  assert.match(await page.locator('#linkedin-setup-note').innerText(),/paused/);
  assert.match(await page.locator('#schedule-preview').innerText(),/LinkedIn[\s\S]*Nov 13[\s\S]*paused/);
  assert.doesNotMatch(await page.locator('#schedule-preview').innerText(),/All channels are off/);
- await page.locator('#preview-linkedin-post').click();
+ await page.locator('#artwork-preview [data-preview-format=linkedin]').click();
  assert.equal(await page.locator('#linkedin-preview-details').count(),0);
  assert.equal(await page.locator('#artwork-preview [data-preview-format=linkedin]').getAttribute('aria-pressed'),'true');
  assert.equal(await page.locator('#linkedin-preview-panel').evaluate(el=>Boolean(el.closest('.editor-preview-pane'))),true);

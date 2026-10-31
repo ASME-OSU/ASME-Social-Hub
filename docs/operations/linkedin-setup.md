@@ -17,7 +17,7 @@ Chapter Page: <https://www.linkedin.com/company/asme-osu/>. Its matched organiza
 
 ## While approval is pending
 
-Keep `integrations.linkedin.enabled` set to `false`. Officers can opt a campaign into **Schedule → LinkedIn Page post**, choose its own days-before/time, and enter an optional caption. Blank captions use the shared event caption. **Preview LinkedIn post** selects the LinkedIn tab in the shared right-hand preview pane. The same tab is available in the enlarged/mobile preview and saved campaign previews. LinkedIn uses the same ordered feed flyers even if Instagram feed posting is off. Duplicating a campaign starts LinkedIn off.
+Keep `integrations.linkedin.enabled` set to `false`. Officers can opt a campaign into **Schedule → LinkedIn Page post**, choose its own days-before/time, and enter an optional caption. Blank captions use the shared event caption. Select **LinkedIn** in the shared right-hand preview pane to review the post. The same tab is available in the enlarged/mobile preview and saved campaign previews. LinkedIn uses the same ordered feed flyers even if Instagram feed posting is off. Duplicating a campaign starts LinkedIn off.
 
 Review the privacy disclosure at `privacy.html`. After deployment, its URL is `https://asme-osu.github.io/ASME-Social-Hub/privacy.html`. Confirm the chapter's contact route and handling practices before entering it in either developer application. The original app's privacy-policy field was blank when inspected; the pending app's field has not been checked.
 
