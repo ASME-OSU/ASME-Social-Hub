@@ -18,9 +18,17 @@ export async function checkLinkedIn(browser,base){
  assert.match(await page.locator('#linkedin-setup-note').innerText(),/paused/);
  assert.match(await page.locator('#schedule-preview').innerText(),/LinkedIn[\s\S]*Nov 13[\s\S]*paused/);
  assert.doesNotMatch(await page.locator('#schedule-preview').innerText(),/All channels are off/);
- await page.locator('#linkedin-preview-details summary').click();
+ await page.locator('#preview-linkedin-post').click();
+ assert.equal(await page.locator('#linkedin-preview-details').count(),0);
+ assert.equal(await page.locator('#artwork-preview [data-preview-format=linkedin]').getAttribute('aria-pressed'),'true');
+ assert.equal(await page.locator('#linkedin-preview-panel').evaluate(el=>Boolean(el.closest('.editor-preview-pane'))),true);
+ assert.equal(await page.locator('#linkedin-preview-panel').isVisible(),true);
  assert.equal(await page.locator('.linkedin-caption').innerText(),'Join our workshop (free) #ASME');
- await page.locator('#linkedin-controls').screenshot({path:'/private/tmp/linkedin-editor-desktop.png'});
+ await page.locator('.editor-preview-pane').screenshot({path:'/private/tmp/linkedin-editor-desktop.png'});
+ await page.locator('#enlarge-preview').click();assert.equal(await page.locator('#preview-dialog #linkedin-preview-panel').isVisible(),true);
+ await page.locator('#preview-dialog [data-preview-format=feed]').click();assert.equal(await page.locator('#linkedin-preview-panel').isVisible(),false);
+ await page.locator('#preview-dialog [data-preview-format=linkedin]').click();await page.locator('#close-preview').click();
+ await page.locator('.editor-preview-pane #linkedin-preview-panel').waitFor({state:'visible'});
  const downloaded=page.waitForEvent('download');await page.locator('#save-button').click();const download=await downloaded;
  const c=JSON.parse(await readFile(await download.path(),'utf8'));
  assert.deepEqual(c.campaign.linkedin,{enabled:true,daysBefore:2,time:'09:30',caption:'Join our workshop (free) #ASME'});
@@ -29,13 +37,16 @@ export async function checkLinkedIn(browser,base){
  await page.route('**/data/archive-index.json',route=>route.fulfill({json:{campaigns:[{...c,status:{...c.status,linkedin:'done'},results:{...c.results,linkedin:{postId:'urn:li:share:123',caption:'Recorded copy',postedAt:'2026-10-31T12:00:00Z',permalink:'https://www.linkedin.com/feed/update/urn:li:share:123/'}}}]}}));
  await page.reload();await page.locator('[data-detail]').first().click();
  assert.match(await page.locator('.detail-posting').innerText(),/LinkedIn[\s\S]*Posted/);
- await page.locator('[data-detail-info=details]').click();
- await page.getByText('LinkedIn post',{exact:true}).click();
+ await page.locator('[data-detail-preview=linkedin]').click();
  assert.equal(await page.locator('#detail .linkedin-caption').innerText(),'Recorded copy');
  await page.locator('[data-edit]').click();assert.equal(await form.locator('[name=linkedinEnabled]').isChecked(),true);assert.equal(await form.locator('[name=linkedinCaption]').inputValue(),'Join our workshop (free) #ASME');
  await page.setViewportSize({width:390,height:844});await page.locator('[data-editor-section=schedule]').count().then(async count=>{if(count)await page.locator('[data-editor-section=schedule]').click();});
- await page.locator('#linkedin-controls').scrollIntoViewIfNeeded();
- await page.locator('#linkedin-controls').screenshot({path:'/private/tmp/linkedin-editor-mobile.png'});
+ await page.locator('#artwork-preview [data-preview-format=linkedin]').click();
+ await page.locator('#mobile-preview').click();
+ assert.equal(await page.locator('#preview-dialog #linkedin-preview-panel').isVisible(),true);
+ await page.locator('#preview-dialog').screenshot({path:'/private/tmp/linkedin-editor-mobile.png'});
+ for(const width of [390,320]){await page.setViewportSize({width,height:844});for(const theme of ['light','dark']){await page.emulateMedia({colorScheme:theme});assert.equal(await page.locator('#preview-dialog').evaluate(el=>el.scrollWidth<=el.clientWidth+1),true);assert.equal(await page.locator('#preview-dialog [data-preview-format=linkedin]').isVisible(),true);}}
+ await page.locator('#close-preview').click();
  assert.ok(await page.locator('#linkedin-controls').evaluate(el=>el.getBoundingClientRect().width<=390));
- assert.deepEqual(errors,[]);await page.close();console.log('LinkedIn browser checks passed: independent schedule, paused setup, caption preview, export, saved receipts, restored editing, and mobile layout.');
+ assert.deepEqual(errors,[]);await page.close();console.log('LinkedIn browser checks passed: independent schedule, paused setup, caption preview, export, saved receipts, restored editing, shared right-pane/enlarged tabs, theme colors, and mobile layout.');
 }

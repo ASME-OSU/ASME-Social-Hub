@@ -88,10 +88,10 @@ export async function checkPreviewPane(browser,base){
   for(const [width,height]of [[1440,1000],[320,640],[390,844],[768,1024],[844,390],[667,320]]){
    await page.setViewportSize({width,height});
    let toolbarBaseline;
-   for(const format of ['feed','story','groupme']){
+   for(const format of ['feed','story','linkedin','groupme']){
     await page.locator(`#preview-dialog [data-preview-format=${format}]`).click();
     await page.waitForFunction(format=>document.querySelector('#preview-dialog').dataset.format===format,format);
-    if(format!=='groupme'){await page.waitForFunction(()=>document.querySelector('#artwork-preview-frame').style.visibility==='visible');const mediaBox=await page.locator('.expanded-preview-stage').boundingBox();assert.ok(mediaBox.width>=(format==='feed'?150:90)&&mediaBox.height>=120,`${width}x${height} ${format}: artwork stays large enough to inspect (${mediaBox.width}×${mediaBox.height})`);}
+    if(!['groupme','linkedin'].includes(format)){await page.waitForFunction(()=>document.querySelector('#artwork-preview-frame').style.visibility==='visible');const mediaBox=await page.locator('.expanded-preview-stage').boundingBox();assert.ok(mediaBox.width>=(format==='feed'?150:90)&&mediaBox.height>=120,`${width}x${height} ${format}: artwork stays large enough to inspect (${mediaBox.width}×${mediaBox.height})`);}
     const layout=await page.locator('#preview-dialog').evaluate(dialog=>{
      const controls=[...dialog.querySelectorAll('.preview-dialog-heading button,.preview-dialog-heading select')].filter(el=>el.getClientRects().length&&getComputedStyle(el).visibility!=='hidden');
      return {fits:dialog.scrollWidth<=dialog.clientWidth,controls:controls.map(el=>{const r=el.getBoundingClientRect();const hit=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2);return {label:el.textContent.trim()||el.getAttribute('aria-label'),x:r.x,y:r.y,width:r.width,height:r.height,right:r.right,bottom:r.bottom,reachable:hit===el||el.contains(hit)};})};
@@ -101,7 +101,7 @@ export async function checkPreviewPane(browser,base){
     assert.equal(await page.locator('#expanded-toggle-preview-caption').isVisible(),true,'Caption control remains visible');
     assert.equal(await page.locator('#preview-zoom').isVisible(),true,'Zoom control remains visible');
     assert.equal(await page.locator('#expanded-toggle-preview-caption').isDisabled(),format!=='feed');
-    assert.equal(await page.locator('#preview-zoom').isDisabled(),format==='groupme');
+    assert.equal(await page.locator('#preview-zoom').isDisabled(),['groupme','linkedin'].includes(format));
     const toolbar=await page.locator('.preview-dialog-heading').evaluate(heading=>({height:heading.getBoundingClientRect().height,positions:[...heading.querySelectorAll('[data-preview-format],#close-preview,.preview-zoom-label,#expanded-toggle-preview-caption')].map(el=>{const r=el.getBoundingClientRect();return [r.x,r.y,r.width,r.height];})}));
     if(!toolbarBaseline)toolbarBaseline=toolbar;
     else assert.deepEqual(toolbar,toolbarBaseline,`${width}x${height}: toolbar slots stay fixed when selecting ${format}`);
