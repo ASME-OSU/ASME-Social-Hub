@@ -32,6 +32,10 @@
     "story": {
       "daysBefore": 3,
       "time": "12:00"
+    },
+    "linkedin": {
+      "daysBefore": 7,
+      "time": "12:00"
     }
   },
   "hashtags": [
@@ -76,7 +80,10 @@
     },
     "linkedin": {
       "enabled": false,
-      "organizationId": ""
+      "organizationUrn": "urn:li:organization:116454259",
+      "publishingAppId": "264214085",
+      "publishingClientId": "863xwuy43av292",
+      "organizationId": "116454259"
     }
   },
   "hubUrl": "https://asme-osu.github.io/ASME-HUB/",

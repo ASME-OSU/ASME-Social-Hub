@@ -1,3 +1,4 @@
+import {linkedinEnabled,linkedinPlan} from '../docs/linkedin.mjs';
 import {groupMeDue,groupMeCadence} from '../docs/groupme-schedule.mjs';
 import {readFile} from 'node:fs/promises';
 import {resolve} from 'node:path';
@@ -15,6 +16,7 @@ function deadline(campaign, channel, config) {
   catch { return {dueAt:null,scheduleInvalid:true}; }
 }
 function channelHealth(campaign, channel, config) {
+  if(channel==='linkedin')return {enabled:linkedinEnabled(config)&&campaign.campaign?.linkedin?.enabled===true,optedIn:campaign.campaign?.linkedin?.enabled===true,paused:!linkedinEnabled(config),...deadline({...campaign,campaign:{...campaign.campaign,linkedin:linkedinPlan(campaign,config)}},channel,config),immediate:false,schedule:cadence(linkedinPlan(campaign,config)),status:text(campaign.status?.linkedin),postId:text(campaign.results?.linkedin?.postId),postedAt:timestamp(campaign.results?.linkedin?.postedAt),publishAttemptedAt:timestamp(campaign.results?.linkedin?.publishAttemptedAt)};
   const schedule=campaign.campaign?.[channel], result=campaign.results?.[channel];
   const groupme=channel==='groupme',bot=groupme && config.integrations?.groupme?.mode==='bot';
   const enabled=groupme
@@ -40,7 +42,7 @@ async function optionalJson(file) {
 export function postingHealth({config,campaigns,candidates,tokenWarning,now=new Date()}) {
   return {
     schemaVersion:1,generatedAt:now.toISOString(),activeYear:text(config.activeYear),
-    config:{timezone:text(config.timezone),defaultCadence:{feed:cadence(config.defaultCadence?.feed),story:cadence(config.defaultCadence?.story)},groupme:{enabled:config.integrations?.groupme?.enabled!==false,mode:config.integrations?.groupme?.mode==='bot'?'bot':'native'}},
+    config:{timezone:text(config.timezone),defaultCadence:{feed:cadence(config.defaultCadence?.feed),story:cadence(config.defaultCadence?.story),linkedin:cadence(linkedinPlan({},config))},linkedin:{enabled:linkedinEnabled(config)},groupme:{enabled:config.integrations?.groupme?.enabled!==false,mode:config.integrations?.groupme?.mode==='bot'?'bot':'native'}},
     tokenWarning:tokenWarning ? {status:text(tokenWarning.status),warning:tokenWarning.warning===true,configured:tokenWarning.configured===true,checkedAt:timestamp(tokenWarning.checkedAt),expiresAt:timestamp(tokenWarning.expiresAt),daysRemaining:Number.isFinite(tokenWarning.daysRemaining)?tokenWarning.daysRemaining:null} : null,
     calendar:{feedUrl:text(config.icalUrl),generatedAt:timestamp(candidates?.generatedAt),candidates:(Array.isArray(candidates?.events)?candidates.events:[]).map(event=>{
       const feed=deadline({start:event.start},'feed',config),story=deadline({start:event.start},'story',config);
@@ -49,7 +51,7 @@ export function postingHealth({config,campaigns,candidates,tokenWarning,now=new 
     campaigns:campaigns.map(campaign=>({
       id:text(campaign.id),year:text(campaign.year),title:text(campaign.title),start:text(campaign.start),end:text(campaign.end),
       demo:Boolean(campaign.demo),cancelled:Boolean(campaign.cancelled),archived:Boolean(campaign.archived),source:sourceIdentity(campaign.source),revision:integer(campaign.revision)??0,
-      channels:Object.fromEntries(['feed','story','groupme'].map(channel=>[channel,channelHealth(campaign,channel,config)])),
+      channels:Object.fromEntries(['feed','story','groupme','linkedin'].map(channel=>[channel,channelHealth(campaign,channel,config)])),
     })),
   };
 }

@@ -73,25 +73,6 @@ At officer handoff, register a replacement bot with the same name/avatar under t
 
 For private delivery testing, create a separate bot in **ASME Bot Testing** and save its ID as `GROUPME_TEST_BOT_ID`. The **Test private GroupMe bot** workflow defaults to preview only. Selecting `send_test` sends one setup message with the separate test credential; this job never receives the production bot credential. Confirm the message appears in the private group. Production announcements remain disabled until explicitly enabled.
 
-## LinkedIn Setup
-
-1. In the **LinkedIn Developer Portal** (https://www.linkedin.com/developers/apps), create or select the app **ASME Ohio State Social Hub** associated with the **ASME OSU** organization page.
-2. Under the **Products** tab:
-   - Add **Share on LinkedIn** (instant, self-serve).
-   - Add **Sign In with LinkedIn using OpenID Connect** (instant, self-serve).
-   - Request access to **Community Management API** (provides `w_organization_social` for organization page posting).
-3. Under the **Settings** tab:
-   - Under **App settings / Company page**, click **Verify** to approve the association using an ASME OSU LinkedIn Page administrator account.
-4. Under the **Auth** tab:
-   - Configure Authorized Redirect URLs (e.g. `http://localhost:3000/callback`).
-   - Copy **Client ID** and **Client Secret**.
-5. In GitHub repository **Settings → Secrets and variables → Actions**:
-   - Add `LINKEDIN_ACCESS_TOKEN`: The OAuth 2.0 access token with `w_organization_social` scope.
-   - Add `LINKEDIN_ORGANIZATION_ID`: The numeric Organization ID for ASME OSU.
-6. In `config/chapter.json`:
-   - Set `"integrations.linkedin.enabled": true`.
-
-
 ## Optional advertising details
 
 Expand **Event extras** when creating or editing a campaign to add food details, RSVP link and deadline, audience, cost, preparation/dress, speaker/company, attendance benefit, and accessibility contact. Blank fields are omitted. RSVP deadlines use the chapter timezone, and links must use HTTPS without embedded credentials. Use an organizational contact appropriate for public advertising; these details are saved in the public repository.
@@ -135,3 +116,7 @@ The manual preview starts a GitHub Actions workflow even though the workflow its
 In [fine-grained token settings](https://github.com/settings/personal-access-tokens), edit the token used by this dashboard. Confirm the resource owner is ASME-OSU, repository access includes ASME-Social-Hub, and repository permissions include Contents read/write and Actions read/write. Save the change; if GitHub requires approval, have an ASME-OSU owner approve the updated permissions. Reconnect in dashboard Settings, then explicitly request Preview dispatcher again. This does not change publishing credentials in Actions secrets. A 403 may also reflect organization policy or your account’s repository role; if permissions and approval are correct, ask an organization owner to review those restrictions. A rate-limit response requires waiting rather than adding permissions.
 
 See GitHub’s [workflow dispatch permissions](https://docs.github.com/en/rest/actions/workflows#create-a-workflow-dispatch-event) and [REST API access troubleshooting](https://docs.github.com/en/rest/using-the-rest-api/troubleshooting-the-rest-api#resource-not-accessible).
+
+## LinkedIn Page publishing
+
+The integration is prepared and paused pending Community Management approval and credentialed acceptance testing. See [LinkedIn setup](docs/operations/linkedin-setup.md) for the two chapter applications, required Actions secrets, activation, token renewal, and recovery. Officers can prepare an independently scheduled LinkedIn post and caption now; existing campaigns remain opted out. The privacy disclosure is available at [privacy.html](docs/privacy.html) after deployment.

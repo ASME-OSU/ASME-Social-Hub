@@ -14,6 +14,8 @@ export function validateConfig(c) {
   try { new Intl.DateTimeFormat('en', { timeZone: c.timezone }); } catch { throw new Error('Invalid timezone'); }
   assert(/^\d{4}-\d{2}$/.test(c.activeYear), 'Invalid activeYear');
   for (const ch of ['feed', 'story']) assert(cadenceValid(c.defaultCadence?.[ch]), `Invalid ${ch} cadence`);
+  if(c.defaultCadence?.linkedin) assert(cadenceValid(c.defaultCadence.linkedin),'Invalid LinkedIn cadence');
+  if(c.integrations?.linkedin?.enabled!==undefined) assert(typeof c.integrations.linkedin.enabled==='boolean','Invalid LinkedIn integration enabled flag');
   return c;
 }
 export function validateCampaign(c) {
@@ -34,6 +36,7 @@ export function validateCampaign(c) {
   validateAdvertising(c.advertising);
   validateStoryDesign(c.storyDesign);
   for (const ch of ['feed','story','linkedin']) if (c.campaign?.[ch]) assert(cadenceValid(c.campaign[ch]), `Invalid ${ch} cadence`);
+  if(c.campaign?.linkedin?.caption!==undefined) assert(typeof c.campaign.linkedin.caption==='string'&&c.campaign.linkedin.caption.length<=3000,'LinkedIn caption must be at most 3000 characters');
   const gm=c.campaign?.groupme;
   if(gm){
     if(gm.announce!==undefined)assert(typeof gm.announce==='boolean','Invalid GroupMe announce flag');

@@ -221,12 +221,14 @@ test('linkedin channel publishes post, records durable intent, and ignores disab
  let publishCalls = 0;
  const services = {
   linkedin: {
-   publishPost: async ({commentary, imageUrl, organizationId}) => {
+   checkReady:()=>({owner:'urn:li:organization:123456'}),
+   uploadImage:async imageUrl=>{assert.equal(imageUrl,'https://example.org/feed.jpg');return 'urn:li:image:fixture';},
+   waitForImage:async()=>{},
+   publish: async ({caption}) => {
     publishCalls++;
-    assert.equal(organizationId, '123456');
-    assert.equal(imageUrl, 'https://example.org/feed.jpg');
-    assert.ok(commentary.includes('Meeting'));
-    return { postId: 'urn:li:share:112233', permalink: 'https://www.linkedin.com/feed/update/urn%3Ali%3Ashare%3A112233' };
+    assert.ok(caption.includes('Meeting'));
+    assert.ok(JSON.parse(await readFile(file,'utf8')).results.linkedin.publishAttemptedAt);
+    return {postId:'urn:li:share:112233',permalink:'https://www.linkedin.com/feed/update/urn%3Ali%3Ashare%3A112233'};
    }
   },
   ig: {},

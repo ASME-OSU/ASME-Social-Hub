@@ -45,3 +45,5 @@ Builds generate a content-versioned service worker. Updates wait until all hub w
 Appearance follows the device by default in the website and installed app. Settings → Appearance offers Follow device, Light, or Dark; the header sun/moon button sets a manual override. Choose Follow device to resume automatic changes.
 
 GroupMe bot announcements are configured under Schedule. The initial message has its own posting time; an optional follow-up defaults to one day before the event. Choose Event details, Friendly invite, or Quick bulletin for each message, or shuffle to select another format at random. Previews and dispatch share the saved formats. Each send records a separate durable attempt and receipt; a follow-up requires a confirmed initial send. Existing campaigns keep their previous timing until edited, and follow-ups are off by default.
+
+LinkedIn Page posting can be prepared under Schedule with its own time and optional caption. The integration remains paused while Community Management approval and credentials are pending; existing campaigns stay opted out. See [LinkedIn setup](docs/operations/linkedin-setup.md) before enabling it.

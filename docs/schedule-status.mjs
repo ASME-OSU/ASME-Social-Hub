@@ -1,3 +1,4 @@
+import {linkedinEnabled,linkedinPlan} from './linkedin.mjs';
 import {groupMeDue} from './groupme-schedule.mjs';
 import {fireTime} from './time.mjs';
 
@@ -6,16 +7,17 @@ function reopenCampaign(c, previous, config, now=new Date()) {
   now=+new Date(now);
   if(!previous || c.cancelled || c.deletedAt || c.archived || c.demo || c.year!==config.activeYear || !(Date.parse(c.start)>+now)) return c;
   c=structuredClone(c);
-  for(const channel of ['feed','story','groupme']) {
+  for(const channel of ['feed','story','groupme','linkedin']) {
     const result=c.results?.[channel]||{};
     const lastLog=(previous.log||[]).filter(entry=>entry.channel===channel).at(-1);
     const legacyMissed=!result.skipReason && lastLog?.message==='Publishing window missed';
     if(c.status?.[channel]!=='skipped' || previous.status?.[channel]==='done' || !(legacyMissed || ['publishing-window-missed','announcement-window-missed','event-started'].includes(result.skipReason))) continue;
-    if(['publishAttemptedAt','containerId','mediaId','postedAt','botAttemptedAt','botSentAt','createAttemptedAt','eventId','createdAt','deletedAt'].some(k=>result[k]||previous.results?.[channel]?.[k])) continue;
+    if(['publishAttemptedAt','containerId','postId','imageUrns','mediaId','postedAt','botAttemptedAt','botSentAt','createAttemptedAt','eventId','createdAt','deletedAt'].some(k=>result[k]||previous.results?.[channel]?.[k])) continue;
+    if(channel==='linkedin'&&(!linkedinEnabled(config)||c.campaign?.linkedin?.enabled!==true))continue;
     const bot=channel==='groupme' && config.integrations?.groupme?.mode==='bot';
     if(channel==='groupme' && (config.integrations?.groupme?.enabled===false || !bot)) continue;
     if(channel==='groupme' ? !(c.campaign?.groupme?.enabled===true && c.campaign?.groupme?.announce===true && previous.campaign?.groupme?.enabled===true && previous.campaign?.groupme?.announce===true) : c.campaign?.[channel]?.enabled!==true || previous.campaign?.[channel]?.enabled===false) continue;
-    const schedule=x=>bot?groupMeDue(x,config):fireTime(x,channel,config.timezone);
+    const schedule=x=>bot?groupMeDue(x,config):fireTime(channel==='linkedin'?{...x,campaign:{...x.campaign,linkedin:linkedinPlan(x,config)}}:x,channel,config.timezone);
     try {
       const due=schedule(c),before=schedule(previous);
       if(due===before || !(Date.parse(due)>+now)) continue;
@@ -36,7 +38,7 @@ export function reopenMissedChannels(c, previous, config, now=new Date()) {
     if(!before)return status;
     const year=next.year||before.year||'legacy';
     const results={...before.results,...next.results};
-    for(const channel of ['feed','story','groupme'])results[channel]={...before.results?.[channel],...next.results?.[channel]};
+    for(const channel of ['feed','story','groupme','linkedin'])results[channel]={...before.results?.[channel],...next.results?.[channel]};
     const draft={...before,...next,year,status:{...before.status,...status},results};
     const chapter={activeYear:year,timezone:zone,integrations:{groupme:{enabled:groupmeBot,mode:groupmeBot?'bot':'native'}}};
     return reopenCampaign(draft,{...before,year},chapter,at).status;

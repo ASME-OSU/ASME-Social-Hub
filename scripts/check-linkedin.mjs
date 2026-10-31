@@ -1,0 +1,41 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+export async function checkLinkedIn(browser,base){
+ const page=await browser.newPage({serviceWorkers:'block',viewport:{width:1280,height:1000}}),errors=[];
+ page.on('pageerror',error=>errors.push(error.message));
+ await page.clock.install({time:new Date('2026-10-31T12:00:00Z')});
+ await page.route('**/data/archive-index.json',route=>route.fulfill({json:{campaigns:[]}}));
+ await page.goto(base);await page.locator('#new-campaign').click();
+ const form=page.locator('#campaign-form');
+ await form.locator('[name=title]').fill('LinkedIn preparation');
+ await form.locator('[name=start]').fill('2026-11-15T18:00');await form.locator('[name=end]').fill('2026-11-15T19:00');
+ await form.locator('[name=location]').fill('Scott Lab');
+ await form.locator('[name=feedEnabled]').uncheck();await form.locator('[name=storyEnabled]').uncheck();
+ assert.equal(await form.locator('[name=linkedinEnabled]').isChecked(),false);
+ await form.locator('[name=linkedinEnabled]').check();
+ await form.locator('[name=linkedinDays]').fill('2');await form.locator('[name=linkedinTime]').fill('09:30');
+ await form.locator('[name=linkedinCaption]').fill('Join our workshop (free) #ASME');
+ assert.match(await page.locator('#linkedin-setup-note').innerText(),/paused/);
+ assert.match(await page.locator('#schedule-preview').innerText(),/LinkedIn[\s\S]*Nov 13[\s\S]*paused/);
+ assert.doesNotMatch(await page.locator('#schedule-preview').innerText(),/All channels are off/);
+ await page.locator('#linkedin-preview-details summary').click();
+ assert.equal(await page.locator('.linkedin-caption').innerText(),'Join our workshop (free) #ASME');
+ await page.locator('#linkedin-controls').screenshot({path:'/private/tmp/linkedin-editor-desktop.png'});
+ const downloaded=page.waitForEvent('download');await page.locator('#save-button').click();const download=await downloaded;
+ const c=JSON.parse(await readFile(await download.path(),'utf8'));
+ assert.deepEqual(c.campaign.linkedin,{enabled:true,daysBefore:2,time:'09:30',caption:'Join our workshop (free) #ASME'});
+ assert.equal(c.status.linkedin,'pending');assert.equal(c.campaign.feed.enabled,false);
+ // Review a saved opt-in and its receipt through the existing detail/editor flow.
+ await page.route('**/data/archive-index.json',route=>route.fulfill({json:{campaigns:[{...c,status:{...c.status,linkedin:'done'},results:{...c.results,linkedin:{postId:'urn:li:share:123',caption:'Recorded copy',postedAt:'2026-10-31T12:00:00Z',permalink:'https://www.linkedin.com/feed/update/urn:li:share:123/'}}}]}}));
+ await page.reload();await page.locator('[data-detail]').first().click();
+ assert.match(await page.locator('.detail-posting').innerText(),/LinkedIn[\s\S]*Posted/);
+ await page.locator('[data-detail-info=details]').click();
+ await page.getByText('LinkedIn post',{exact:true}).click();
+ assert.equal(await page.locator('#detail .linkedin-caption').innerText(),'Recorded copy');
+ await page.locator('[data-edit]').click();assert.equal(await form.locator('[name=linkedinEnabled]').isChecked(),true);assert.equal(await form.locator('[name=linkedinCaption]').inputValue(),'Join our workshop (free) #ASME');
+ await page.setViewportSize({width:390,height:844});await page.locator('[data-editor-section=schedule]').count().then(async count=>{if(count)await page.locator('[data-editor-section=schedule]').click();});
+ await page.locator('#linkedin-controls').scrollIntoViewIfNeeded();
+ await page.locator('#linkedin-controls').screenshot({path:'/private/tmp/linkedin-editor-mobile.png'});
+ assert.ok(await page.locator('#linkedin-controls').evaluate(el=>el.getBoundingClientRect().width<=390));
+ assert.deepEqual(errors,[]);await page.close();console.log('LinkedIn browser checks passed: independent schedule, paused setup, caption preview, export, saved receipts, restored editing, and mobile layout.');
+}

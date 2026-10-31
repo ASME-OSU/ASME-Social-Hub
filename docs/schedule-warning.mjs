@@ -1,8 +1,9 @@
+import {linkedinEnabled,linkedinPlan} from './linkedin.mjs';
 import {groupMeCadence,groupMeDue} from './groupme-schedule.mjs';
 import {timeZoneName} from './display-time.mjs';
 import {fireTime} from './time.mjs';
 
-const labels={feed:'Instagram feed',story:'Instagram story',groupme:'GroupMe announcement'};
+const labels={feed:'Instagram feed',story:'Instagram story',linkedin:'LinkedIn',groupme:'GroupMe announcement'};
 const WINDOW_MS=24*60*60*1000;
 
 // Mirrors the dispatcher's 24-hour catch-up window; a past due time alone
@@ -11,19 +12,20 @@ export function scheduleWarnings(c, config, now=new Date()) {
   const current=+new Date(now),start=Date.parse(c.start);
   if(!Number.isFinite(current)||!Number.isFinite(start)||c.cancelled||c.deletedAt||c.demo||c.archived||c.year!==config.activeYear)return [];
   const warnings=[];
-  for(const [channel,kind] of [['feed','initial'],['story','initial'],['groupme','initial'],['groupme','followUp']]) {
+  for(const [channel,kind] of [['linkedin','initial'],['feed','initial'],['story','initial'],['groupme','initial'],['groupme','followUp']]) {
     const followUp=kind==='followUp';
     if(followUp&&(!c.campaign?.groupme?.followUp?.enabled||!c.results?.groupme?.botSentAt))continue;
     const result=(followUp?c.results?.groupme?.followUp:c.results?.[channel])||{},state=followUp?result.status:c.status?.[channel];
-    if(state==='done'||['mediaId','postedAt','publishAttemptedAt','botSentAt','botAttemptedAt','eventId','createAttemptedAt'].some(key=>result[key]))continue;
+    if(state==='done'||['postId','mediaId','postedAt','publishAttemptedAt','botSentAt','botAttemptedAt','eventId','createAttemptedAt'].some(key=>result[key]))continue;
     const lastLog=(c.log||[]).filter(entry=>entry.channel===channel).at(-1);
     const skippedMissed=state==='skipped'&&(['publishing-window-missed','announcement-window-missed','event-started'].includes(result.skipReason)||(!result.skipReason&&lastLog?.message==='Publishing window missed'));
     // A skipped channel never becomes due just because its time is changed.
     // Unrelated skips have their own cause and must not imply late eligibility.
     if(state==='skipped'&&!skippedMissed)continue;
+    if(channel==='linkedin'&&!linkedinEnabled(config))continue;
     const bot=channel==='groupme';
     if(bot ? (config.integrations?.groupme?.enabled===false||config.integrations?.groupme?.mode!=='bot'||c.campaign?.groupme?.enabled!==true||c.campaign?.groupme?.announce!==true) : c.campaign?.[channel]?.enabled!==true)continue;
-    const cadence=bot?groupMeCadence(c,config,kind):{...config.defaultCadence?.[channel],...c.campaign?.[channel],enabled:true};
+    const cadence=channel==='linkedin'?linkedinPlan(c,config):bot?groupMeCadence(c,config,kind):{...config.defaultCadence?.[channel],...c.campaign?.[channel],enabled:true};
     if(!Number.isInteger(cadence.daysBefore)||cadence.daysBefore<0||cadence.daysBefore>365||!/^([01]\d|2[0-3]):[0-5]\d$/.test(cadence.time))continue;
     let due;
     try {due=bot?groupMeDue(c,config,kind):fireTime({...c,campaign:{...c.campaign,[channel]:cadence}},channel,config.timezone);}catch{continue;}

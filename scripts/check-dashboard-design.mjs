@@ -24,7 +24,7 @@ export async function checkDashboardDesign(browser,base){
  const baselineSources=baseline?Object.fromEntries(['docs/app.js','docs/styles.css','docs/index.html'].map(path=>[path,execFileSync('git',['show',`HEAD:${path}`],{encoding:'utf8'})])):null;
  await mkdir(output,{recursive:true});
  for(const [width,height]of [[1440,900],[1440,778],[390,844],[320,740]])for(const theme of ['light','dark'])for(const health of ['healthy','stale']){
-  const context=await browser.newContext({viewport:{width,height},colorScheme:theme,reducedMotion:'reduce',timezoneId:'America/Los_Angeles'});
+  const context=await browser.newContext({serviceWorkers:'block',viewport:{width,height},colorScheme:theme,reducedMotion:'reduce',timezoneId:'America/Los_Angeles'});
   try{
    const page=await context.newPage(),errors=[],requests=[];let listedCampaigns=campaigns;
    await page.clock.install({time:new Date('2026-10-20T16:00:00Z')});page.on('pageerror',error=>errors.push(error.message));

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-31T20:37:53.004Z",
+  "generatedAt": "2026-10-31T22:32:11.661Z",
   "activeYear": "2026-27",
   "config": {
     "timezone": "America/New_York",
@@ -12,7 +12,14 @@
       "story": {
         "daysBefore": 3,
         "time": "12:00"
+      },
+      "linkedin": {
+        "daysBefore": 7,
+        "time": "12:00"
       }
+    },
+    "linkedin": {
+      "enabled": false
     },
     "groupme": {
       "enabled": true,
@@ -958,6 +965,22 @@
           "publishAttemptedAt": null,
           "createAttemptedAt": null,
           "botAttemptedAt": null
+        },
+        "linkedin": {
+          "enabled": false,
+          "optedIn": false,
+          "paused": true,
+          "dueAt": "2025-10-15T16:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "daysBefore": 7,
+            "time": "12:00"
+          },
+          "status": null,
+          "postId": null,
+          "postedAt": null,
+          "publishAttemptedAt": null
         }
       }
     },
@@ -1045,6 +1068,22 @@
           "publishAttemptedAt": null,
           "createAttemptedAt": null,
           "botAttemptedAt": "2026-10-21T14:59:17.343Z"
+        },
+        "linkedin": {
+          "enabled": false,
+          "optedIn": false,
+          "paused": true,
+          "dueAt": "2026-10-15T16:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "daysBefore": 7,
+            "time": "12:00"
+          },
+          "status": null,
+          "postId": null,
+          "postedAt": null,
+          "publishAttemptedAt": null
         }
       }
     },
@@ -1132,6 +1171,22 @@
           "publishAttemptedAt": null,
           "createAttemptedAt": null,
           "botAttemptedAt": "2026-10-19T22:46:29.582Z"
+        },
+        "linkedin": {
+          "enabled": false,
+          "optedIn": false,
+          "paused": true,
+          "dueAt": "2026-10-16T16:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "daysBefore": 7,
+            "time": "12:00"
+          },
+          "status": null,
+          "postId": null,
+          "postedAt": null,
+          "publishAttemptedAt": null
         }
       }
     },
@@ -1219,6 +1274,22 @@
           "publishAttemptedAt": null,
           "createAttemptedAt": null,
           "botAttemptedAt": null
+        },
+        "linkedin": {
+          "enabled": false,
+          "optedIn": false,
+          "paused": true,
+          "dueAt": "2026-10-21T16:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "daysBefore": 7,
+            "time": "12:00"
+          },
+          "status": null,
+          "postId": null,
+          "postedAt": null,
+          "publishAttemptedAt": null
         }
       }
     },
@@ -1306,6 +1377,22 @@
           "publishAttemptedAt": null,
           "createAttemptedAt": null,
           "botAttemptedAt": "2026-10-27T16:52:58.078Z"
+        },
+        "linkedin": {
+          "enabled": false,
+          "optedIn": false,
+          "paused": true,
+          "dueAt": "2026-10-22T16:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "daysBefore": 7,
+            "time": "12:00"
+          },
+          "status": null,
+          "postId": null,
+          "postedAt": null,
+          "publishAttemptedAt": null
         }
       }
     },
@@ -1393,6 +1480,22 @@
           "publishAttemptedAt": null,
           "createAttemptedAt": null,
           "botAttemptedAt": null
+        },
+        "linkedin": {
+          "enabled": false,
+          "optedIn": false,
+          "paused": true,
+          "dueAt": "2026-10-28T16:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "daysBefore": 7,
+            "time": "12:00"
+          },
+          "status": null,
+          "postId": null,
+          "postedAt": null,
+          "publishAttemptedAt": null
         }
       }
     },
@@ -1480,6 +1583,22 @@
           "publishAttemptedAt": null,
           "createAttemptedAt": null,
           "botAttemptedAt": "2026-10-29T16:58:18.620Z"
+        },
+        "linkedin": {
+          "enabled": false,
+          "optedIn": false,
+          "paused": true,
+          "dueAt": "2026-10-29T16:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "daysBefore": 7,
+            "time": "12:00"
+          },
+          "status": null,
+          "postId": null,
+          "postedAt": null,
+          "publishAttemptedAt": null
         }
       }
     },
@@ -1567,6 +1686,22 @@
           "publishAttemptedAt": null,
           "createAttemptedAt": null,
           "botAttemptedAt": null
+        },
+        "linkedin": {
+          "enabled": false,
+          "optedIn": false,
+          "paused": true,
+          "dueAt": "2026-11-05T17:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "daysBefore": 7,
+            "time": "12:00"
+          },
+          "status": null,
+          "postId": null,
+          "postedAt": null,
+          "publishAttemptedAt": null
         }
       }
     },
@@ -1654,6 +1789,22 @@
           "publishAttemptedAt": null,
           "createAttemptedAt": null,
           "botAttemptedAt": null
+        },
+        "linkedin": {
+          "enabled": false,
+          "optedIn": false,
+          "paused": true,
+          "dueAt": "2026-11-05T17:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "daysBefore": 7,
+            "time": "12:00"
+          },
+          "status": null,
+          "postId": null,
+          "postedAt": null,
+          "publishAttemptedAt": null
         }
       }
     },
@@ -1741,6 +1892,22 @@
           "publishAttemptedAt": null,
           "createAttemptedAt": null,
           "botAttemptedAt": null
+        },
+        "linkedin": {
+          "enabled": false,
+          "optedIn": false,
+          "paused": true,
+          "dueAt": "2026-11-12T17:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "daysBefore": 7,
+            "time": "12:00"
+          },
+          "status": null,
+          "postId": null,
+          "postedAt": null,
+          "publishAttemptedAt": null
         }
       }
     },
@@ -1828,6 +1995,22 @@
           "publishAttemptedAt": null,
           "createAttemptedAt": null,
           "botAttemptedAt": null
+        },
+        "linkedin": {
+          "enabled": false,
+          "optedIn": false,
+          "paused": true,
+          "dueAt": "2026-11-26T17:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "daysBefore": 7,
+            "time": "12:00"
+          },
+          "status": null,
+          "postId": null,
+          "postedAt": null,
+          "publishAttemptedAt": null
         }
       }
     },
@@ -1915,6 +2098,22 @@
           "publishAttemptedAt": null,
           "createAttemptedAt": null,
           "botAttemptedAt": null
+        },
+        "linkedin": {
+          "enabled": false,
+          "optedIn": false,
+          "paused": true,
+          "dueAt": "2026-12-03T17:00:00.000Z",
+          "scheduleInvalid": false,
+          "immediate": false,
+          "schedule": {
+            "daysBefore": 7,
+            "time": "12:00"
+          },
+          "status": null,
+          "postId": null,
+          "postedAt": null,
+          "publishAttemptedAt": null
         }
       }
     }

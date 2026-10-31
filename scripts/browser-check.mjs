@@ -1,3 +1,4 @@
+import {checkLinkedIn} from './check-linkedin.mjs';
 import {checkGroupMeSchedule} from './check-groupme-schedule.mjs';
 import {checkEventTiming} from './check-event-timing.mjs';
 import {checkHomeRail} from './check-home-rail.mjs';
@@ -29,6 +30,7 @@ let browser;
 try {
  for(let i=0;i<50;i++){try{if((await fetch(base)).ok)break;}catch{}await new Promise(r=>setTimeout(r,100));}
  browser=await chromium.launch({headless:true});
+ await checkLinkedIn(browser,base);
  await checkEventTiming(browser,base);
  await checkDispatcherAccess(browser,base);
  await checkPostingStatus(browser,base);
@@ -47,7 +49,7 @@ try {
  await checkEditorLayout(browser,base);
  await checkStoryDesigns(browser,base);
  await checkStoryEmptyMedia(browser,base);
- const page=await browser.newPage({viewport:{width:1440,height:1080},timezoneId:'America/Los_Angeles'});
+ const page=await browser.newPage({serviceWorkers:'block',viewport:{width:1440,height:1080},timezoneId:'America/Los_Angeles'});
  await page.clock.install({time:new Date('2026-10-15T16:00:00Z')});
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  // Exercise only labeled examples, even when deployed Pages data includes live campaigns.
@@ -206,7 +208,7 @@ try {
  assert.equal(writes.length,5);const storyOnly=JSON.parse(Buffer.from(writes[4].content,'base64').toString());
  assert.equal(storyOnly.status.feed,'skipped');assert.equal(storyOnly.status.story,'pending');assert.equal(storyOnly.flyerUrl,pngSaved.flyerUrl);
  // Opt-in bot controls in an isolated browser: no credentials or live writes.
- const botPage=await browser.newPage({viewport:{width:1440,height:1080}});
+ const botPage=await browser.newPage({serviceWorkers:'block',viewport:{width:1440,height:1080}});
  await botPage.route('**/data/archive-index.json',route=>route.fulfill({json:{campaigns:[]}}));
  await botPage.route('**/data/candidates.json',route=>route.fulfill({json:{events:[],changes:[]}}));
  await botPage.clock.install({time:new Date('2026-10-15T16:00:00Z')});

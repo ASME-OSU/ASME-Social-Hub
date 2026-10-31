@@ -1,0 +1,6 @@
+#linkedin-controls{margin-top:18px;padding-top:18px;border-top:1px solid var(--border,#d7dde5)}
+.linkedin-preview{border:1px solid var(--border,#d7dde5);border-radius:12px;padding:16px;margin:12px 0;overflow:hidden}
+.linkedin-preview header{display:flex;flex-direction:column;gap:4px}.linkedin-preview header span{font-size:.8rem;opacity:.7}
+.linkedin-caption{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6}
+.linkedin-preview img{display:block;width:100%;max-height:400px;object-fit:contain;margin-top:12px}
+.privacy-link{display:inline-block;margin:12px 0;font-size:.85rem;color:inherit}

@@ -1,13 +1,14 @@
 import {fireTime,localInput} from './time.mjs';
+import {linkedinEnabled,linkedinPlan} from './linkedin.mjs';
 import {groupMeDue} from './groupme-schedule.mjs';
 
-const labels={feed:'Instagram feed',story:'Instagram Story',groupme:'GroupMe announcement',followUp:'GroupMe follow-up'};
+const labels={feed:'Instagram feed',story:'Instagram Story',linkedin:'LinkedIn',groupme:'GroupMe announcement',followUp:'GroupMe follow-up'};
 export function nextCampaignAction(c,config,now=new Date()){
  const current=+new Date(now),start=Date.parse(c.start);
  if(!Number.isFinite(current)||!Number.isFinite(start)||current>=start||c.cancelled||c.deletedAt||c.archived||c.demo||c.year!==config.activeYear)return null;
  const actions=[];
  function add(channel,kind,receipt,state,due){
-  if(['done','skipped'].includes(state)||receipt.mediaId||receipt.postedAt||receipt.publishAttemptedAt||receipt.botSentAt||receipt.botAttemptedAt)return;
+  if(['done','skipped'].includes(state)||receipt.postId||receipt.mediaId||receipt.postedAt||receipt.publishAttemptedAt||receipt.botSentAt||receipt.botAttemptedAt)return;
   try{
    const at=due(),time=Date.parse(at);
    if(!Number.isFinite(time)||time>=start||current-time>86400000)return;
@@ -15,7 +16,8 @@ export function nextCampaignAction(c,config,now=new Date()){
    actions.push({channel,kind,label:labels[kind==='followUp'?'followUp':channel],due:at,late:time<current});
   }catch{/* Invalid schedules appear in warnings rather than promising a send. */}
  }
- for(const channel of ['feed','story']){
+ for(const channel of ['feed','story','linkedin']){
+  if(channel==='linkedin'&&(!linkedinEnabled(config)||c.campaign?.linkedin?.enabled!==true))continue;
   if(c.campaign?.[channel]?.enabled===false)continue;
   const cadence={...config.defaultCadence?.[channel],...c.campaign?.[channel],enabled:true};
   add(channel,'initial',c.results?.[channel]||{},c.status?.[channel],()=>fireTime({...c,campaign:{...c.campaign,[channel]:cadence}},channel,config.timezone));

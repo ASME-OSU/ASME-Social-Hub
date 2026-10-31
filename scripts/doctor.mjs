@@ -3,6 +3,7 @@ import path from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {assessTokenExpiry} from './refresh-token.mjs';
 import {createInstagramClient} from './ig.mjs';
+import {linkedinReadiness} from './linkedin.mjs';
 import {createGroupMeClient} from './groupme.mjs';
 import {createLinkedInClient} from './linkedin.mjs';
 export async function doctor({root=process.cwd(),env=process.env,live=false,fetchImpl=fetch}={}) {
@@ -16,11 +17,13 @@ export async function doctor({root=process.cwd(),env=process.env,live=false,fetc
   const groupmeEnabled=config.integrations?.groupme?.enabled!==false;
   if(!groupmeEnabled) add('groupme',true,'Disabled in chapter configuration');
   const linkedinEnabled=config.integrations?.linkedin?.enabled===true;
-  if(config.integrations?.linkedin && !linkedinEnabled) add('linkedin',true,'Disabled in chapter configuration');
-  for(const key of ['IG_USER_ID','IG_ACCESS_TOKEN','SECRETS_ADMIN_PAT',...(groupmeEnabled?(config.integrations?.groupme?.mode==='bot'?['GROUPME_BOT_ID']:['GROUPME_TOKEN','GROUPME_GROUP_ID']):[]),...(linkedinEnabled?['LINKEDIN_ACCESS_TOKEN','LINKEDIN_ORGANIZATION_ID']:[])]) add(key,Boolean(env[key]),env[key]?'Present (value hidden)':`Missing ${key}${live?'':' — local preview remains available'}`);
+  for(const key of ['IG_USER_ID','IG_ACCESS_TOKEN','SECRETS_ADMIN_PAT',...(groupmeEnabled?(config.integrations?.groupme?.mode==='bot'?['GROUPME_BOT_ID']:['GROUPME_TOKEN','GROUPME_GROUP_ID']):[]),...(linkedinEnabled?['LINKEDIN_ACCESS_TOKEN','LINKEDIN_ORGANIZATION_ID']:[])]) add(key,Boolean(key==='LINKEDIN_ORGANIZATION_ID'?(env.LINKEDIN_ORGANIZATION_URN||env[key]):env[key]),(key==='LINKEDIN_ORGANIZATION_ID'?(env.LINKEDIN_ORGANIZATION_URN||env[key]):env[key])?'Present (value hidden)':`Missing ${key}${live?'':' — local preview remains available'}`);
   add('calendar',Boolean(config.icalUrl),config.icalUrl?'Calendar configured':'Optional: set icalUrl to enable calendar suggestions');
   if(env.IG_TOKEN_EXPIRES_AT) {const assessment=assessTokenExpiry(env.IG_TOKEN_EXPIRES_AT);add('token-expiry',!assessment.warning,assessment.daysRemaining===null?'Invalid IG_TOKEN_EXPIRES_AT':`${Math.floor(assessment.daysRemaining)} days remain`);}
   else add('token-expiry',true,'Expiry cannot be inferred from an opaque token. Set IG_TOKEN_EXPIRES_AT for a local expiry warning; successful refresh logs expiry.');
+  if(config.integrations?.linkedin?.enabled===true){
+    try{const state=linkedinReadiness(env);add('linkedin',true,'Configured for '+state.owner+'; publishing is unverified');const days=(Date.parse(state.expiresAt)-Date.now())/86400000;add('linkedin-token-expiry',days>=14,Math.ceil(days)+' days remain; reauthorize before expiry');}catch(error){add('linkedin',false,error.message);}
+  }else add('linkedin',true,'Paused; LinkedIn setup can be prepared without credentials');
   if(live) {
     const probe=async(name,fn)=>{try{await fn();add(name,true,'Read-only check passed');}catch{add(name,false,'Read-only check failed; check configuration, credentials, permissions, or API availability');}};
     await probe('instagram-live',()=>createInstagramClient({env,fetchImpl}).request('me',{fields:{fields:'id,username'}}));

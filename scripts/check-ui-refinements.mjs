@@ -7,9 +7,9 @@ export async function checkUiRefinements(browser,base){
  const flyer=await readFile('docs/media/2026-27/2026-10-22-asme-scheduling-buckeyelink-tour-feed.jpg');
  await mkdir('test-results/ui-refinement',{recursive:true});
  for(const theme of ['light','dark']){
-  const context=await browser.newContext({viewport:{width:1440,height:1000},colorScheme:theme,reducedMotion:'reduce'});
+  const context=await browser.newContext({serviceWorkers:'block',viewport:{width:1440,height:1000},colorScheme:theme,reducedMotion:'reduce'});
   try{
-   const page=await context.newPage(),errors=[];page.on('pageerror',error=>errors.push(error.message));
+   const page=await context.newPage(),errors=[];await page.clock.install({time:new Date('2026-10-21T16:00:00Z')});page.on('pageerror',error=>errors.push(error.message));
    await page.route('**/config/chapter.json',route=>route.fulfill({json:config}));
    await page.route('**/data/archive-index.json',route=>route.fulfill({json:{campaigns:[campaign]}}));
    await page.route('**/data/candidates.json',route=>route.fulfill({json:{events:[],changes:[]}}));

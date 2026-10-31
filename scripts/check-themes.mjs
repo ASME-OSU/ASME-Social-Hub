@@ -16,7 +16,7 @@ export async function checkThemes(browser,base){
   try{
    const page=await context.newPage();await page.route('**/config/chapter.json',async route=>{const response=await route.fetch(),config=await response.json();await route.fulfill({json:{...config,showExamples:true,socialLinks:{...config.socialLinks,facebook:'https://www.facebook.com/chapter-test-fixture/',linktree:'https://linktr.ee/chapter-test-fixture'}}});});
    await page.goto(base);await page.locator('.campaign-card').first().waitFor();
-   assert.equal(await page.locator('#connection-label').textContent(),'Not connected');assert.equal(await page.locator('#header-connection-text').textContent(),'Not connected');assert.equal(await page.locator('.sidebar-foot').textContent().then(text=>/Plan once|Ohio State University/.test(text)),false);assert.equal(await page.locator('.workspace>footer').textContent().then(text=>text.trim()),'ASME Hub');
+   assert.equal(await page.locator('#connection-label').textContent(),'Not connected');assert.equal(await page.locator('#header-connection-text').textContent(),'Not connected');assert.equal(await page.locator('.sidebar-foot').textContent().then(text=>/Plan once|Ohio State University/.test(text)),false);assert.equal(await page.locator('.workspace>footer .footer-social').textContent().then(text=>text.trim()),'ASME Hub');assert.equal(await page.locator('.workspace>footer .privacy-link').getAttribute('href'),'./privacy.html');
    assert.equal(await page.locator('.social-brand-facebook').first().getAttribute('fill'),'currentColor');
    assert.equal(await page.locator('nav .nav-icon svg').count(),3);
    assert.equal(await page.locator('.sidebar-social a').count(),5);
