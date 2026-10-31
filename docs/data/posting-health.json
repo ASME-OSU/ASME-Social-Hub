@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-31T07:04:11.651Z",
+  "generatedAt": "2026-10-31T08:44:34.699Z",
   "activeYear": "2026-27",
   "config": {
     "timezone": "America/New_York",
@@ -23,7 +23,7 @@
     "status": "unknown",
     "warning": false,
     "configured": true,
-    "checkedAt": "2026-10-31T07:04:11.453Z",
+    "checkedAt": "2026-10-31T08:44:34.530Z",
     "expiresAt": null,
     "daysRemaining": null
   },
