@@ -1,6 +1,8 @@
 {
-  "status": "unknown",
+  "status": "healthy",
   "warning": false,
   "configured": true,
-  "checkedAt": "2026-11-01T13:46:48.828Z"
+  "checkedAt": "2026-11-01T15:55:22.636Z",
+  "expiresAt": "2026-12-31T15:04:28.250Z",
+  "daysRemaining": 59.96464831018518
 }
