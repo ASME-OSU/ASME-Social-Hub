@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {checkContrast} from './check-themes.mjs';
 import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {spawn} from 'node:child_process';
 import {resolve} from 'node:path';
@@ -37,6 +38,7 @@ export async function checkCampaignCards(browser,base){
    assert.equal(await steps.count(),3);assert.match(await engagement.innerText(),/17\s+likes/);assert.match(await engagement.innerText(),/191\s+reached/);assert.match(await engagement.innerText(),/not live/);
    assert.match(await steps.nth(0).innerText(),/Posted[\s\S]*Oct 21, 10:59 AM/i);assert.match(await steps.nth(1).innerText(),/Pending[\s\S]*Oct 25, 11:30 AM/i);assert.match(await steps.nth(2).innerText(),/Posted[\s\S]*Oct 21, 10:00 AM/i);
    assert.equal(await card(noReceipt.title).locator('.step-time').filter({hasText:'Time not recorded'}).count(),3,'Completed channels without receipts must not invent actual posting times');assert.match(await card(noReceipt.title).locator('.card-engagement').innerText(),/0\s+likes/);assert.match(await card(noReceipt.title).locator('.card-engagement').innerText(),/0\s+reached/);
+   await checkContrast(page,['.campaign-card .step-status','.campaign-card .step-time,.campaign-card .step-row time','.campaign-card .card-engagement p','.campaign-card .card-title-row .badge.pending','.campaign-card .card-title-row .badge.failed','.campaign-card .card-title-row .badge.done','.card-warnings p']);
    assert.equal(await first.locator('.card-warnings').count(),0,'Future pending has no warning panel');assert.equal(await card(long.title).locator('.card-warnings').count(),0);
    assert.match(await card(long.title).locator('.card-engagement').innerText(),/not recorded|after Feed publishes/i);
    for(const fixture of [failed,missed]){

@@ -32,7 +32,7 @@ export function advertisingLines(c, config) {
     ...[['audience','Audience'],['cost','Cost'],['preparation','Bring / dress'],['speaker','Speaker'],['benefit','Why attend'],['accessibilityContact','Accessibility contact']].map(([key,label]) => filled(key) ? `${label}: ${filled(key)}` : '')
   ].filter(Boolean);
 }
-export function captionFor(c, config) {
+export function captionFor(c, config, {validateLength=true}={}) {
   const type = config.eventTypes?.find(t=>t.id===c.type);
   const lines = advertisingLines(c,config);
   const food = c.food === true ? lines.shift() : '';
@@ -46,6 +46,6 @@ export function captionFor(c, config) {
     const rendered = line.replace(/\{(\w+)\}/g,(_,k)=>values[k]??'').trim();
     return line.trim() && !rendered ? [] : [rendered];
   }).join('\n').replace(/\n{3,}/g,'\n\n').trim();
-  assert(caption.length <= 2200, 'Instagram caption exceeds 2200 characters; shorten the description or advertising details');
+  assert(!validateLength || caption.length <= 2200, 'Instagram caption exceeds 2200 characters; shorten the description or advertising details');
   return caption;
 }

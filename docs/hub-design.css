@@ -125,14 +125,14 @@ button.primary{border-radius:2px;box-shadow:0 3px 0 #00000012}
 .campaign-card .card-art{height:100px;min-height:0;margin:8px 8px 0;padding:14px 18px;border:0;border-radius:10px;background-color:var(--ice)}
 .campaign-card .card-art>img{opacity:.24}
 .campaign-card .card-art::after{background:linear-gradient(90deg,var(--ice) 5%,transparent 85%);opacity:.85}
-.campaign-card .art-label{max-width:74%;padding:0;margin:0;background:transparent;font-size:10px;color:var(--navy)}
+.campaign-card .art-label{max-width:74%;padding:0;margin:0;background:transparent;font-size:11px;color:var(--navy)}
 .campaign-card .art-label small{font-size:12px;margin-top:3px;line-height:1.4}
 .campaign-card .art-date{align-self:center;flex:none;margin:0;padding:8px 10px;background:var(--paper);border-radius:8px;font-size:46px;line-height:.9}
 .campaign-card .art-date small{font-size:10px;margin-top:6px;color:var(--navy)}
 .campaign-card .card-body{padding:16px 18px 12px;flex:0 1 auto}
 .card-title-row{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
 .campaign-card .card-title-row h3{font:28px/1.1 var(--font-display);letter-spacing:-.02em;color:var(--navy);min-height:0;margin:0;flex:1;min-width:0;overflow-wrap:anywhere}
-.card-title-row>.badge{flex:none;margin-top:3px;border-radius:5px;font-size:9px;max-width:45%;overflow-wrap:anywhere}
+.card-title-row>.badge{flex:none;margin-top:3px;border-radius:5px;font-size:12px;letter-spacing:0;text-transform:none;max-width:45%;overflow-wrap:anywhere}
 .card-title-row>.badge.done{background:transparent;color:var(--navy);border-color:var(--steel)}
 .card-details{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;margin-bottom:12px}
 .campaign-card .card-info{display:flex;gap:7px;align-items:baseline;min-width:0;flex:1 1 140px;margin:0;font-size:12px;line-height:1.5}
@@ -146,10 +146,10 @@ button.primary{border-radius:2px;box-shadow:0 3px 0 #00000012}
 .campaign-card .card-engagement-values strong{font-size:17px;color:var(--navy)}
 .campaign-card .card-engagement-values [aria-hidden]{font-size:24px;color:var(--scarlet);flex:none}
 .campaign-card .card-engagement-values .reach-icon{width:23px;height:23px;color:var(--navy)}
-.campaign-card .card-engagement p{font-size:10px;line-height:1.4;margin:6px 0 0;text-align:center}
-.campaign-card .card-engagement small{font-size:10px;margin:2px 0 0;text-align:center}
+.campaign-card .card-engagement p{font-size:12px;line-height:1.5;margin:6px 0 0;text-align:center}
+.campaign-card .card-engagement small{font-size:12px;margin:2px 0 0;text-align:center}
 .campaign-card .card-engagement.is-empty{padding:9px 12px}
-.campaign-card .card-engagement.is-empty p{font-size:11px;margin:0}
+.campaign-card .card-engagement.is-empty p{font-size:12px;margin:0}
 .campaign-card .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border:0;background:color-mix(in srgb,var(--ice) 65%,var(--paper));border-radius:9px;padding:12px 6px;margin-top:10px}
 .campaign-card .step-row{grid-template-columns:22px minmax(0,1fr);gap:6px;padding:0 8px;min-width:0;line-height:1.4}
 .campaign-card .step-row+.step-row{border-left:1px solid var(--line)}
@@ -158,16 +158,22 @@ button.primary{border-radius:2px;box-shadow:0 3px 0 #00000012}
 .campaign-card .status-dot.failed{background:var(--scarlet-tint);border-color:var(--scarlet);color:var(--scarlet)}
 .campaign-card .status-dot.skipped{border:1px solid var(--line);background:var(--ice);color:var(--muted)}
 .campaign-card .step-row strong{font-size:12px;color:var(--navy);overflow-wrap:anywhere}
-.campaign-card .step-status{display:block;text-transform:uppercase;letter-spacing:.06em;font-size:9px;line-height:1.5;margin-top:2px}
-.campaign-card .step-row time,.campaign-card .step-time{font-size:10px;line-height:1.5;overflow-wrap:anywhere;margin-top:3px}
+.campaign-card .step-status{display:block;text-transform:none;letter-spacing:0;font-size:12px;line-height:1.5;margin-top:2px}
+.campaign-card .step-row time,.campaign-card .step-time{font-size:12px;line-height:1.5;overflow-wrap:anywhere;margin-top:3px}
 .card-warnings{display:flex;gap:9px;align-items:flex-start;background:color-mix(in srgb,#d58a19 8%,var(--paper));border:1px solid color-mix(in srgb,#d58a19 30%,var(--paper));border-radius:9px;padding:10px 12px;margin-top:10px}
 .card-warning-icon{color:#b5730d;font-size:22px;line-height:1.2;flex:none}
-.card-warnings p{font-size:11px;line-height:1.5;margin:0;overflow-wrap:anywhere}
+.card-warnings p{font-size:13px;line-height:1.5;margin:0;overflow-wrap:anywhere}
 .campaign-card .card-footer{padding:0 18px 4px;border:0;gap:12px}
 .campaign-card .card-footer button{font-size:12px;min-height:44px;color:var(--navy)}
-@container(max-width:360px){
+@container(max-width:380px){
  .campaign-card .card-details .card-info{flex-basis:100%}
- .campaign-card .step-row{display:block;padding:0 7px}.campaign-card .status-dot{margin:0 0 6px}
+ .campaign-card .steps{grid-template-columns:1fr;padding:4px 12px}
+ .campaign-card .step-row{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;padding:10px 0}
+ .campaign-card .step-row+.step-row{border-left:0;border-top:1px solid var(--line)}
+ .campaign-card .status-dot{margin-top:2px}
+ .campaign-card .step-row>div{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;align-items:baseline}
+ .campaign-card .step-status{grid-column:1;grid-row:2;margin-top:0}
+ .campaign-card .step-row time,.campaign-card .step-time{grid-column:2;grid-row:1/3;max-width:130px;margin-top:0;text-align:right}
 }
 @container(max-width:260px){
  .card-title-row{flex-wrap:wrap;gap:8px}.campaign-card .card-title-row h3{flex-basis:100%}.card-title-row>.badge{margin-top:0}
@@ -264,9 +270,10 @@ button.primary{border-radius:2px;box-shadow:0 3px 0 #00000012}
 
 /* A little more chapter color without competing with the event artwork. */
 .campaign-card{border-color:color-mix(in srgb,var(--navy) 18%,var(--paper));box-shadow:0 3px 12px #10284008}
-.campaign-card .card-art{background-color:color-mix(in srgb,var(--navy) 10%,var(--paper));box-shadow:none}
-.campaign-card .card-art>img{opacity:.3;filter:saturate(.85)}
-.campaign-card .card-art::after{background:linear-gradient(90deg,color-mix(in srgb,var(--navy) 10%,var(--paper)) 5%,transparent 95%)}
+/* A clean chapter header avoids ghosted text from cropped flyer artwork. */
+.campaign-card .card-art{background-color:color-mix(in srgb,var(--navy) 8%,var(--paper));box-shadow:inset 3px 0 var(--scarlet)}
+.campaign-card .card-art>img{display:none}
+.campaign-card .card-art::after{display:none}
 .campaign-card .art-date{background:var(--paper);border:1px solid color-mix(in srgb,var(--scarlet) 18%,var(--paper));box-shadow:0 2px 5px #10284008}
 .campaign-card .card-engagement{background:color-mix(in srgb,var(--scarlet) 5%,var(--paper))}
 .campaign-card .steps{background:color-mix(in srgb,var(--navy) 7%,var(--paper))}
@@ -439,9 +446,43 @@ details[open]:not(.mobile-social-menu):not(.dispatcher-controls):not(.artwork-pr
 @media(max-width:699px){.header-social .hub-shortcut-divider{grid-column:1/-1}.header-social .hub-shortcut-divider,.footer-social .hub-shortcut-divider{background:var(--line)}}
 
 /* Let the workspace use the display instead of keeping a fixed desktop canvas. */
+.campaign-sync{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 16px}
+.campaign-sync p{font-size:13px;color:var(--muted);margin:0;line-height:1.6}
+.campaign-sync button{flex:none;background:var(--paper);border-color:var(--line)}
+#campaign-attention{border:1px solid var(--status-failed-line);border-left:4px solid var(--status-failed-ink);border-radius:8px;background:var(--paper);padding:16px 20px;margin:0 0 20px}
+.attention-summary{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.attention-summary h2{font:650 18px/1.4 var(--font-body);margin:0 0 4px;color:var(--status-failed-ink)}
+.attention-summary p{font-size:14px;line-height:1.6;margin:0;color:var(--muted)}
+.attention-summary button{flex:none;color:var(--status-failed-ink);border-color:var(--status-failed-ink)}
+#review-queue{margin-top:12px;border-top:1px solid var(--line)}
+#review-queue>summary{cursor:pointer;min-height:44px;padding:12px 0;font-weight:600;font-size:14px}
+.review-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 16px;padding:16px 0;border-top:1px solid var(--line)}
+.review-item h3{font:650 16px/1.5 var(--font-body);margin:0;overflow-wrap:anywhere}
+.review-item p{font-size:14px;line-height:1.6;color:var(--muted);margin:0;overflow-wrap:anywhere}
+.review-item button{grid-column:2;grid-row:1/4;align-self:center}
+button.stat.attention{border-radius:0;text-align:left;background:var(--scarlet-tint);border-color:var(--line);color:var(--ink);font-weight:400}
+button.stat.attention:hover{background:color-mix(in srgb,var(--scarlet) 12%,var(--paper))}
+button.stat.attention .stat-label{text-decoration:underline;text-underline-offset:3px}
+dialog#editor-discard-dialog{width:min(480px,calc(100vw - 32px));max-height:calc(100dvh - 32px);padding:24px;border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink)}
+#editor-discard-dialog h2{font:650 22px/1.4 var(--font-body)}
+#editor-discard-dialog p{font-size:15px;line-height:1.6;color:var(--muted)}
+#editor-discard-dialog .actions{display:flex;gap:12px;flex-wrap:wrap}
+@media(max-width:699px){
+ .campaign-sync{align-items:flex-start}.campaign-sync p{font-size:12px}
+ #campaign-attention{padding:14px}
+ .attention-summary{gap:10px}.attention-summary button{width:100%}
+ .review-item{grid-template-columns:minmax(0,1fr)}.review-item button{grid-column:1;grid-row:auto;justify-self:start}
+ #editor-discard-dialog .actions{flex-direction:column}#editor-discard-dialog .actions button{width:100%}
+}
 .workspace{min-width:0;min-height:100dvh}
 main{width:100%;max-width:none;min-width:0;padding-inline:clamp(16px,3vw,48px)}
 @media(min-width:1600px){
  #editor{width:calc(100vw - 32px)}
  #detail{width:calc(100vw - 48px);height:calc(100dvh - 32px);max-height:calc(100dvh - 32px)}
 }
+
+#caption-budget{font-size:14px;line-height:1.6}
+#caption-budget.error{color:var(--scarlet);font-weight:600;background:var(--scarlet-tint);border-left:3px solid var(--scarlet);padding:10px 12px}
+
+/* The summary action opens the queue; avoid a duplicate collapsed disclosure. */
+#review-queue:not([open]){display:none}

@@ -1,3 +1,5 @@
+import {checkHubAuditFixes} from './check-hub-audit-fixes.mjs';
+import {checkEditorGuard} from './check-editor-guard.mjs';
 import {checkLinkedIn} from './check-linkedin.mjs';
 import {checkGroupMeSchedule} from './check-groupme-schedule.mjs';
 import {checkEventTiming} from './check-event-timing.mjs';
@@ -30,25 +32,37 @@ let browser;
 try {
  for(let i=0;i<50;i++){try{if((await fetch(base)).ok)break;}catch{}await new Promise(r=>setTimeout(r,100));}
  browser=await chromium.launch({headless:true});
- await checkLinkedIn(browser,base);
- await checkEventTiming(browser,base);
- await checkDispatcherAccess(browser,base);
- await checkPostingStatus(browser,base);
- await checkMemberEvent(browser,base);
- await checkDashboardDesign(browser,base);
- await checkCampaignCards(browser,base);
- await checkCampaignModal(browser,base);
- await checkHomeRail(browser,base);
- await checkAcademicYears(browser,base);
- await checkPreviewPane(browser,base);
- await checkCampaignControls(browser,base);
- await checkGroupMePreview(browser,base);
- await checkGroupMeSchedule(browser,base);
- await checkThemes(browser,base);
- await checkUiRefinements(browser,base);
- await checkEditorLayout(browser,base);
- await checkStoryDesigns(browser,base);
- await checkStoryEmptyMedia(browser,base);
+ await checkEditorGuard(browser,base);
+ await checkHubAuditFixes(browser,base);
+ // Existing fixtures intentionally abandon edits between scenarios. Exercise the
+ // real discard action when their next action meets the new confirmation dialog.
+ const preparedPages=new WeakSet();
+ async function prepareFixturePage(page){if(preparedPages.has(page))return page;preparedPages.add(page);await page.addLocatorHandler(page.locator('#editor-discard-dialog'),async()=>{await page.locator('[data-discard-edits]').click();});return page;}
+ const newContext=browser.newContext.bind(browser),newPage=browser.newPage.bind(browser);
+ browser.newContext=async(...args)=>{const context=await newContext(...args),create=context.newPage.bind(context);context.newPage=async(...options)=>prepareFixturePage(await create(...options));return context;};
+ browser.newPage=async(...args)=>prepareFixturePage(await newPage(...args));
+ let reachedCheck=!process.env.BROWSER_CHECK_START_AT;
+ async function runCheck(name,check){if(name===process.env.BROWSER_CHECK_START_AT)reachedCheck=true;if(reachedCheck)await check(browser,base);}
+ await runCheck('LinkedIn',checkLinkedIn);
+ await runCheck('EventTiming',checkEventTiming);
+ await runCheck('DispatcherAccess',checkDispatcherAccess);
+ await runCheck('PostingStatus',checkPostingStatus);
+ await runCheck('MemberEvent',checkMemberEvent);
+ await runCheck('DashboardDesign',checkDashboardDesign);
+ await runCheck('CampaignCards',checkCampaignCards);
+ await runCheck('CampaignModal',checkCampaignModal);
+ await runCheck('HomeRail',checkHomeRail);
+ await runCheck('AcademicYears',checkAcademicYears);
+ await runCheck('PreviewPane',checkPreviewPane);
+ await runCheck('CampaignControls',checkCampaignControls);
+ await runCheck('GroupMePreview',checkGroupMePreview);
+ await runCheck('GroupMeSchedule',checkGroupMeSchedule);
+ await runCheck('Themes',checkThemes);
+ await runCheck('UiRefinements',checkUiRefinements);
+ await runCheck('EditorLayout',checkEditorLayout);
+ await runCheck('StoryDesigns',checkStoryDesigns);
+ await runCheck('StoryEmptyMedia',checkStoryEmptyMedia);
+ if(!reachedCheck)throw Error('Unknown BROWSER_CHECK_START_AT check name');
  const page=await browser.newPage({serviceWorkers:'block',viewport:{width:1440,height:1080},timezoneId:'America/Los_Angeles'});
  await page.clock.install({time:new Date('2026-10-15T16:00:00Z')});
  const errors=[];page.on('pageerror',e=>errors.push(e.message));

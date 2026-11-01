@@ -32,3 +32,10 @@ h1{font:clamp(38px,3.8vw,54px)/1.02 Editorial,Georgia,serif;letter-spacing:-.035
 .event-actions:has(>a[hidden]){display:none}
 .event-actions .event-primary{background:var(--paper);border-color:var(--rule);color:var(--ink)}
 @media(min-width:700px) and (max-height:800px){.event-layout{padding-top:20px}.event-poster{max-height:max(420px,calc(100dvh - 244px))}.event-poster p{margin:28px 0}h1{font-size:clamp(36px,3.6vw,50px)}}
+
+/* Recovery and preview use the same readable controls in either appearance. */
+.event-recovery{display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin:0 0 48px}.event-recovery button{font:600 14px Inter,system-ui,sans-serif;min-height:44px;padding:10px 18px;color:var(--ink);background:var(--paper);border:1px solid var(--muted);border-radius:4px;cursor:pointer}.event-recovery a{font-size:14px}.event-recovery button:focus-visible{outline:3px solid var(--accent);outline-offset:4px}.event-local-banner{background:var(--paper);border-bottom:1px solid var(--rule);padding:12px 24px;font-size:13px}.event-local-banner a{margin-left:12px}
+
+/* Keep secondary details readable in both device appearances. */
+.event-kicker,.event-kicker span{font-size:12px;letter-spacing:.07em}.event-facts dt,.event-calendar-actions h2{font-size:12px;letter-spacing:.08em}.event-timezone,.event-address,.event-flyer-link>span,.event-footer,.event-example{font-size:13px}.poster-label,.poster-footer{font-size:12px;letter-spacing:.08em}
+@media(min-width:700px){.event-footer{padding-bottom:16px}}

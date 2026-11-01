@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 
-async function checkContrast(page,selectors){
+export async function checkContrast(page,selectors){
  const rows=await page.evaluate(selectors=>{
   const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d',{willReadFrequently:true});canvas.width=canvas.height=1;
   const rgba=color=>{ctx.clearRect(0,0,1,1);ctx.fillStyle=color;ctx.fillRect(0,0,1,1);return [...ctx.getImageData(0,0,1,1).data].map((v,i)=>i===3?v/255:v);};
@@ -9,6 +9,7 @@ async function checkContrast(page,selectors){
   return selectors.map(selector=>{const element=[...document.querySelectorAll(selector)].find(el=>el.checkVisibility());if(!element)return {selector,missing:true};const ancestors=[];for(let e=element;e;e=e.parentElement)ancestors.unshift(e);const bg=ancestors.reduce((color,e)=>over(rgba(getComputedStyle(e).backgroundColor),color),[255,255,255,1]),fg=over(rgba(getComputedStyle(element).color),bg),values=[luminance(fg),luminance(bg)].sort((a,b)=>b-a);return {selector,ratio:(values[0]+.05)/(values[1]+.05)};});
  },selectors);
  for(const row of rows){assert.ok(!row.missing,`Contrast target missing: ${row.selector}`);assert.ok(row.ratio>=4.5,`${row.selector}: text contrast ${row.ratio.toFixed(2)} must meet 4.5:1`);}
+ return rows;
 }
 export async function checkThemes(browser,base){
  for(const theme of ['light','dark']){
@@ -33,7 +34,14 @@ export async function checkThemes(browser,base){
    assert.equal(await page.locator('#sidebar').evaluate(e=>e.getBoundingClientRect().width),240);
    const expandedDivider=await page.locator('.sidebar-social .hub-shortcut-divider').boundingBox();assert.ok(expandedDivider.width>expandedDivider.height,'Expanded Hub divider is horizontal');
    await checkContrast(page,['#sidebar .sidebar-label','#sidebar .asme-hub-shortcut','#sidebar nav button.active']);
-   await checkContrast(page,['h1','.subtle','.stat-label','.stat small','.campaign-card h3','.campaign-card .card-info','.card-footer button','#new-campaign','nav button.active']);
+   await checkContrast(page,['h1','.subtle','.stat-label','.stat small','.campaign-card h3','.campaign-card .card-info','.card-footer button','#new-campaign','nav button.active','.campaign-card .art-label','.campaign-card .art-label small','.campaign-card .art-date','.campaign-card .step-status','.campaign-card .step-time,.campaign-card .step-row time','.campaign-card .card-engagement p','.campaign-card .card-title-row .badge','#preview-banner p']);
+   await page.setViewportSize({width:390,height:844});
+   assert.equal(await page.locator('#preview-banner p').isVisible(),true,'Phone onboarding retains the connection explanation');
+   await checkContrast(page,['#preview-banner p','.campaign-card .step-status','.campaign-card .step-time,.campaign-card .step-row time']);
+   const channelType=await page.locator('.campaign-card .step-status').first().evaluate(el=>({size:parseFloat(getComputedStyle(el).fontSize),transform:getComputedStyle(el).textTransform}));
+   assert.ok(channelType.size>=12,'Phone channel statuses are at least 12px');assert.equal(channelType.transform,'none','Channel statuses retain readable sentence case');
+   const channels=await page.locator('.campaign-card').first().locator('.step-row').evaluateAll(rows=>rows.map(row=>row.getBoundingClientRect().y));assert.ok(channels[1]>channels[0]&&channels[2]>channels[1],'Phone channels stack into readable rows');
+   await page.setViewportSize({width:1440,height:1000});
    await page.locator('#header-sidebar-toggle').click();await page.waitForFunction(()=>document.querySelector('aside').getBoundingClientRect().width===72);await page.reload();await page.locator('.campaign-card').first().waitFor();assert.equal(await page.locator('#header-sidebar-toggle').getAttribute('aria-expanded'),'false');assert.equal(await page.locator('.sidebar-social').isVisible(),true);const railDivider=await page.locator('.sidebar-social .hub-shortcut-divider').boundingBox();assert.ok(railDivider.width>railDivider.height,'Collapsed Hub divider stays horizontal');
    await page.locator('#header-sidebar-toggle').click();await page.waitForFunction(()=>document.querySelector('aside').getBoundingClientRect().width===240);
    await page.locator('[data-view=settings]').click();await checkContrast(page,['#appearance-heading','#appearance-theme','#appearance-theme+.field-help','#settings-form h2','#settings-form label','#settings-connection-state','#settings-form input[name=owner]','#channel-defaults-form .subtle','#channel-defaults-form button.primary']);

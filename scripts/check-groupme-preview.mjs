@@ -11,7 +11,7 @@ export async function checkGroupMePreview(browser,base) {
  const recordedText='Original sent announcement\n'+Array.from({length:15},(_,i)=>`Recorded line ${i+1}: this is the exact delivered text.`).join('\n');
  const fixture={id:'groupme-delivered-fixture',year:'2026-27',type:'social',title:'Current edited event title',description:'New content that must not replace the delivered message.',start:'2026-11-20T23:30:00Z',end:'2026-11-21T01:00:00Z',food:false,location:{name:'Fixture room'},template:'refined-blueprint',revision:4,campaign:{feed:{enabled:false,daysBefore:7,time:'12:00'},story:{enabled:false,daysBefore:3,time:'12:00'},groupme:{enabled:true,announce:true}},status:{feed:'skipped',story:'skipped',groupme:'done'},results:{feed:{},story:{},groupme:{botAttemptedAt:'2026-11-13T17:00:00Z',botSentAt:'2026-11-13T17:00:01Z',botText:recordedText}},log:[]};
  const errors=[],writes=[],external=[];
- const context=await browser.newContext({viewport:{width:1440,height:1000},timezoneId:'America/Los_Angeles'});
+ const context=await browser.newContext({serviceWorkers:'block',viewport:{width:1440,height:1000},timezoneId:'America/Los_Angeles'});
  try{
   const page=await context.newPage();await page.clock.install({time:new Date('2026-10-20T16:00:00Z')});
   page.on('pageerror',error=>errors.push(error.message));

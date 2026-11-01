@@ -452,7 +452,9 @@ input::placeholder,textarea::placeholder{color:var(--muted);opacity:1}
 .sidebar-foot .dot.limited{background:var(--signal)}
 @media(max-width:699px){
  #view-dashboard .preview-banner{padding:8px 14px;margin-bottom:20px}
- #view-dashboard .preview-banner>div,#view-dashboard .preview-banner>.preview-icon{display:none}
+ #view-dashboard .preview-banner>div{display:block}
+ #view-dashboard .preview-banner>.preview-icon{display:none}
+ #view-dashboard .preview-banner p{display:block;margin:4px 0 8px;font-size:14px;line-height:1.6}
  #view-dashboard .preview-banner button{margin:0;min-height:44px;padding:8px 0}
  #view-dashboard .section-heading{flex-wrap:wrap}
  #view-dashboard .section-heading #timezone-label{max-width:none;text-align:left;font-size:12px}

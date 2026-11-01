@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {mkdir,readFile} from 'node:fs/promises';
+import {renderEventPage} from '../docs/event-page.mjs';
 
 export async function checkMemberEvent(browser,base){
  const config=JSON.parse(await readFile('config/chapter.json','utf8'));
@@ -17,6 +18,16 @@ export async function checkMemberEvent(browser,base){
    const url=`${base}/event.html?year=${fixture.year}&id=${fixture.id}`;
    await page.goto(url);await page.locator('.event-layout:not([hidden])').waitFor();await page.evaluate(()=>document.fonts.ready);
    assert.equal(await page.locator('h1').textContent(),fixture.title);
+   const contrasts=await page.evaluate(()=>{
+    const rgb=value=>(value.match(/[\d.]+/g)||[]).slice(0,3).map(Number);
+    const luminance=color=>rgb(color).map(x=>{x/=255;return x<=.04045?x/12.92:((x+.055)/1.055)**2.4;}).reduce((sum,x,i)=>sum+x*[.2126,.7152,.0722][i],0);
+    return ['#event-title','#event-description','#event-timezone','#event-location','#event-google-calendar','#event-calendar'].map(selector=>{
+     const node=document.querySelector(selector),style=getComputedStyle(node);let background=style.backgroundColor,ancestor=node;
+     while(background==='rgba(0, 0, 0, 0)'&&ancestor.parentElement){ancestor=ancestor.parentElement;background=getComputedStyle(ancestor).backgroundColor;}
+     const a=luminance(style.color),b=luminance(background);return {selector,ratio:(Math.max(a,b)+.05)/(Math.min(a,b)+.05)};
+    });
+   });
+   for(const {selector,ratio} of contrasts)assert.ok(ratio>=4.5,`${theme} ${selector} text contrast ${ratio.toFixed(2)} must meet 4.5:1`);
    assert.equal(await page.evaluate(()=>getComputedStyle(document.documentElement).colorScheme),'light dark');
    const lightBg=await page.locator('body').evaluate(e=>getComputedStyle(e).backgroundColor);
    assert.equal(lightBg,theme==='dark'?'rgb(23, 29, 33)':'rgb(245, 242, 234)');
@@ -39,6 +50,21 @@ export async function checkMemberEvent(browser,base){
    assert.equal(await page.locator('#event-calendar').isVisible(),false);assert.equal(await page.locator('#event-google-calendar').isVisible(),false);assert.equal(await page.locator('#event-rsvp').isVisible(),false);
    record={...fixture,deletedAt:'2026-10-21T12:00:00Z'};await page.reload();await page.locator('.event-error').waitFor();assert.match(await page.locator('#event-status').textContent(),/no longer available/);
    await page.goto(`${base}/event.html?year=2026-27&id=..%2Fprivate`);await page.locator('.event-error').waitFor();
+   assert.equal(await page.locator('#event-recovery').isVisible(),true);
+   assert.equal(await page.locator('#event-retry').isVisible(),false,'Invalid links offer contact rather than a futile retry');
+   await page.route('**/data/campaigns/**',route=>route.fulfill({status:503,body:'Unavailable'}));
+   await page.goto(url);await page.locator('.event-error').waitFor();assert.equal(await page.locator('#event-retry').isVisible(),true);
+   await page.unroute('**/data/campaigns/**');
+   await page.route('**/data/campaigns/**',route=>route.fulfill({json:fixture}));
+   await page.locator('#event-retry').click();await page.locator('#event-title').waitFor();assert.equal(await page.locator('#event-title').textContent(),fixture.title);
+   // The shared destination is pre-rendered, including title/address/metadata before scripts execute.
+   const staticUrl=`${base}/events/${fixture.year}/${fixture.id}/`;
+   await page.route(staticUrl,route=>route.fulfill({contentType:'text/html',body:renderEventPage(fixture,{...config,siteUrl:base,previewOnly:true},{localPreview:false})}));
+   await page.goto(staticUrl);await page.locator('#event-title').waitFor();
+   assert.equal(await page.locator('meta[property="og:title"]').getAttribute('content'),fixture.title);
+   assert.equal(await page.locator('meta[property="og:url"]').getAttribute('content'),staticUrl);
+   assert.equal(await page.locator('#event-title').textContent(),fixture.title);
+   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Shared pre-rendered page fits phone');
    assert.deepEqual(errors,[]);
   }finally{await context.close();}
  }

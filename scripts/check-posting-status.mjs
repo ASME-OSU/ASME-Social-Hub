@@ -23,7 +23,7 @@ export async function checkPostingStatus(browser,base){
     record=state==='unknown'?{}:{lastSuccessfulLiveRunAt:new Date(current-(state==='stale'?13*3600000:state==='delayed'?2*3600000:300000)).toISOString(),...(state==='failed'?{lastLiveRunAt:new Date(current-60000).toISOString(),lastLiveRunStatus:'failed'}:{})};
     await page.clock.fastForward(60000);await page.waitForFunction(state=>document.querySelector('.dispatcher-health').dataset.state===state,state);
     const attention=state==='failed'||state==='stale';
-    assert.equal(await panel.evaluate(el=>el.previousElementSibling.id),attention?'preview-banner':'campaign-list');
+    assert.equal(await panel.evaluate(el=>el.previousElementSibling.id),'preview-banner');
     assert.equal(await page.locator('#dispatcher-warning').isVisible(),attention);
     assert.equal(await details.evaluate(el=>el.open),false);
     assert.equal(await page.locator('#dispatcher-preview').isVisible(),false);

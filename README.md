@@ -27,7 +27,7 @@ The dispatcher is scheduled every 30 minutes and uses chapter-local calendar dat
 
 Campaign details group **Cancel campaign** (stop pending posts and retain the archive record) beside **Delete from hub** (hide the campaign from the dashboard and archive while retaining publishing receipts). Click a feed or story image to open a centered preview; close it with X, Escape, or the backdrop.
 
-GroupMe bot announcements include one member event link instead of separate calendar and flyer links. `event.html?year=<year>&id=<campaign-id>` displays public event details, RSVP, the flyer, and separate Google Calendar and Apple Calendar actions. Dates use Columbus time with the correct EDT/EST abbreviation. It follows the device’s light/dark appearance automatically, including changes while the page is open. Campaign details include a link to this member view.
+GroupMe bot announcements include one member event link instead of separate calendar and flyer links. `events/<year>/<campaign-id>/` displays public event details, RSVP, the flyer, and separate Google Calendar and Apple Calendar actions, with event-specific sharing previews. Older `event.html?year=<year>&id=<campaign-id>` links remain supported. Dates use Columbus time with the correct EDT/EST abbreviation. It follows the device’s light/dark appearance automatically, including changes while the page is open. Campaign details include a link to this member view.
 
 See [SETUP.md](SETUP.md), [HANDOFF.md](HANDOFF.md), [FORKING.md](FORKING.md), and [INTEGRATIONS.md](INTEGRATIONS.md). Calendar recurrence parsing was extracted from the neighboring ASME Newsletter Builder and uses `node-ical@0.26.1`.
 
@@ -47,3 +47,8 @@ Appearance follows the device by default in the website and installed app. Setti
 GroupMe bot announcements are configured under Schedule. The initial message has its own posting time; an optional follow-up defaults to one day before the event. Choose Event details, Friendly invite, or Quick bulletin for each message, or shuffle to select another format at random. Previews and dispatch share the saved formats. Each send records a separate durable attempt and receipt; a follow-up requires a confirmed initial send. Existing campaigns keep their previous timing until edited, and follow-ups are off by default.
 
 LinkedIn Page posting can be prepared under Schedule with its own time and optional caption. The integration remains paused while Community Management approval and credentials are pending; existing campaigns stay opted out. See [LinkedIn setup](docs/operations/linkedin-setup.md) before enabling it.
+
+
+Campaign editing protects unsaved changes: Close and Escape offer Keep editing or Discard, and the browser warns before leaving a dirty editor. Changing event type applies defaults only to fields you have not customized. Instagram caption limits are checked before uploads or saving; the editor shows the complete caption character budget.
+
+The dashboard refreshes campaign data every minute and on return to the tab, with a manual Refresh campaigns action and a sync timestamp. Automatic refresh waits while a dialog is open. Connected refresh reads authoritative campaign receipts from the repository; disconnected refresh reads the published snapshot. The attention queue above campaigns includes failed, missed, and delayed steps, including older events that have left the home cards.

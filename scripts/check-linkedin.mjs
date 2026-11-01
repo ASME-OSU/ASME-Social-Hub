@@ -35,7 +35,7 @@ export async function checkLinkedIn(browser,base){
  assert.equal(c.status.linkedin,'pending');assert.equal(c.campaign.feed.enabled,false);
  // Review a saved opt-in and its receipt through the existing detail/editor flow.
  await page.route('**/data/archive-index.json',route=>route.fulfill({json:{campaigns:[{...c,status:{...c.status,linkedin:'done'},results:{...c.results,linkedin:{postId:'urn:li:share:123',caption:'Recorded copy',postedAt:'2026-10-31T12:00:00Z',permalink:'https://www.linkedin.com/feed/update/urn:li:share:123/'}}}]}}));
- await page.reload();await page.locator('[data-detail]').first().click();
+ await page.reload();await page.locator('#campaign-list [data-detail]').first().click();
  assert.match(await page.locator('.detail-posting').innerText(),/LinkedIn[\s\S]*Posted/);
  await page.locator('[data-detail-preview=linkedin]').click();
  assert.equal(await page.locator('#detail .linkedin-caption').innerText(),'Recorded copy');
