@@ -518,7 +518,7 @@ main{width:100%;max-width:none;min-width:0;padding-inline:clamp(16px,3vw,48px)}
 @media(max-width:699px){
  .campaign-heading-actions{gap:12px}
  .campaign-rail-controls{width:auto;flex:none;gap:0}
- #view-dashboard .campaign-heading-actions #new-campaign{position:static;width:auto;min-width:0;white-space:nowrap;min-height:44px;padding:10px 12px;font-size:12px;border-radius:8px;box-shadow:none}
+ #view-dashboard .campaign-heading-actions #new-campaign{position:static;margin:0;width:auto;min-width:0;white-space:nowrap;min-height:44px;padding:10px 12px;font-size:12px;border-radius:8px;box-shadow:none}
  .preview-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px}
  #view-dashboard .preview-banner .preview-icon,#view-dashboard .preview-banner p{display:none}
  .preview-banner>div{min-width:0;flex:1}
