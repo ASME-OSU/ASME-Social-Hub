@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30T20:52:26.939Z",
+  "generatedAt": "2026-11-02T15:52:07.157Z",
   "campaigns": [
     {
       "id": "2026-12-10-asme-study-tables",
@@ -978,7 +978,7 @@
         "feed": "",
         "story": ""
       },
-      "revision": 3,
+      "revision": 4,
       "cancelled": false,
       "status": {
         "feed": "done",
@@ -1047,9 +1047,19 @@
           "at": "2026-10-22T21:43:16.329Z",
           "channel": "story",
           "message": "Publishing window missed"
+        },
+        {
+          "at": "2026-11-02T15:50:50.059Z",
+          "channel": "story",
+          "message": "Missed publishing warning dismissed"
         }
       ],
-      "flyerUrl": "https://raw.githubusercontent.com/ASME-OSU/ASME-Social-Hub/main/assets/uploads/2026-10-22-asme-scheduling-buckeyelink-tour-1792546874319-1.png"
+      "flyerUrl": "https://raw.githubusercontent.com/ASME-OSU/ASME-Social-Hub/main/assets/uploads/2026-10-22-asme-scheduling-buckeyelink-tour-1792546874319-1.png",
+      "warningDismissals": {
+        "[\"story\",\"initial\",\"2026-10-22T21:30:00.000Z\",\"2026-10-22T18:30:00.000Z\"]": {
+          "at": "2026-11-02T15:50:50.059Z"
+        }
+      }
     },
     {
       "id": "2025-10-22-industry-night",
