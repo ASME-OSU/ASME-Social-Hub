@@ -295,10 +295,10 @@ button.primary{border-radius:8px;box-shadow:none}
 
 /* Campaigns stay in one browsable row at every size; the archive keeps the full history. */
 .campaign-heading-actions{display:flex;align-items:center;gap:12px;flex:none}
-.campaign-rail-controls{display:flex;gap:6px}
-.campaign-rail-controls button{width:44px;height:44px;min-width:44px;padding:0;font-size:20px;border-color:var(--line);background:var(--paper)}
+.campaign-rail-controls{display:flex;align-items:center;gap:0;border:1px solid var(--line);border-radius:10px;background:var(--paper);overflow:hidden}
+.campaign-rail-controls button{width:44px;height:44px;min-width:44px;padding:0;font-size:20px;border:0;border-radius:0;background:transparent}
 .campaign-rail-controls button:disabled{cursor:default;opacity:.35}
-#campaign-position{min-width:48px;text-align:center;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+#campaign-position{display:grid;place-items:center;min-height:44px;min-width:48px;text-align:center;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
 @media(min-width:700px){
  #campaign-list.campaign-grid{display:grid;grid-auto-flow:column;grid-auto-columns:clamp(340px,39%,420px);grid-template-columns:none;justify-content:start;gap:20px;overflow-x:auto;overflow-y:hidden;max-width:100%;padding:0 0 12px;scroll-snap-type:x proximity;overscroll-behavior-x:contain;scroll-padding-inline:2px;scrollbar-width:thin;scrollbar-color:var(--steel) transparent}
  #campaign-list>.campaign-card{width:100%;scroll-snap-align:start}
@@ -307,7 +307,7 @@ button.primary{border-radius:8px;box-shadow:none}
 }
 @media(max-width:699px){
  .campaign-heading-actions{display:flex;align-items:center;justify-content:space-between;margin-top:16px}
- .campaign-rail-controls{display:flex;width:100%;justify-content:space-between;align-items:center}
+ .campaign-rail-controls{display:flex;justify-content:center;align-items:center}
  #campaign-list.campaign-grid{display:grid;grid-auto-flow:column;grid-auto-columns:100%;grid-template-columns:none;gap:20px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-padding-inline:0;overscroll-behavior-x:contain;scrollbar-width:none;padding:0 0 4px}
  #campaign-list::-webkit-scrollbar{display:none}
  #campaign-list>.campaign-card{width:100%;scroll-snap-align:start;scroll-snap-stop:always}
@@ -517,7 +517,7 @@ main{width:100%;max-width:none;min-width:0;padding-inline:clamp(16px,3vw,48px)}
 .notice,.error,#schedule-preview,#year-warning{border:1px solid var(--line);border-radius:10px}
 @media(max-width:699px){
  .campaign-heading-actions{gap:12px}
- .campaign-rail-controls{width:auto;flex:1;gap:8px}
+ .campaign-rail-controls{width:auto;flex:none;gap:0}
  #view-dashboard .campaign-heading-actions #new-campaign{position:static;width:auto;min-width:0;white-space:nowrap;min-height:44px;padding:10px 12px;font-size:12px;border-radius:8px;box-shadow:none}
  .preview-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px}
  #view-dashboard .preview-banner .preview-icon,#view-dashboard .preview-banner p{display:none}
