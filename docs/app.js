@@ -117,13 +117,15 @@ function render(){academicYearsController.refresh();$('#campaign-list').setAttri
 function reviewCampaigns(){return campaigns.filter(c=>!c.cancelled&&!c.deletedAt&&campaignWarnings(c).length>0);}
 function renderReviewQueue(){
  const items=reviewCampaigns();$('#campaign-attention').hidden=!items.length;
+ const reviewButton=$('#open-review-queue');reviewButton.textContent=items.length===1?'Review campaign →':'Review campaigns →';
+ if(items.length===1){reviewButton.setAttribute('aria-haspopup','dialog');reviewButton.removeAttribute('aria-expanded');reviewButton.removeAttribute('aria-controls');}else{reviewButton.removeAttribute('aria-haspopup');reviewButton.setAttribute('aria-controls','review-queue');reviewButton.setAttribute('aria-expanded',String($('#review-queue').open));}
  $('#attention-title').textContent=`${items.length} ${items.length===1?'campaign needs':'campaigns need'} review`;
  $('#attention-description').textContent='Review failed, missed, or delayed publishing steps, including past events.';
  $('#review-list').innerHTML=items.map(c=>`<article class="review-item"><h3>${esc(c.title)}</h3><p>${esc(format(c.start))} · ${esc(c.year)}</p>${campaignWarnings(c).map(w=>`<p>${esc(w.message)}</p>`).join('')}<button type="button" data-detail="${esc(c.id)}">Review campaign →</button></article>`).join('')||'<p>No campaigns need attention.</p>';
 }
-function openReviewQueue(){view('dashboard');const queue=$('#review-queue');$('#campaign-attention').hidden=false;queue.open=true;queue.scrollIntoView({block:'start'});queue.querySelector('summary').focus();}
-$('#open-review-queue').addEventListener('click',()=>{if($('#review-queue').open)$('#review-queue').open=false;else openReviewQueue();});
-$('#review-queue').addEventListener('toggle',()=>$('#open-review-queue').setAttribute('aria-expanded',String($('#review-queue').open)));
+function openReviewQueue(){const items=reviewCampaigns();if(items.length===1){detail(items[0]);return;}view('dashboard');const queue=$('#review-queue');$('#campaign-attention').hidden=false;queue.open=true;queue.scrollIntoView({block:'start'});queue.querySelector('summary').focus();}
+$('#open-review-queue').addEventListener('click',()=>{if(reviewCampaigns().length===1){openReviewQueue();return;}if($('#review-queue').open)$('#review-queue').open=false;else openReviewQueue();});
+$('#review-queue').addEventListener('toggle',()=>{if(reviewCampaigns().length!==1)$('#open-review-queue').setAttribute('aria-expanded',String($('#review-queue').open));});
 
 let lastCampaignSync=0,refreshingCampaigns=false,dataRevision=0;
 function showCampaignSync(message){$('#campaign-sync-status').textContent=message||(config?.previewOnly?'Local drafts in this browser.':`Campaigns synced ${format(new Date(lastCampaignSync))} ${timeZoneName(new Date(lastCampaignSync),config.timezone)}. Updates refresh every minute.`);}

@@ -1,0 +1,10 @@
+{
+  "id":"missed-story-fixture", "year":"2026-27", "type":"gbm",
+  "title":"Past event with missed story", "description":"Synthetic missed publishing fixture.",
+  "start":"2026-10-22T21:30:00.000Z", "end":"2026-10-22T22:30:00.000Z",
+  "location":{"name":"Fixture room"}, "template":"refined-blueprint", "revision":3,
+  "campaign":{"feed":{"enabled":true,"daysBefore":1,"time":"10:00"},"story":{"enabled":true,"daysBefore":0,"time":"14:30"},"groupme":{"enabled":false,"announce":false}},
+  "status":{"feed":"done","story":"skipped","groupme":"skipped"},
+  "results":{"feed":{"mediaId":"fixture-receipt","postedAt":"2026-10-21T14:59:17.343Z"},"story":{"skipReason":"publishing-window-missed"}},
+  "log":[{"at":"2026-10-22T21:43:16.329Z","channel":"story","message":"Publishing window missed"}]
+}

@@ -6,8 +6,8 @@ import {visibleWarnings,dismissMissedWarning} from '../docs/warning-dismissals.m
 import {mergeCampaignEdit} from '../docs/campaign-save.mjs';
 const config={activeYear:'2026-27',timezone:'America/New_York'};
 const now='2026-11-02T16:00:00Z';
-const campaign=JSON.parse(await readFile(new URL('../data/campaigns/2026-27/2026-10-22-asme-scheduling-buckeyelink-tour.json',import.meta.url)));
-test('BuckeyeLink missed story can be acknowledged without changing publishing history',()=>{
+const campaign=JSON.parse(await readFile(new URL('./fixtures/missed-campaign.json',import.meta.url)));
+test('A past event missed story can be acknowledged without changing publishing history',()=>{
  const warnings=scheduleWarnings(campaign,config,now);
  assert.equal(warnings.length,1);assert.equal(warnings[0].channel,'story');
  assert.match(warnings[0].message,/Dismiss this warning once reviewed/);

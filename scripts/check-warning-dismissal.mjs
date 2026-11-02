@@ -3,7 +3,7 @@ import {readFile} from 'node:fs/promises';
 import {spawn} from 'node:child_process';
 import {chromium} from 'playwright';
 const config=JSON.parse(await readFile('config/chapter.json','utf8'));
-const original=JSON.parse(await readFile('data/campaigns/2026-27/2026-10-22-asme-scheduling-buckeyelink-tour.json','utf8'));
+const original=JSON.parse(await readFile('tests/fixtures/missed-campaign.json','utf8'));
 let remote=structuredClone(original),conflict=false;
 const port=4317,base=`http://127.0.0.1:${port}`;
 const server=spawn(process.execPath,['scripts/serve.mjs'],{env:{...process.env,PORT:String(port)},stdio:'pipe'});
@@ -30,8 +30,11 @@ try{
   return r.fulfill({status:404,json:{message:'Mock only'}});
  });
  await page.goto(base);
+ await page.locator('#open-review-queue').click();
+ await page.locator('#detail').waitFor({state:'visible'});
+ await page.locator('[data-close=detail]').first().click();
  await page.locator('[data-review-queue]').click();
- await page.locator(`#review-list [data-detail="${original.id}"]`).click();
+ await page.locator('#detail').waitFor({state:'visible'});
  const dismiss=page.locator('.detail-priority-warning > [data-dismiss-missed]');
  await dismiss.waitFor({state:'visible'});
  // A concurrent publishing update must survive, and a rejected write stays visible.

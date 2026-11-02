@@ -28,8 +28,12 @@ export async function checkHubAuditFixes(browser,base){
   assert.equal(await page.locator('#campaign-list [data-detail="audit-old"]').count(),0,'Past campaigns leave home cards');
   assert.match(await page.locator('#attention-title').textContent(),/1 campaign needs review/);
   assert.ok(await page.locator('#campaign-attention').evaluate(e=>e.getBoundingClientRect().top)<await page.locator('#campaign-list').evaluate(e=>e.getBoundingClientRect().top),'Attention precedes phone cards');
-  await page.locator('#open-review-queue').click();await page.locator('#review-list [data-detail="audit-old"]').click();assert.match(await page.locator('#detail-title').textContent(),/Past campaign/);await page.locator('[data-close=detail]').first().click();
+  await page.locator('#open-review-queue').click();assert.match(await page.locator('#detail-title').textContent(),/Past campaign/);await page.locator('[data-close=detail]').first().click();
+  records.push({...old,id:'audit-other',title:'Another campaign requiring review'});
+  await page.locator('#refresh-campaigns').click();await page.waitForFunction(()=>document.querySelector('#attention-title').textContent.includes('2 campaigns'));
+  await page.locator('#open-review-queue').click();assert.equal(await page.locator('#review-queue').evaluate(el=>el.open),true);
   for(const theme of ['light','dark']){await page.emulateMedia({colorScheme:theme});await checkContrast(page,['#attention-title','#attention-description','#open-review-queue','#campaign-sync-status','#refresh-campaigns','.review-item p']);}
+  records.pop();await page.locator('#refresh-campaigns').click();await page.waitForFunction(()=>document.querySelector('#attention-title').textContent.includes('1 campaign'));
   await page.locator('#campaign-list [data-detail="audit-future"]').click();await page.locator('[data-edit]').click();
   await page.getByRole('button',{name:'Preview image 2',exact:true}).click();await page.locator('[data-close=editor]').first().click();
   assert.equal(await page.locator('#editor').isVisible(),false,'Choosing a carousel preview is not an edit');
