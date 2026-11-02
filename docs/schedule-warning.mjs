@@ -33,7 +33,9 @@ export function scheduleWarnings(c, config, now=new Date()) {
     if(current<start&&current<=dueAt)continue;
     const scheduled=new Intl.DateTimeFormat('en-US',{timeZone:config.timezone,dateStyle:'medium',timeStyle:'short'}).format(new Date(dueAt))+' '+timeZoneName(dueAt,config.timezone);
     const missed=skippedMissed||current>=start||current-dueAt>WINDOW_MS;
-    const message=skippedMissed
+    const message=current>=start
+      ? `${followUp?'GroupMe follow-up':labels[channel]} was not posted before the event started. Scheduled for ${scheduled}. No further post will be sent for this past event. Dismiss this warning once reviewed; the missed publishing history is retained.`
+      : skippedMissed
       ? `${followUp?'GroupMe follow-up':labels[channel]} will not be posted: it is marked skipped after a missed publishing window. Scheduled for ${scheduled}. A posting time that is still in the past will not reopen it. Choose a future posting time and save the campaign.`
       : missed
       ? `${followUp?'GroupMe follow-up':labels[channel]} will not be posted: ${current>=start?'the event has already started':'the scheduled posting date has already passed and its 24-hour publishing window has closed'}. Scheduled for ${scheduled}. Choose a future posting time or reduce the number of days before the event.`

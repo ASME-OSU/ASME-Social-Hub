@@ -1,5 +1,5 @@
 import {reopenMissedChannels} from './schedule-status.mjs';
-const runtime=new Set(['revision','status','results','log','flyers']);
+const runtime=new Set(['revision','status','results','log','flyers','warningDismissals']);
 function canonical(value) {
   if(Array.isArray(value)) return value.map(canonical);
   if(value && typeof value==='object') return Object.fromEntries(Object.keys(value).sort().filter(k=>value[k]!==undefined).map(k=>[k,canonical(value[k])]));
