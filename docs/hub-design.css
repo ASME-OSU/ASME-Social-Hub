@@ -1,17 +1,17 @@
-/* Chapter desk: warm paper, quiet rules, and scarlet wayfinding. */
-:root,:root[data-theme="light"]{--canvas:#f6f4ef;--paper:#fffefa;--ice:#eeece6;--ink:#202c35;--muted:#59646c;--line:#d9d8d1;--navy:#263c49;--scarlet:#ba0c2f;--scarlet-tint:#f9e9e9;--sidebar-bg:#192a33}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--canvas:#171c20;--paper:#20272b;--ice:#2a3237;--ink:#faf9f6;--muted:#ced5da;--line:#3d484e;--navy:#b9cfda;--scarlet:#ff8a9b;--scarlet-tint:#3b272e;--sidebar-bg:#223b4b;--sidebar-edge:#526c7b;--sidebar-shadow:8px 0 24px #0003}}
-:root[data-theme="dark"]{--canvas:#171c20;--paper:#20272b;--ice:#2a3237;--ink:#faf9f6;--muted:#ced5da;--line:#3d484e;--navy:#b9cfda;--scarlet:#ff8a9b;--scarlet-tint:#3b272e;--sidebar-bg:#223b4b;--sidebar-edge:#526c7b;--sidebar-shadow:8px 0 24px #0003}
+/* Shared ASME Hub palette and surfaces; the Social Hub keeps its campaign tools. */
+:root,:root[data-theme="light"]{--canvas:#f2f5f9;--paper:#ffffff;--ice:#f7f9fc;--ink:#15253a;--muted:#5c697d;--line:#dce3ec;--navy:#102840;--scarlet:#ba0c2f;--scarlet-tint:#fbe7eb;--sidebar-bg:#061426;--radius:8px;--radius-lg:14px}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--canvas:#071321;--paper:#0d1d30;--ice:#102339;--ink:#e8edf4;--muted:#a4b0c0;--line:#20364f;--navy:#b9cfda;--scarlet:#ee6a84;--scarlet-tint:#302134;--sidebar-bg:#061426;--sidebar-edge:#20364f;--sidebar-shadow:none}}
+:root[data-theme="dark"]{--canvas:#071321;--paper:#0d1d30;--ice:#102339;--ink:#e8edf4;--muted:#a4b0c0;--line:#20364f;--navy:#b9cfda;--scarlet:#ee6a84;--scarlet-tint:#302134;--sidebar-bg:#061426;--sidebar-edge:#20364f;--sidebar-shadow:none}
 #sidebar{background-image:none}header{background:var(--canvas)}
-.page-heading{border-bottom:1px solid var(--line)}
+.page-heading{border-bottom:0;padding-bottom:0}
 .page-heading h1{letter-spacing:-.04em}
 .eyebrow{color:var(--scarlet);letter-spacing:.15em}.page-heading p{max-width:580px;font-size:14px}
-button.primary{border-radius:2px;box-shadow:0 3px 0 #00000012}
+button.primary{border-radius:8px;box-shadow:none}
 .preview-banner{background:transparent}
 .stats{background:transparent;border:0;border-block:1px solid var(--line)}
 .stat strong{color:var(--navy)}.section-heading h2{letter-spacing:-.02em}
-.campaign-card{border-radius:0;box-shadow:0 3px 0 #00000004}.campaign-card:hover{border-color:var(--scarlet)}
-.card-art{height:120px;background:var(--ice);color:var(--ink);border-bottom:1px solid var(--line);border-top:3px solid var(--scarlet);padding:20px 24px;background-image:none}
+.campaign-card{border-radius:14px;box-shadow:0 4px 20px #0a1e370b}.campaign-card:hover{border-color:var(--steel)}
+.card-art{height:120px;background:var(--ice);color:var(--ink);border-bottom:1px solid var(--line);border-top:0;padding:20px 24px;background-image:none}
 .card-art{isolation:isolate;overflow:hidden}
 .card-art>img{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 35%;opacity:.18;filter:saturate(.65);z-index:-2;pointer-events:none}
 .card-art::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--ice),transparent 55%,var(--ice));opacity:.8;z-index:-1;pointer-events:none}
@@ -89,7 +89,7 @@ button.primary{border-radius:2px;box-shadow:0 3px 0 #00000012}
 }
 
 /* Routine publishing health is a quiet disclosure below the campaigns. */
-.dispatcher-health{padding:0;margin:16px 0 0;background:transparent;border:0;border-block:1px solid var(--line);border-radius:0;font-size:12px}
+.dispatcher-health{padding:0;margin:0 0 16px;background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;font-size:12px}
 .dispatcher-health .dispatcher-controls{margin:0;border:0}
 .dispatcher-health .dispatcher-controls>summary{display:flex;align-items:center;gap:12px;min-height:48px;width:100%;padding:10px 4px;list-style:none;font-size:12px;font-weight:400}
 .dispatcher-controls>summary::-webkit-details-marker{display:none}
@@ -105,7 +105,7 @@ button.primary{border-radius:2px;box-shadow:0 3px 0 #00000012}
 .posting-details #dispatcher-last-run{margin:0;font-size:12px;color:var(--muted)}
 .posting-details p{font-size:12px;margin:0 0 10px;color:var(--muted)}
 .dispatcher-health button{min-height:44px;padding:6px 10px;font-size:12px;margin:0 6px 8px 0}
-.dispatcher-health[data-state=failed],.dispatcher-health[data-state=stale]{margin:16px 0;padding:0 12px;border:1px solid var(--line);border-left:3px solid var(--scarlet);background:var(--paper)}
+.dispatcher-health[data-state=failed],.dispatcher-health[data-state=stale]{margin:16px 0;padding:0 12px;border:1px solid var(--status-failed-line);border-radius:10px;background:var(--paper)}
 .dispatcher-health[data-state=failed] .posting-dot,.dispatcher-health[data-state=stale] .posting-dot{background:var(--scarlet)}
 .dispatcher-health[data-state=failed] #dispatcher-health-title,.dispatcher-health[data-state=stale] #dispatcher-health-title{color:var(--scarlet);font-weight:600}
 .dispatcher-health #dispatcher-warning{margin:0 0 12px;font-size:12px;font-weight:400}
@@ -271,7 +271,7 @@ button.primary{border-radius:2px;box-shadow:0 3px 0 #00000012}
 /* A little more chapter color without competing with the event artwork. */
 .campaign-card{border-color:color-mix(in srgb,var(--navy) 18%,var(--paper));box-shadow:0 3px 12px #10284008}
 /* A clean chapter header avoids ghosted text from cropped flyer artwork. */
-.campaign-card .card-art{background-color:color-mix(in srgb,var(--navy) 8%,var(--paper));box-shadow:inset 3px 0 var(--scarlet)}
+.campaign-card .card-art{background-color:color-mix(in srgb,var(--navy) 5%,var(--paper));box-shadow:none}
 .campaign-card .card-art>img{display:none}
 .campaign-card .card-art::after{display:none}
 .campaign-card .art-date{background:var(--paper);border:1px solid color-mix(in srgb,var(--scarlet) 18%,var(--paper));box-shadow:0 2px 5px #10284008}
@@ -293,18 +293,26 @@ button.primary{border-radius:2px;box-shadow:0 3px 0 #00000012}
 .campaign-card .card-title-row>.badge.pending,.detail-overview-status>.badge.pending,.archive-row .badge.pending{background:var(--status-pending-bg);color:var(--status-pending-ink);border-color:var(--status-pending-line)}
 .campaign-card .card-title-row>.badge.failed,.detail-overview-status>.badge.failed,.archive-row .badge.failed,.campaign-card .card-title-row>.badge.cancelled,.detail-overview-status>.badge.cancelled,.archive-row .badge.cancelled{background:var(--status-failed-bg);color:var(--status-failed-ink);border-color:var(--status-failed-line)}
 
-/* Desktop campaigns form one horizontal rail; the archive keeps the full history. */
+/* Campaigns stay in one browsable row at every size; the archive keeps the full history. */
 .campaign-heading-actions{display:flex;align-items:center;gap:12px;flex:none}
 .campaign-rail-controls{display:flex;gap:6px}
 .campaign-rail-controls button{width:44px;height:44px;min-width:44px;padding:0;font-size:20px;border-color:var(--line);background:var(--paper)}
 .campaign-rail-controls button:disabled{cursor:default;opacity:.35}
-@media(min-width:1000px){
+#campaign-position{min-width:48px;text-align:center;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+@media(min-width:700px){
  #campaign-list.campaign-grid{display:grid;grid-auto-flow:column;grid-auto-columns:clamp(340px,39%,420px);grid-template-columns:none;justify-content:start;gap:20px;overflow-x:auto;overflow-y:hidden;max-width:100%;padding:0 0 12px;scroll-snap-type:x proximity;overscroll-behavior-x:contain;scroll-padding-inline:2px;scrollbar-width:thin;scrollbar-color:var(--steel) transparent}
  #campaign-list>.campaign-card{width:100%;scroll-snap-align:start}
  #campaign-list>.empty{grid-column:auto;width:min(100%,600px)}
  #campaign-list:not(:has(.campaign-card)){display:block}
 }
-@media(max-width:999px){.campaign-rail-controls{display:none}.campaign-heading-actions{display:block}}
+@media(max-width:699px){
+ .campaign-heading-actions{display:flex;align-items:center;justify-content:space-between;margin-top:16px}
+ .campaign-rail-controls{display:flex;width:100%;justify-content:space-between;align-items:center}
+ #campaign-list.campaign-grid{display:grid;grid-auto-flow:column;grid-auto-columns:100%;grid-template-columns:none;gap:20px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-padding-inline:0;overscroll-behavior-x:contain;scrollbar-width:none;padding:0 0 4px}
+ #campaign-list::-webkit-scrollbar{display:none}
+ #campaign-list>.campaign-card{width:100%;scroll-snap-align:start;scroll-snap-stop:always}
+ #campaign-list:not(:has(.campaign-card)){display:block}
+}
 
 /* Fit the initial desktop overview to the viewport without shrinking touch controls. */
 @media(min-width:900px){
@@ -385,13 +393,13 @@ details[open]:not(.mobile-social-menu):not(.dispatcher-controls):not(.artwork-pr
 
 /* The first campaign view answers what it is, what goes out next, and what needs attention. */
 #detail .detail-event-summary{font-size:13px;line-height:1.5;margin:0 0 12px;color:var(--ink);overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-#detail .detail-next-action{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--line);border-left:3px solid var(--navy);border-radius:6px;margin:0 0 14px;background:var(--paper)}
+#detail .detail-next-action{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;margin:0 0 14px;background:var(--paper)}
 #detail .detail-next-label{display:block;font-size:10px;font-weight:650;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
 #detail .detail-next-action strong{display:block;font-size:14px;line-height:1.4}
 #detail .detail-next-time{text-align:right;flex-shrink:0;font-size:12px;line-height:1.5}
 #detail .detail-next-time span{display:block;color:var(--muted);font-size:11px}
 #detail .detail-next-action>p{font-size:12px;line-height:1.5;color:var(--muted);margin:0;max-width:60%}
-#detail .detail-priority-warning{border-left:3px solid var(--scarlet);background:var(--scarlet-tint);padding:10px 12px;margin-bottom:12px;border-radius:4px}
+#detail .detail-priority-warning{border:1px solid var(--status-failed-line);background:var(--scarlet-tint);padding:10px 12px;margin-bottom:12px;border-radius:4px}
 #detail .detail-priority-warning>strong{font-size:12px;line-height:1.4}
 #detail .detail-priority-warning>p{font-size:12px;line-height:1.5;margin:4px 0 0;overflow-wrap:anywhere}
 #detail .detail-priority-warning .detail-warning-details{background:transparent;border:0;margin:0;padding:0}
@@ -449,7 +457,7 @@ details[open]:not(.mobile-social-menu):not(.dispatcher-controls):not(.artwork-pr
 .campaign-sync{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 16px}
 .campaign-sync p{font-size:13px;color:var(--muted);margin:0;line-height:1.6}
 .campaign-sync button{flex:none;background:var(--paper);border-color:var(--line)}
-#campaign-attention{border:1px solid var(--status-failed-line);border-left:4px solid var(--status-failed-ink);border-radius:8px;background:var(--paper);padding:16px 20px;margin:0 0 20px}
+#campaign-attention{border:1px solid var(--status-failed-line);border-radius:8px;background:var(--paper);padding:16px 20px;margin:0 0 20px}
 .attention-summary{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
 .attention-summary h2{font:650 18px/1.4 var(--font-body);margin:0 0 4px;color:var(--status-failed-ink)}
 .attention-summary p{font-size:14px;line-height:1.6;margin:0;color:var(--muted)}
@@ -482,7 +490,42 @@ main{width:100%;max-width:none;min-width:0;padding-inline:clamp(16px,3vw,48px)}
 }
 
 #caption-budget{font-size:14px;line-height:1.6}
-#caption-budget.error{color:var(--scarlet);font-weight:600;background:var(--scarlet-tint);border-left:3px solid var(--scarlet);padding:10px 12px}
+#caption-budget.error{color:var(--scarlet);font-weight:600;background:var(--scarlet-tint);border:1px solid var(--status-failed-line);padding:10px 12px}
 
 /* The summary action opens the queue; avoid a duplicate collapsed disclosure. */
 #review-queue:not([open]){display:none}
+
+/* Navigation uses a selected surface rather than a colored edge. */
+#sidebar nav button{position:relative;border-radius:10px;color:#aebaca;box-shadow:none;min-height:46px}
+#sidebar nav button:hover{color:#fff;background:#ffffff0c}
+#sidebar nav button.active{color:#fff;background:#ffffff16;box-shadow:none;font-weight:750}
+#sidebar nav .nav-icon{display:grid;place-items:center;width:30px;height:30px;border-radius:8px;color:inherit;background:transparent}
+#sidebar nav .nav-icon svg{width:19px;height:19px}
+#sidebar nav button.active::before,#sidebar nav button.active::after{content:none}
+@media(max-width:699px){
+ #sidebar{padding-inline:8px}
+ #sidebar nav{gap:6px;align-items:center}
+ #sidebar nav button{border-radius:10px;min-height:48px;padding:4px 0;gap:1px}
+ #sidebar nav .nav-icon{height:23px}
+ .campaign-sync{gap:8px;align-items:center;margin-bottom:16px}
+ .campaign-sync p{font-size:11px}
+ .campaign-sync button{padding:8px 10px;font-size:11px}
+}
+
+/* Messages communicate through text and surfaces, without decorative side rules. */
+.preview-banner{border:1px solid var(--line);border-radius:10px;background:var(--paper)}
+.notice,.error,#schedule-preview,#year-warning{border:1px solid var(--line);border-radius:10px}
+@media(max-width:699px){
+ .campaign-heading-actions{gap:12px}
+ .campaign-rail-controls{width:auto;flex:1;gap:8px}
+ #view-dashboard .campaign-heading-actions #new-campaign{position:static;width:auto;min-width:0;white-space:nowrap;min-height:44px;padding:10px 12px;font-size:12px;border-radius:8px;box-shadow:none}
+ .preview-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px}
+ #view-dashboard .preview-banner .preview-icon,#view-dashboard .preview-banner p{display:none}
+ .preview-banner>div{min-width:0;flex:1}
+ .preview-banner strong{font-size:12px}
+ .preview-banner button{font-size:12px;padding:4px 0;min-height:44px}
+}
+@media(min-width:700px) and (max-width:1099px){
+ #view-dashboard .page-heading{flex-wrap:wrap}
+ .campaign-heading-actions{margin-left:auto}
+}

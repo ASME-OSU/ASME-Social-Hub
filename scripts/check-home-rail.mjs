@@ -15,11 +15,16 @@ export async function checkHomeRail(browser,base){
    const page=await context.newPage(),errors=[],requests=[];let listedCampaigns=campaigns;page.on('pageerror',error=>errors.push(error.message));await page.clock.install({time:new Date('2026-10-22T18:00:00Z')});
    await page.route('**/config/chapter.json',route=>route.fulfill({json:config}));await page.route('**/data/archive-index.json',route=>route.fulfill({json:{campaigns:listedCampaigns}}));await page.route('**/data/candidates.json',route=>route.fulfill({json:{events:[],changes:[]}}));await page.route('**/data/token-warning.json',route=>route.fulfill({json:{status:'unknown'}}));await page.route('**/data/dispatcher-health.json',route=>route.fulfill({json:{lastSuccessfulLiveRunAt:'2026-10-22T17:55:00Z'}}));await page.route('https://rail-fixture.invalid/**',route=>route.fulfill({contentType:'image/jpeg',body:image}));await page.route('https://api.github.com/**',route=>{requests.push(route.request().method());return route.abort();});
    await page.goto(base);const rail=page.locator('#campaign-list'),cards=rail.locator('.campaign-card'),recentCard=cards.filter({has:page.getByRole('heading',{name:recent.title,exact:true})});await cards.first().waitFor();assert.equal(await cards.count(),4,'Upcoming and recent events share the home list');assert.equal(await rail.getByRole('heading',{name:old.title,exact:true}).count(),0);assert.match(await recentCard.innerText(),/17\s+likes/);assert.match(await recentCard.innerText(),/191\s+reached/);
-   if(width>=1000){
-    assert.equal(await page.locator('#campaign-rail-controls').isVisible(),true);assert.equal(await page.locator('#campaign-previous').isDisabled(),true);const positions=await cards.evaluateAll(items=>items.map(item=>item.getBoundingClientRect().y));assert.ok(Math.max(...positions)-Math.min(...positions)<2,'Desktop cards form one horizontal row');
+   await page.evaluate(()=>document.fonts.ready);await page.screenshot({path:`${output}/${width}-${height}-${theme}-dashboard.png`});
+   {
+    assert.equal(await page.locator('#campaign-rail-controls').isVisible(),true);assert.equal(await page.locator('#campaign-previous').isDisabled(),true);const positions=await cards.evaluateAll(items=>items.map(item=>item.getBoundingClientRect().y));assert.ok(Math.max(...positions)-Math.min(...positions)<2,'Campaigns form one horizontal row on desktop and mobile');
     await page.locator('#campaign-next').focus();await page.keyboard.press('Enter');await page.waitForFunction(()=>document.querySelector('#campaign-list').scrollLeft>100);const scrolled=await rail.evaluate(el=>el.scrollLeft);await page.locator('#campaign-previous').click();await page.waitForFunction(before=>document.querySelector('#campaign-list').scrollLeft<before,scrolled);
     const lastAction=cards.last().getByRole('button');await lastAction.focus();assert.equal(await lastAction.evaluate(el=>el===document.activeElement),true);const lastRect=await lastAction.boundingBox(),railRect=await rail.boundingBox();assert.ok(lastRect.x>=railRect.x-2&&lastRect.x+lastRect.width<=railRect.x+railRect.width+2,'Focusing an offscreen campaign scrolls it into the rail');
-   }else assert.equal(await page.locator('#campaign-rail-controls').isVisible(),false,'Phone cards use regular document flow');
+   }
+   assert.match(await page.locator('#campaign-position').innerText(),/of 4/);
+   assert.equal(await page.locator('nav button.active').evaluate(el=>getComputedStyle(el).boxShadow),'none','Selected navigation has no accent stripe');
+   assert.equal(await page.locator('#view-dashboard .page-heading').evaluate(el=>getComputedStyle(el).borderBottomWidth),'0px','Heading has no redundant divider');
+   assert.equal(await page.locator('.dispatcher-health').evaluate(el=>getComputedStyle(el).borderTopWidth),'0px','Posting status has only a bottom divider');
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'The rail never widens the page');
    await cards.first().getByRole('button').click();const modal=page.locator('#detail');await page.waitForFunction(()=>{const img=document.querySelector('#detail .ig-detail-image img');return img?.complete&&img.naturalWidth>0;});await page.evaluate(async()=>{await document.fonts.ready;await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));});
    if(width>=1000){
@@ -32,7 +37,7 @@ export async function checkHomeRail(browser,base){
    assert.deepEqual(errors,[]);assert.deepEqual(requests,[]);
   }finally{await context.close();}
  }
- await writeFile(`${output}/measurements.json`,JSON.stringify(measurements,null,2));console.log('Home rail passed: desktop one-row scroll and keyboard focus, mobile overflow, recent stats, automatic 24-hour removal with archive preserved, and complete initial modal previews/footer at common desktop sizes.');
+ await writeFile(`${output}/measurements.json`,JSON.stringify(measurements,null,2));console.log('Home rail passed: desktop and mobile one-row scroll, position count and keyboard focus, simplified dividers and navigation, recent stats, automatic 24-hour removal with archive preserved, and complete initial modal previews/footer at common desktop sizes.');
 }
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
  const {chromium}=await import('playwright'),port=4303,base=`http://127.0.0.1:${port}`,server=spawn(process.execPath,['scripts/serve.mjs'],{env:{...process.env,PORT:String(port)},stdio:'pipe'});let browser;

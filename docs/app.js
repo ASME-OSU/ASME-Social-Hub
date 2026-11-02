@@ -106,7 +106,9 @@ function archiveRow(c){const image=campaignImage(c,'feed'),latest=latestInsights
 
 function updateCampaignRail(){
  const rail=$('#campaign-list'),controls=$('#campaign-rail-controls');if(!rail||!controls)return;
- const overflowing=matchMedia('(min-width:1000px)').matches&&rail.scrollWidth>rail.clientWidth+2;
+ const overflowing=rail.scrollWidth>rail.clientWidth+2,card=rail.querySelector('.campaign-card'),count=rail.querySelectorAll('.campaign-card').length;
+ const step=card?card.getBoundingClientRect().width+parseFloat(getComputedStyle(rail).columnGap||0):1,index=Math.min(count,Math.max(1,Math.round(rail.scrollLeft/step)+1));
+ $('#campaign-position').textContent=count?`${index} of ${count}`:'';
  controls.hidden=!overflowing;$('#campaign-previous').disabled=rail.scrollLeft<=2;$('#campaign-next').disabled=rail.scrollLeft>=rail.scrollWidth-rail.clientWidth-2;
 }
 for(const [selector,direction] of [['#campaign-previous',-1],['#campaign-next',1]])$(selector).addEventListener('click',()=>{const rail=$('#campaign-list'),card=rail.querySelector('.campaign-card');rail.scrollBy({left:direction*((card?.getBoundingClientRect().width||360)+20),behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});});
