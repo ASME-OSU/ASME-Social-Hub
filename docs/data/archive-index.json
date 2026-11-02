@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-02T15:52:07.157Z",
+  "generatedAt": "2026-11-02T18:30:21.912Z",
   "campaigns": [
     {
       "id": "2026-12-10-asme-study-tables",
@@ -466,7 +466,7 @@
       "cancelled": false,
       "status": {
         "feed": "done",
-        "story": "pending",
+        "story": "done",
         "groupme": "pending"
       },
       "results": {
@@ -483,7 +483,16 @@
           "postedAt": "2026-10-29T16:58:18.620Z",
           "permalink": "https://www.instagram.com/p/DfFfYY3FH3t/"
         },
-        "story": {},
+        "story": {
+          "preparedRevision": 1,
+          "image": "https://asme-osu.github.io/ASME-Social-Hub/media/2026-27/2026-11-05-asme-matlab-info-session-story.jpg",
+          "caption": "ASME MATLAB Info Session\n\nWe’re having a MATLAB info session! Come join us if you want to learn more about MATLAB and how it works. See the flyer for details!\n\nThursday, November 5, 2026 at 5:30 PM\nScott Laboratory E141\n\n#ASME #Engineering #OhioState",
+          "containerId": "18433734745198294",
+          "publishAttemptedAt": "2026-11-02T18:30:07.256Z",
+          "mediaId": "18117233084090670",
+          "postedAt": "2026-11-02T18:30:07.256Z",
+          "permalink": "https://www.instagram.com/stories/asmeohiostate/4021701578784218748"
+        },
         "groupme": {
           "botText": "ASME MATLAB Info Session\nThursday, November 5, 2026 at 5:30 PM EST\nScott Laboratory E141\nWe’re having a MATLAB info session! Come join us if you want to learn more about MATLAB and how it works. See the flyer for details!\nEvent details: https://asme-osu.github.io/ASME-Social-Hub/event.html?year=2026-27&id=2026-11-05-asme-matlab-info-session",
           "botAttemptedAt": "2026-10-29T16:58:18.620Z",
@@ -500,6 +509,16 @@
               "likes": 6,
               "saved": 0
             }
+          },
+          {
+            "channel": "story",
+            "day": 0,
+            "mediaId": "18117233084090670",
+            "recordedAt": "2026-11-02T18:30:20.781Z",
+            "metrics": {
+              "reach": 0,
+              "replies": 0
+            }
           }
         ]
       },
@@ -513,6 +532,11 @@
           "at": "2026-10-29T16:58:18.620Z",
           "channel": "groupme",
           "message": "Bot announcement sent"
+        },
+        {
+          "at": "2026-11-02T18:30:07.256Z",
+          "channel": "story",
+          "message": "Published"
         }
       ],
       "flyerUrl": "https://raw.githubusercontent.com/ASME-OSU/ASME-Social-Hub/main/assets/uploads/2026-11-05-asme-matlab-info-session-1793068613066-1.png"
