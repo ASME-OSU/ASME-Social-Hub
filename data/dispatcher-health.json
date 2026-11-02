@@ -1,7 +1,7 @@
 {
-  "lastLiveRunAt": "2026-11-02T13:46:19.460Z",
+  "lastLiveRunAt": "2026-11-02T16:11:48.541Z",
   "lastLiveRunStatus": "success",
-  "lastSuccessfulLiveRunAt": "2026-11-02T13:46:19.460Z",
-  "runId": "41455826287",
-  "event": "schedule"
+  "lastSuccessfulLiveRunAt": "2026-11-02T16:11:48.541Z",
+  "runId": "41479031283",
+  "event": "workflow_dispatch"
 }
