@@ -1,22 +1,6 @@
 {
-  "generatedAt": "2026-11-02T16:31:36.878Z",
+  "generatedAt": "2026-11-03T14:38:39.037Z",
   "events": [
-    {
-      "id": "4o94ugad0fu7c42nu4j2huli1j@google.com::2026-11-02T00:00:00.000Z",
-      "title": "Enrollment Census Date (second-session)",
-      "start": "2026-11-02T00:00:00.000Z",
-      "end": "2026-11-03T00:00:00.000Z",
-      "allDay": true,
-      "location": "",
-      "description": "",
-      "url": "https://calendar.google.com/calendar/ical/c93730cdacb567b0f010d1367080e3028ec5c7657d9713b675ac9e5c437b9fba%40group.calendar.google.com/public/basic.ics",
-      "updated": "2026-07-09T22:54:00.000Z",
-      "source": {
-        "kind": "ical",
-        "uid": "4o94ugad0fu7c42nu4j2huli1j@google.com::2026-11-02T00:00:00.000Z",
-        "calendarUid": "4o94ugad0fu7c42nu4j2huli1j@google.com"
-      }
-    },
     {
       "id": "6007o04v43b5pioguflhf7p4qk@google.com::2026-11-11T00:00:00.000Z",
       "title": "Veterans Day observed - no classes, offices closed",
