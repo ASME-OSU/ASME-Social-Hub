@@ -1,0 +1,126 @@
+/* Dark-mode readability, matched to the Officer Hub. Light and print styles retain their own palette. */
+@media screen {
+:root[data-theme="dark"] {
+  --canvas: #091525;
+  --ink: #eef2f7;
+  --muted: #bac6d5;
+  --control-border: #617b98;
+  --readability-focus: #b4d7ff;
+  --paper: #112238;
+  --ice: #182d45;
+  --line: #344b66;
+  --steel: #7890aa;
+  --status-done-bg: #123b31;
+  --status-done-ink: #9ee2bf;
+  --status-done-line: #477b65;
+  --status-pending-bg: #3c331c;
+  --status-pending-ink: #f5d785;
+  --status-pending-line: #8a7440;
+  --status-failed-bg: #412633;
+  --status-failed-ink: #ffb4c3;
+  --status-failed-line: #956071;
+}
+
+:root[data-theme="dark"] .campaign-card .card-title-row h3,
+:root[data-theme="dark"] .campaign-card .step-row strong,
+:root[data-theme="dark"] #detail :is(.detail-next-action strong, .detail-info-pane h3) {
+  color: var(--ink);
+}
+:root[data-theme="dark"] :is(.campaign-card .card-info, .campaign-card .art-label, .campaign-card .step-status, .campaign-card .step-time, .campaign-card .step-row time, .campaign-card .card-engagement p, .campaign-card .card-engagement small, .campaign-card .card-footer small, .archive-main p, .timeline time, .field-help, .subtle, #editor label, #settings-form label, .badge, #campaign-position, .posting-details p, #dispatcher-health-title, .campaign-sync p) {
+  font-size: 13px;
+  line-height: 1.5;
+}
+:root[data-theme="dark"] #detail :is(.detail-event-meta, .detail-next-label, .detail-next-time, .detail-next-time span, .detail-priority-warning p, .detail-warning-details summary, .detail-insights .card-engagement p, .detail-insights .card-engagement small) {
+  font-size: 13px;
+  line-height: 1.5;
+}
+:root[data-theme="dark"] :is(input, select, textarea, button:not(.primary):not(.detail-artwork-trigger):not(.ig-previous):not(.ig-next)) {
+  border-color: var(--control-border);
+}
+:root[data-theme="dark"] :is(input, select, textarea)::placeholder {
+  color: var(--muted);
+  opacity: 1;
+}
+:root[data-theme="dark"] :is(button, a, input, select, textarea, summary):focus-visible {
+  outline: 3px solid var(--readability-focus);
+  outline-offset: 3px;
+}
+:root[data-theme="dark"] .campaign-card .status-dot.done {
+  background: var(--status-done-bg);
+  border-color: var(--status-done-ink);
+  color: var(--status-done-ink);
+}
+:root[data-theme="dark"] .card-warning-icon { color: var(--status-pending-ink); }
+}
+@media screen and (prefers-color-scheme: dark) {
+:root:not([data-theme="light"]) {
+  --canvas: #091525;
+  --ink: #eef2f7;
+  --muted: #bac6d5;
+  --control-border: #617b98;
+  --readability-focus: #b4d7ff;
+  --paper: #112238;
+  --ice: #182d45;
+  --line: #344b66;
+  --steel: #7890aa;
+  --status-done-bg: #123b31;
+  --status-done-ink: #9ee2bf;
+  --status-done-line: #477b65;
+  --status-pending-bg: #3c331c;
+  --status-pending-ink: #f5d785;
+  --status-pending-line: #8a7440;
+  --status-failed-bg: #412633;
+  --status-failed-ink: #ffb4c3;
+  --status-failed-line: #956071;
+}
+
+:root:not([data-theme="light"]) .campaign-card .card-title-row h3,
+:root:not([data-theme="light"]) .campaign-card .step-row strong,
+:root:not([data-theme="light"]) #detail :is(.detail-next-action strong, .detail-info-pane h3) {
+  color: var(--ink);
+}
+:root:not([data-theme="light"]) :is(.campaign-card .card-info, .campaign-card .art-label, .campaign-card .step-status, .campaign-card .step-time, .campaign-card .step-row time, .campaign-card .card-engagement p, .campaign-card .card-engagement small, .campaign-card .card-footer small, .archive-main p, .timeline time, .field-help, .subtle, #editor label, #settings-form label, .badge, #campaign-position, .posting-details p, #dispatcher-health-title, .campaign-sync p) {
+  font-size: 13px;
+  line-height: 1.5;
+}
+:root:not([data-theme="light"]) #detail :is(.detail-event-meta, .detail-next-label, .detail-next-time, .detail-next-time span, .detail-priority-warning p, .detail-warning-details summary, .detail-insights .card-engagement p, .detail-insights .card-engagement small) {
+  font-size: 13px;
+  line-height: 1.5;
+}
+:root:not([data-theme="light"]) :is(input, select, textarea, button:not(.primary):not(.detail-artwork-trigger):not(.ig-previous):not(.ig-next)) {
+  border-color: var(--control-border);
+}
+:root:not([data-theme="light"]) :is(input, select, textarea)::placeholder {
+  color: var(--muted);
+  opacity: 1;
+}
+:root:not([data-theme="light"]) :is(button, a, input, select, textarea, summary):focus-visible {
+  outline: 3px solid var(--readability-focus);
+  outline-offset: 3px;
+}
+:root:not([data-theme="light"]) .campaign-card .status-dot.done {
+  background: var(--status-done-bg);
+  border-color: var(--status-done-ink);
+  color: var(--status-done-ink);
+}
+:root:not([data-theme="light"]) .card-warning-icon { color: var(--status-pending-ink); }
+}
+
+@media screen and (max-width: 699px) {
+  :root[data-theme="dark"] :is(#editor, #settings-form) :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) { font-size: 16px; }
+}
+@media screen and (max-width: 699px) and (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) :is(#editor, #settings-form) :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) { font-size: 16px; }
+}
+
+@media screen {
+  :root[data-theme="dark"] #editor :is(.field-help, #form-timezone, #caption-budget) { font-size: 13px; line-height: 1.5; }
+  :root[data-theme="dark"] #editor .editor-section-nav button { font-size: 13px; line-height: 1.3; }
+  :root[data-theme="dark"] #editor .editor-section-nav button span { font-size: 12px; }
+}
+
+@media screen and (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) #editor :is(.field-help, #form-timezone, #caption-budget) { font-size: 13px; line-height: 1.5; }
+  :root:not([data-theme="light"]) #editor .editor-section-nav button { font-size: 13px; line-height: 1.3; }
+  :root:not([data-theme="light"]) #editor .editor-section-nav button span { font-size: 12px; }
+}
