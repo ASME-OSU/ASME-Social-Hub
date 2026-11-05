@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-05T01:43:26.334Z",
+  "generatedAt": "2026-11-05T02:33:39.031Z",
   "activeYear": "2026-27",
   "config": {
     "timezone": "America/New_York",
@@ -30,9 +30,9 @@
     "status": "healthy",
     "warning": false,
     "configured": true,
-    "checkedAt": "2026-11-05T01:43:26.057Z",
+    "checkedAt": "2026-11-05T02:33:38.741Z",
     "expiresAt": "2026-12-31T15:04:28.250Z",
-    "daysRemaining": 56.556275381944445
+    "daysRemaining": 56.521406354166665
   },
   "calendar": {
     "feedUrl": "https://calendar.google.com/calendar/ical/c93730cdacb567b0f010d1367080e3028ec5c7657d9713b675ac9e5c437b9fba%40group.calendar.google.com/public/basic.ics",
