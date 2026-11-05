@@ -131,6 +131,17 @@
           "reach": 0,
           "replies": 0
         }
+      },
+      {
+        "channel": "feed",
+        "day": 7,
+        "mediaId": "18115452980134920",
+        "recordedAt": "2026-11-05T18:49:43.864Z",
+        "metrics": {
+          "reach": 190,
+          "likes": 7,
+          "saved": 0
+        }
       }
     ]
   },
