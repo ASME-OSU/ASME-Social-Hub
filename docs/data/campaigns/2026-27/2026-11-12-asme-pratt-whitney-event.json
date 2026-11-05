@@ -73,14 +73,22 @@
   "status": {
     "feed": "pending",
     "story": "pending",
-    "groupme": "pending"
+    "groupme": "skipped"
   },
   "results": {
     "feed": {},
     "story": {},
-    "groupme": {},
+    "groupme": {
+      "skipReason": "cancelled"
+    },
     "insights": []
   },
-  "log": [],
+  "log": [
+    {
+      "at": "2026-11-05T07:18:44.209Z",
+      "channel": "groupme",
+      "message": "Bot announcement skipped"
+    }
+  ],
   "flyerUrl": "https://raw.githubusercontent.com/ASME-OSU/ASME-Social-Hub/main/assets/uploads/2026-11-12-asme-pratt-whitney-event-1793068324322-1.png"
 }
