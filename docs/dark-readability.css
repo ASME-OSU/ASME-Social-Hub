@@ -124,3 +124,21 @@
   :root:not([data-theme="light"]) #editor .editor-section-nav button { font-size: 13px; line-height: 1.3; }
   :root:not([data-theme="light"]) #editor .editor-section-nav button span { font-size: 12px; }
 }
+
+/* Secondary screens use the same readable text sizes as the campaign cards. */
+@media screen {
+  :root[data-theme="dark"] #detail :is(.detail-posting .step-status, .detail-posting .step-time, .detail-posting time, .insights-summary dt, .detail-images figcaption, .detail-preview-tabs button, .detail-info-tabs button, .dialog-footer button, .dialog-footer > span) { font-size: 13px; line-height: 1.5; }
+  :root[data-theme="dark"] :is(.archive-stats span, .comparison-row p small, .gm-status, .gm-bot-name, .gm-bot-badge, .gm-note, .gm-count, .linkedin-preview-heading span) { font-size: 13px; line-height: 1.5; }
+  :root[data-theme="dark"] #hub-guide :is(.guide-sources, .guide-tabs button, .guide-permissions th, .guide-permissions td) { font-size: 13px; line-height: 1.5; }
+  :root[data-theme="dark"] .schedule-warning { border: 1px solid var(--status-pending-line); border-radius: 8px; background: var(--status-pending-bg); color: var(--status-pending-ink); }
+  :root[data-theme="dark"] :is(.schedule-warning[data-state="missed"], .schedule-warning[data-state="failed"], .gm-error) { border: 1px solid var(--status-failed-line); border-radius: 8px; background: var(--status-failed-bg); color: var(--status-failed-ink); }
+}
+
+/* Secondary screens use the same readable text sizes as the campaign cards. */
+@media screen and (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) #detail :is(.detail-posting .step-status, .detail-posting .step-time, .detail-posting time, .insights-summary dt, .detail-images figcaption, .detail-preview-tabs button, .detail-info-tabs button, .dialog-footer button, .dialog-footer > span) { font-size: 13px; line-height: 1.5; }
+  :root:not([data-theme="light"]) :is(.archive-stats span, .comparison-row p small, .gm-status, .gm-bot-name, .gm-bot-badge, .gm-note, .gm-count, .linkedin-preview-heading span) { font-size: 13px; line-height: 1.5; }
+  :root:not([data-theme="light"]) #hub-guide :is(.guide-sources, .guide-tabs button, .guide-permissions th, .guide-permissions td) { font-size: 13px; line-height: 1.5; }
+  :root:not([data-theme="light"]) .schedule-warning { border: 1px solid var(--status-pending-line); border-radius: 8px; background: var(--status-pending-bg); color: var(--status-pending-ink); }
+  :root:not([data-theme="light"]) :is(.schedule-warning[data-state="missed"], .schedule-warning[data-state="failed"], .gm-error) { border: 1px solid var(--status-failed-line); border-radius: 8px; background: var(--status-failed-bg); color: var(--status-failed-ink); }
+}
