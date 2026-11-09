@@ -63,8 +63,8 @@
     "feed": "",
     "story": ""
   },
-  "revision": 3,
-  "cancelled": false,
+  "revision": 4,
+  "cancelled": true,
   "status": {
     "feed": "pending",
     "story": "pending",
