@@ -68,14 +68,22 @@
   "status": {
     "feed": "pending",
     "story": "pending",
-    "groupme": "pending"
+    "groupme": "skipped"
   },
   "results": {
     "feed": {},
     "story": {},
-    "groupme": {},
+    "groupme": {
+      "skipReason": "cancelled"
+    },
     "insights": []
   },
-  "log": [],
+  "log": [
+    {
+      "at": "2026-11-09T05:02:02.670Z",
+      "channel": "groupme",
+      "message": "Bot announcement skipped"
+    }
+  ],
   "flyerUrl": "https://raw.githubusercontent.com/ASME-OSU/ASME-Social-Hub/main/assets/uploads/2026-12-03-asme-sweets-with-swe-1793068515835-1.png"
 }
