@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-05T18:49:44.806Z",
+  "generatedAt": "2026-11-09T05:01:24.255Z",
   "campaigns": [
     {
       "id": "2026-12-10-asme-study-tables",
@@ -152,8 +152,8 @@
         "feed": "",
         "story": ""
       },
-      "revision": 3,
-      "cancelled": false,
+      "revision": 4,
+      "cancelled": true,
       "status": {
         "feed": "pending",
         "story": "pending",
