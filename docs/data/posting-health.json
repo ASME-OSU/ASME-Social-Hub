@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-12T16:49:27.848Z",
+  "generatedAt": "2026-11-12T18:32:35.387Z",
   "activeYear": "2026-27",
   "config": {
     "timezone": "America/New_York",
@@ -30,9 +30,9 @@
     "status": "healthy",
     "warning": false,
     "configured": true,
-    "checkedAt": "2026-11-12T16:49:27.658Z",
+    "checkedAt": "2026-11-12T18:32:35.071Z",
     "expiresAt": "2026-12-31T15:04:28.250Z",
-    "daysRemaining": 48.927090185185186
+    "daysRemaining": 48.855476608796295
   },
   "calendar": {
     "feedUrl": "https://calendar.google.com/calendar/ical/c93730cdacb567b0f010d1367080e3028ec5c7657d9713b675ac9e5c437b9fba%40group.calendar.google.com/public/basic.ics",
@@ -1792,14 +1792,14 @@
             "daysBefore": 7,
             "time": "12:00"
           },
-          "status": "pending",
-          "mediaId": null,
-          "postedAt": null,
+          "status": "done",
+          "mediaId": "18417943684080212",
+          "postedAt": "2026-11-12T18:32:17.156Z",
           "eventId": null,
           "syncedRevision": null,
           "botSentAt": null,
           "deletedAt": null,
-          "publishAttemptedAt": null,
+          "publishAttemptedAt": "2026-11-12T18:32:17.156Z",
           "createAttemptedAt": null,
           "botAttemptedAt": null
         },
@@ -1847,11 +1847,11 @@
           "postedAt": null,
           "eventId": null,
           "syncedRevision": null,
-          "botSentAt": null,
+          "botSentAt": "2026-11-12T18:32:17.156Z",
           "deletedAt": null,
           "publishAttemptedAt": null,
           "createAttemptedAt": null,
-          "botAttemptedAt": null
+          "botAttemptedAt": "2026-11-12T18:32:17.156Z"
         },
         "linkedin": {
           "enabled": false,

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-09T05:02:03.716Z",
+  "generatedAt": "2026-11-12T18:32:34.925Z",
   "campaigns": [
     {
       "id": "2026-12-10-asme-study-tables",
@@ -249,17 +249,44 @@
       "revision": 3,
       "cancelled": false,
       "status": {
-        "feed": "pending",
+        "feed": "done",
         "story": "pending",
         "groupme": "pending"
       },
       "results": {
-        "feed": {},
+        "feed": {
+          "preparedRevision": 3,
+          "image": "https://asme-osu.github.io/ASME-Social-Hub/media/2026-27/2026-11-19-asme-friendsgiving-feed.jpg",
+          "images": [
+            "https://asme-osu.github.io/ASME-Social-Hub/media/2026-27/2026-11-19-asme-friendsgiving-feed.jpg"
+          ],
+          "caption": "ASME Friendsgiving\n\nJoin ASME for Friendsgiving! See flyer for all details.\n\nThursday, November 19, 2026 at 5:30 PM\nScott Lab E141\nFood provided!\n\n#ASME #Engineering #OhioState",
+          "containerId": "18435480085198294",
+          "publishAttemptedAt": "2026-11-12T18:32:17.156Z",
+          "mediaId": "18417943684080212",
+          "postedAt": "2026-11-12T18:32:17.156Z",
+          "permalink": "https://www.instagram.com/p/DfptQ-slLgK/"
+        },
         "story": {},
-        "groupme": {},
+        "groupme": {
+          "botText": "ASME Friendsgiving\nThursday, November 19, 2026 at 5:30 PM EST\nScott Lab E141\nJoin ASME for Friendsgiving! See flyer for all details.\nFood provided!\nEvent details: https://asme-osu.github.io/ASME-Social-Hub/events/2026-27/2026-11-19-asme-friendsgiving/",
+          "botAttemptedAt": "2026-11-12T18:32:17.156Z",
+          "botSentAt": "2026-11-12T18:32:17.156Z"
+        },
         "insights": []
       },
-      "log": [],
+      "log": [
+        {
+          "at": "2026-11-12T18:32:17.156Z",
+          "channel": "feed",
+          "message": "Published"
+        },
+        {
+          "at": "2026-11-12T18:32:17.156Z",
+          "channel": "groupme",
+          "message": "Bot announcement sent"
+        }
+      ],
       "flyerUrl": "https://raw.githubusercontent.com/ASME-OSU/ASME-Social-Hub/main/assets/uploads/2026-11-19-asme-friendsgiving-1793068434379-1.png"
     },
     {
