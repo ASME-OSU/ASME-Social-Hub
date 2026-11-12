@@ -92,7 +92,8 @@
     "story": {},
     "groupme": {
       "botText": "ASME Friendsgiving\nThursday, November 19, 2026 at 5:30 PM EST\nScott Lab E141\nJoin ASME for Friendsgiving! See flyer for all details.\nFood provided!\nEvent details: https://asme-osu.github.io/ASME-Social-Hub/events/2026-27/2026-11-19-asme-friendsgiving/",
-      "botAttemptedAt": "2026-11-12T18:32:17.156Z"
+      "botAttemptedAt": "2026-11-12T18:32:17.156Z",
+      "botSentAt": "2026-11-12T18:32:17.156Z"
     },
     "insights": []
   },
@@ -101,6 +102,11 @@
       "at": "2026-11-12T18:32:17.156Z",
       "channel": "feed",
       "message": "Published"
+    },
+    {
+      "at": "2026-11-12T18:32:17.156Z",
+      "channel": "groupme",
+      "message": "Bot announcement sent"
     }
   ],
   "flyerUrl": "https://raw.githubusercontent.com/ASME-OSU/ASME-Social-Hub/main/assets/uploads/2026-11-19-asme-friendsgiving-1793068434379-1.png"
