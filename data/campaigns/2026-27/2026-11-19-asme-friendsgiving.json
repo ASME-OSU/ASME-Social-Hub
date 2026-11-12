@@ -90,7 +90,10 @@
       "permalink": "https://www.instagram.com/p/DfptQ-slLgK/"
     },
     "story": {},
-    "groupme": {},
+    "groupme": {
+      "botText": "ASME Friendsgiving\nThursday, November 19, 2026 at 5:30 PM EST\nScott Lab E141\nJoin ASME for Friendsgiving! See flyer for all details.\nFood provided!\nEvent details: https://asme-osu.github.io/ASME-Social-Hub/events/2026-27/2026-11-19-asme-friendsgiving/",
+      "botAttemptedAt": "2026-11-12T18:32:17.156Z"
+    },
     "insights": []
   },
   "log": [
