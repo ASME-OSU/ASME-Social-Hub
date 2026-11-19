@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-18T22:04:20.243Z",
+  "generatedAt": "2026-11-19T22:15:04.853Z",
   "campaigns": [
     {
       "id": "2026-12-10-asme-study-tables",
@@ -308,6 +308,17 @@
             "metrics": {
               "reach": 0,
               "replies": 0
+            }
+          },
+          {
+            "channel": "feed",
+            "day": 7,
+            "mediaId": "18417943684080212",
+            "recordedAt": "2026-11-19T22:15:03.626Z",
+            "metrics": {
+              "reach": 154,
+              "likes": 8,
+              "saved": 0
             }
           }
         ]
