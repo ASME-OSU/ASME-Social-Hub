@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-19T13:25:10.447Z",
+  "generatedAt": "2026-11-19T16:02:25.779Z",
   "activeYear": "2026-27",
   "config": {
     "timezone": "America/New_York",
@@ -30,13 +30,13 @@
     "status": "healthy",
     "warning": false,
     "configured": true,
-    "checkedAt": "2026-11-19T13:25:10.165Z",
+    "checkedAt": "2026-11-19T16:02:25.521Z",
     "expiresAt": "2027-01-14T15:38:22.420Z",
-    "daysRemaining": 56.09250295138889
+    "daysRemaining": 55.98329744212963
   },
   "calendar": {
     "feedUrl": "https://calendar.google.com/calendar/ical/c93730cdacb567b0f010d1367080e3028ec5c7657d9713b675ac9e5c437b9fba%40group.calendar.google.com/public/basic.ics",
-    "generatedAt": "2026-11-18T15:57:27.134Z",
+    "generatedAt": "2026-11-19T16:02:24.624Z",
     "candidates": [
       {
         "id": "58pheu7tqvdrjtnuoj7e3punhq@google.com::2026-11-25T00:00:00.000Z",
