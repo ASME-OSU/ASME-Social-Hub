@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-23T18:43:40.368Z",
+  "generatedAt": "2026-11-24T18:16:21.650Z",
   "events": [
     {
       "id": "58pheu7tqvdrjtnuoj7e3punhq@google.com::2026-11-25T00:00:00.000Z",
@@ -178,22 +178,6 @@
       }
     },
     {
-      "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-01-07T22:30:00.000Z",
-      "title": "ASME Ice Skating Event",
-      "start": "2027-01-07T22:30:00.000Z",
-      "end": "2027-01-07T23:30:00.000Z",
-      "allDay": false,
-      "location": "Scott Laboratory E141",
-      "description": "Ice Skating",
-      "url": "https://calendar.google.com/calendar/ical/c93730cdacb567b0f010d1367080e3028ec5c7657d9713b675ac9e5c437b9fba%40group.calendar.google.com/public/basic.ics",
-      "updated": "2026-09-11T15:09:34.000Z",
-      "source": {
-        "kind": "ical",
-        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-01-07T22:30:00.000Z",
-        "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
-      }
-    },
-    {
       "id": "52h2drdkkab14hmqinu4v3vm27@google.com::2027-01-11T00:00:00.000Z",
       "title": "Semester and first-session classes begin",
       "start": "2027-01-11T00:00:00.000Z",
@@ -207,22 +191,6 @@
         "kind": "ical",
         "uid": "52h2drdkkab14hmqinu4v3vm27@google.com::2027-01-11T00:00:00.000Z",
         "calendarUid": "52h2drdkkab14hmqinu4v3vm27@google.com"
-      }
-    },
-    {
-      "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-01-14T22:30:00.000Z",
-      "title": "ASME Weekly Chapter Meeting ",
-      "start": "2027-01-14T22:30:00.000Z",
-      "end": "2027-01-14T23:30:00.000Z",
-      "allDay": false,
-      "location": "Scott Laboratory E141",
-      "description": "",
-      "url": "https://calendar.google.com/calendar/ical/c93730cdacb567b0f010d1367080e3028ec5c7657d9713b675ac9e5c437b9fba%40group.calendar.google.com/public/basic.ics",
-      "updated": "2026-09-11T15:09:34.000Z",
-      "source": {
-        "kind": "ical",
-        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-01-14T22:30:00.000Z",
-        "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
       }
     },
     {
@@ -242,19 +210,19 @@
       }
     },
     {
-      "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-01-21T22:30:00.000Z",
-      "title": "ASME Weekly Chapter Meeting ",
-      "start": "2027-01-21T22:30:00.000Z",
-      "end": "2027-01-21T23:30:00.000Z",
+      "id": "3bts5beuldhplh23g9uiba65el@google.com::2027-01-20T22:30:00.000Z",
+      "title": "ASME ice skating event",
+      "start": "2027-01-20T22:30:00.000Z",
+      "end": "2027-01-20T23:30:00.000Z",
       "allDay": false,
       "location": "Scott Laboratory E141",
-      "description": "",
+      "description": "Ice Skating",
       "url": "https://calendar.google.com/calendar/ical/c93730cdacb567b0f010d1367080e3028ec5c7657d9713b675ac9e5c437b9fba%40group.calendar.google.com/public/basic.ics",
-      "updated": "2026-09-11T15:09:34.000Z",
+      "updated": "2026-11-23T20:21:47.000Z",
       "source": {
         "kind": "ical",
-        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-01-21T22:30:00.000Z",
-        "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        "uid": "3bts5beuldhplh23g9uiba65el@google.com::2027-01-20T22:30:00.000Z",
+        "calendarUid": "3bts5beuldhplh23g9uiba65el@google.com"
       }
     },
     {
@@ -274,83 +242,51 @@
       }
     },
     {
-      "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-01-28T22:30:00.000Z",
-      "title": "ASME Weekly Chapter Meeting ",
-      "start": "2027-01-28T22:30:00.000Z",
-      "end": "2027-01-28T23:30:00.000Z",
+      "id": "3bts5beuldhplh23g9uiba65el@google.com::2027-02-03T22:30:00.000Z",
+      "title": "ASME hot chocolate event",
+      "start": "2027-02-03T22:30:00.000Z",
+      "end": "2027-02-03T23:30:00.000Z",
       "allDay": false,
       "location": "Scott Laboratory E141",
-      "description": "",
+      "description": "Ice Skating",
       "url": "https://calendar.google.com/calendar/ical/c93730cdacb567b0f010d1367080e3028ec5c7657d9713b675ac9e5c437b9fba%40group.calendar.google.com/public/basic.ics",
-      "updated": "2026-09-11T15:09:34.000Z",
+      "updated": "2026-11-23T20:21:47.000Z",
       "source": {
         "kind": "ical",
-        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-01-28T22:30:00.000Z",
-        "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        "uid": "3bts5beuldhplh23g9uiba65el@google.com::2027-02-03T22:30:00.000Z",
+        "calendarUid": "3bts5beuldhplh23g9uiba65el@google.com"
       }
     },
     {
-      "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-02-04T22:30:00.000Z",
-      "title": "ASME Weekly Chapter Meeting ",
-      "start": "2027-02-04T22:30:00.000Z",
-      "end": "2027-02-04T23:30:00.000Z",
-      "allDay": false,
-      "location": "Scott Laboratory E141",
+      "id": "05qgmeodl6141u6ttpss77okrn@google.com::2027-02-13T00:00:00.000Z",
+      "title": "Bunny Volunteering",
+      "start": "2027-02-13T00:00:00.000Z",
+      "end": "2027-02-14T00:00:00.000Z",
+      "allDay": true,
+      "location": "",
       "description": "",
       "url": "https://calendar.google.com/calendar/ical/c93730cdacb567b0f010d1367080e3028ec5c7657d9713b675ac9e5c437b9fba%40group.calendar.google.com/public/basic.ics",
-      "updated": "2026-09-11T15:09:34.000Z",
+      "updated": "2026-11-23T20:28:06.000Z",
       "source": {
         "kind": "ical",
-        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-02-04T22:30:00.000Z",
-        "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        "uid": "05qgmeodl6141u6ttpss77okrn@google.com::2027-02-13T00:00:00.000Z",
+        "calendarUid": "05qgmeodl6141u6ttpss77okrn@google.com"
       }
     },
     {
-      "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-02-11T22:30:00.000Z",
-      "title": "ASME Weekly Chapter Meeting ",
-      "start": "2027-02-11T22:30:00.000Z",
-      "end": "2027-02-11T23:30:00.000Z",
+      "id": "3bts5beuldhplh23g9uiba65el@google.com::2027-02-17T22:30:00.000Z",
+      "title": "ASME poker night",
+      "start": "2027-02-17T22:30:00.000Z",
+      "end": "2027-02-17T23:30:00.000Z",
       "allDay": false,
       "location": "Scott Laboratory E141",
-      "description": "",
+      "description": "Ice Skating",
       "url": "https://calendar.google.com/calendar/ical/c93730cdacb567b0f010d1367080e3028ec5c7657d9713b675ac9e5c437b9fba%40group.calendar.google.com/public/basic.ics",
-      "updated": "2026-09-11T15:09:34.000Z",
+      "updated": "2026-11-23T20:21:47.000Z",
       "source": {
         "kind": "ical",
-        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-02-11T22:30:00.000Z",
-        "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
-      }
-    },
-    {
-      "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-02-18T22:30:00.000Z",
-      "title": "ASME Weekly Chapter Meeting ",
-      "start": "2027-02-18T22:30:00.000Z",
-      "end": "2027-02-18T23:30:00.000Z",
-      "allDay": false,
-      "location": "Scott Laboratory E141",
-      "description": "",
-      "url": "https://calendar.google.com/calendar/ical/c93730cdacb567b0f010d1367080e3028ec5c7657d9713b675ac9e5c437b9fba%40group.calendar.google.com/public/basic.ics",
-      "updated": "2026-09-11T15:09:34.000Z",
-      "source": {
-        "kind": "ical",
-        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-02-18T22:30:00.000Z",
-        "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
-      }
-    },
-    {
-      "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-02-25T22:30:00.000Z",
-      "title": "ASME Weekly Chapter Meeting ",
-      "start": "2027-02-25T22:30:00.000Z",
-      "end": "2027-02-25T23:30:00.000Z",
-      "allDay": false,
-      "location": "Scott Laboratory E141",
-      "description": "",
-      "url": "https://calendar.google.com/calendar/ical/c93730cdacb567b0f010d1367080e3028ec5c7657d9713b675ac9e5c437b9fba%40group.calendar.google.com/public/basic.ics",
-      "updated": "2026-09-11T15:09:34.000Z",
-      "source": {
-        "kind": "ical",
-        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-02-25T22:30:00.000Z",
-        "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        "uid": "3bts5beuldhplh23g9uiba65el@google.com::2027-02-17T22:30:00.000Z",
+        "calendarUid": "3bts5beuldhplh23g9uiba65el@google.com"
       }
     },
     {
@@ -402,35 +338,19 @@
       }
     },
     {
-      "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-03-04T22:30:00.000Z",
-      "title": "ASME Weekly Chapter Meeting ",
-      "start": "2027-03-04T22:30:00.000Z",
-      "end": "2027-03-04T23:30:00.000Z",
+      "id": "3bts5beuldhplh23g9uiba65el@google.com::2027-03-03T22:30:00.000Z",
+      "title": "ASME Pups n' Study",
+      "start": "2027-03-03T22:30:00.000Z",
+      "end": "2027-03-03T23:30:00.000Z",
       "allDay": false,
       "location": "Scott Laboratory E141",
-      "description": "",
+      "description": "Ice Skating",
       "url": "https://calendar.google.com/calendar/ical/c93730cdacb567b0f010d1367080e3028ec5c7657d9713b675ac9e5c437b9fba%40group.calendar.google.com/public/basic.ics",
-      "updated": "2026-09-11T15:09:34.000Z",
+      "updated": "2026-11-23T20:21:47.000Z",
       "source": {
         "kind": "ical",
-        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-03-04T22:30:00.000Z",
-        "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
-      }
-    },
-    {
-      "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-03-11T22:30:00.000Z",
-      "title": "ASME Weekly Chapter Meeting ",
-      "start": "2027-03-11T22:30:00.000Z",
-      "end": "2027-03-11T23:30:00.000Z",
-      "allDay": false,
-      "location": "Scott Laboratory E141",
-      "description": "",
-      "url": "https://calendar.google.com/calendar/ical/c93730cdacb567b0f010d1367080e3028ec5c7657d9713b675ac9e5c437b9fba%40group.calendar.google.com/public/basic.ics",
-      "updated": "2026-09-11T15:09:34.000Z",
-      "source": {
-        "kind": "ical",
-        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-03-11T22:30:00.000Z",
-        "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        "uid": "3bts5beuldhplh23g9uiba65el@google.com::2027-03-03T22:30:00.000Z",
+        "calendarUid": "3bts5beuldhplh23g9uiba65el@google.com"
       }
     },
     {
@@ -466,99 +386,67 @@
       }
     },
     {
-      "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-03-18T21:30:00.000Z",
-      "title": "ASME Weekly Chapter Meeting ",
-      "start": "2027-03-18T21:30:00.000Z",
-      "end": "2027-03-18T22:30:00.000Z",
+      "id": "0cujf7qnieu7qvb53bf1ek2n5u@google.com::2027-03-30T18:00:00.000Z",
+      "title": "Career Fair",
+      "start": "2027-03-30T18:00:00.000Z",
+      "end": "2027-03-30T21:00:00.000Z",
       "allDay": false,
-      "location": "Scott Laboratory E141",
+      "location": "",
       "description": "",
       "url": "https://calendar.google.com/calendar/ical/c93730cdacb567b0f010d1367080e3028ec5c7657d9713b675ac9e5c437b9fba%40group.calendar.google.com/public/basic.ics",
-      "updated": "2026-09-11T15:09:34.000Z",
+      "updated": "2026-11-23T20:17:49.000Z",
       "source": {
         "kind": "ical",
-        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-03-18T21:30:00.000Z",
-        "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        "uid": "0cujf7qnieu7qvb53bf1ek2n5u@google.com::2027-03-30T18:00:00.000Z",
+        "calendarUid": "0cujf7qnieu7qvb53bf1ek2n5u@google.com"
       }
     },
     {
-      "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-03-25T21:30:00.000Z",
-      "title": "ASME Weekly Chapter Meeting ",
-      "start": "2027-03-25T21:30:00.000Z",
-      "end": "2027-03-25T22:30:00.000Z",
+      "id": "3bts5beuldhplh23g9uiba65el@google.com::2027-03-31T21:30:00.000Z",
+      "title": "ASME GB",
+      "start": "2027-03-31T21:30:00.000Z",
+      "end": "2027-03-31T22:30:00.000Z",
       "allDay": false,
       "location": "Scott Laboratory E141",
       "description": "",
       "url": "https://calendar.google.com/calendar/ical/c93730cdacb567b0f010d1367080e3028ec5c7657d9713b675ac9e5c437b9fba%40group.calendar.google.com/public/basic.ics",
-      "updated": "2026-09-11T15:09:34.000Z",
+      "updated": "2026-11-23T20:21:47.000Z",
       "source": {
         "kind": "ical",
-        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-03-25T21:30:00.000Z",
-        "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        "uid": "3bts5beuldhplh23g9uiba65el@google.com::2027-03-31T21:30:00.000Z",
+        "calendarUid": "3bts5beuldhplh23g9uiba65el@google.com"
       }
     },
     {
-      "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-04-01T21:30:00.000Z",
-      "title": "ASME Weekly Chapter Meeting ",
-      "start": "2027-04-01T21:30:00.000Z",
-      "end": "2027-04-01T22:30:00.000Z",
+      "id": "3bts5beuldhplh23g9uiba65el@google.com::2027-04-14T21:30:00.000Z",
+      "title": "ASME Racecar Derby",
+      "start": "2027-04-14T21:30:00.000Z",
+      "end": "2027-04-15T00:00:00.000Z",
       "allDay": false,
       "location": "Scott Laboratory E141",
-      "description": "",
+      "description": "Ice Skating",
       "url": "https://calendar.google.com/calendar/ical/c93730cdacb567b0f010d1367080e3028ec5c7657d9713b675ac9e5c437b9fba%40group.calendar.google.com/public/basic.ics",
-      "updated": "2026-09-11T15:09:34.000Z",
+      "updated": "2026-11-23T20:23:39.000Z",
       "source": {
         "kind": "ical",
-        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-04-01T21:30:00.000Z",
-        "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        "uid": "3bts5beuldhplh23g9uiba65el@google.com::2027-04-14T21:30:00.000Z",
+        "calendarUid": "3bts5beuldhplh23g9uiba65el@google.com"
       }
     },
     {
-      "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-04-08T21:30:00.000Z",
-      "title": "ASME Weekly Chapter Meeting ",
-      "start": "2027-04-08T21:30:00.000Z",
-      "end": "2027-04-08T22:30:00.000Z",
+      "id": "682i62hu3jijnd8q9pr45i5e36@google.com::2027-04-21T21:30:00.000Z",
+      "title": "ASME Study Tables",
+      "start": "2027-04-21T21:30:00.000Z",
+      "end": "2027-04-21T22:30:00.000Z",
       "allDay": false,
-      "location": "Scott Laboratory E141",
+      "location": "",
       "description": "",
       "url": "https://calendar.google.com/calendar/ical/c93730cdacb567b0f010d1367080e3028ec5c7657d9713b675ac9e5c437b9fba%40group.calendar.google.com/public/basic.ics",
-      "updated": "2026-09-11T15:09:34.000Z",
+      "updated": "2026-11-23T20:21:38.000Z",
       "source": {
         "kind": "ical",
-        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-04-08T21:30:00.000Z",
-        "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
-      }
-    },
-    {
-      "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-04-15T21:30:00.000Z",
-      "title": "ASME Weekly Chapter Meeting ",
-      "start": "2027-04-15T21:30:00.000Z",
-      "end": "2027-04-15T22:30:00.000Z",
-      "allDay": false,
-      "location": "Scott Laboratory E141",
-      "description": "",
-      "url": "https://calendar.google.com/calendar/ical/c93730cdacb567b0f010d1367080e3028ec5c7657d9713b675ac9e5c437b9fba%40group.calendar.google.com/public/basic.ics",
-      "updated": "2026-09-11T15:09:34.000Z",
-      "source": {
-        "kind": "ical",
-        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-04-15T21:30:00.000Z",
-        "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
-      }
-    },
-    {
-      "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-04-22T21:30:00.000Z",
-      "title": "ASME Weekly Chapter Meeting ",
-      "start": "2027-04-22T21:30:00.000Z",
-      "end": "2027-04-22T22:30:00.000Z",
-      "allDay": false,
-      "location": "Scott Laboratory E141",
-      "description": "",
-      "url": "https://calendar.google.com/calendar/ical/c93730cdacb567b0f010d1367080e3028ec5c7657d9713b675ac9e5c437b9fba%40group.calendar.google.com/public/basic.ics",
-      "updated": "2026-09-11T15:09:34.000Z",
-      "source": {
-        "kind": "ical",
-        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-04-22T21:30:00.000Z",
-        "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
+        "uid": "682i62hu3jijnd8q9pr45i5e36@google.com::2027-04-21T21:30:00.000Z",
+        "calendarUid": "682i62hu3jijnd8q9pr45i5e36@google.com"
       }
     },
     {
@@ -591,22 +479,6 @@
         "kind": "ical",
         "uid": "6gfnpld5mplfs469vkqitl36fj@google.com::2027-04-28T00:00:00.000Z",
         "calendarUid": "6gfnpld5mplfs469vkqitl36fj@google.com"
-      }
-    },
-    {
-      "id": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-04-29T21:30:00.000Z",
-      "title": "ASME Weekly Chapter Meeting ",
-      "start": "2027-04-29T21:30:00.000Z",
-      "end": "2027-04-29T22:30:00.000Z",
-      "allDay": false,
-      "location": "Scott Laboratory E141",
-      "description": "",
-      "url": "https://calendar.google.com/calendar/ical/c93730cdacb567b0f010d1367080e3028ec5c7657d9713b675ac9e5c437b9fba%40group.calendar.google.com/public/basic.ics",
-      "updated": "2026-09-11T15:09:34.000Z",
-      "source": {
-        "kind": "ical",
-        "uid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com::2027-04-29T21:30:00.000Z",
-        "calendarUid": "cgqu1b7nqiesqn2bf0s1gg7jki_R20260924T213000@google.com"
       }
     },
     {
